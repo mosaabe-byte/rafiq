@@ -1,0 +1,204 @@
+.profile { padding: 0 0 20px; }
+
+.profile-hero {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 18px 14px;
+}
+.big-avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--purple-light);
+  color: var(--purple);
+  font-size: 22px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--purple-mid);
+  flex-shrink: 0;
+}
+.hero-name {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 3px;
+}
+.hero-level {
+  font-size: 13px;
+  color: var(--gray-400);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.level-pill {
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 10px;
+  background: var(--purple-light);
+  color: var(--purple-dark);
+}
+
+.xp-section { padding: 0 18px 14px; }
+.xp-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: var(--gray-400);
+}
+.xp-val { font-weight: 600; color: var(--purple); }
+.xp-track {
+  height: 8px;
+  background: var(--gray-100);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.xp-fill {
+  height: 100%;
+  background: var(--purple);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+.xp-next { font-size: 11px; color: var(--gray-200); margin-top: 5px; }
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 0 18px 6px;
+}
+.ps-box {
+  background: var(--gray-50);
+  border-radius: 10px;
+  padding: 10px 6px;
+  text-align: center;
+}
+.ps-n {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--gray-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+.ps-n.flame { color: var(--amber); }
+.ps-l { font-size: 10px; color: var(--gray-400); margin-top: 4px; line-height: 1.4; }
+
+.profile-section { padding: 16px 18px 0; }
+.profile-section h2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.skills-list { display: flex; flex-direction: column; gap: 9px; }
+.skill-row { display: flex; align-items: center; gap: 10px; }
+.skill-name {
+  font-size: 12px;
+  color: var(--gray-600);
+  width: 110px;
+  flex-shrink: 0;
+}
+.skill-track {
+  flex: 1;
+  height: 6px;
+  background: var(--gray-100);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.skill-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+.sf-purple { background: var(--purple); }
+.sf-teal { background: var(--teal); }
+.sf-amber { background: var(--amber); }
+.skill-pct {
+  font-size: 11px;
+  color: var(--gray-400);
+  width: 32px;
+  text-align: left;
+  flex-shrink: 0;
+}
+
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.badge-card {
+  border: 1px solid var(--gray-100);
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  background: var(--white);
+}
+.badge-card.earned {
+  border-color: var(--purple-mid);
+  background: var(--purple-light);
+}
+.badge-card.locked { opacity: 0.4; }
+.badge-icon { font-size: 22px; margin-bottom: 6px; }
+.badge-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 2px;
+}
+.badge-desc { font-size: 10px; color: var(--gray-400); line-height: 1.5; }
+
+.activity-list { display: flex; flex-direction: column; }
+.activity-item {
+  display: flex;
+  gap: 11px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.activity-item:last-child { border-bottom: none; }
+.act-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+.act-done { background: var(--teal); }
+.act-content { flex: 1; }
+.act-text { font-size: 13px; color: var(--gray-900); line-height: 1.6; }
+.act-time { font-size: 11px; color: var(--gray-200); margin-top: 2px; }
+
+.next-step-card {
+  margin: 18px 18px 0;
+  padding: 14px;
+  border: 1px solid var(--purple-mid);
+  border-radius: 14px;
+  background: var(--purple-light);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: opacity 0.15s;
+}
+.next-step-card:hover { opacity: 0.85; }
+.ns-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--purple);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ns-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--purple-dark);
+  margin-bottom: 2px;
+}
+.ns-sub { font-size: 12px; color: var(--purple); line-height: 1.5; }

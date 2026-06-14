@@ -1,0 +1,8 @@
+.vercel
+# بيئة وأسرار (للمستقبل)
+.env
+.env.local
+.env*.local
+
+# Vercel
+.vercel
