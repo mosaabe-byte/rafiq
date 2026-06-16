@@ -6,17 +6,21 @@ import {
   IconVocabulary,
   IconUserCircle,
 } from '@tabler/icons-react';
+import { useLanguage } from '../i18n/LanguageContext';
+import LanguageSwitcher from '../i18n/LanguageSwitcher';
 import './Layout.css';
 
-const navItems = [
-  { to: '/', label: 'مشاريعي', icon: IconLayoutGrid, end: true },
-  { to: '/new', label: 'جديد', icon: IconCirclePlus },
-  { to: '/roadmap', label: 'الطريق', icon: IconRoute },
-  { to: '/glossary', label: 'المعجم', icon: IconVocabulary },
-  { to: '/profile', label: 'ملفي', icon: IconUserCircle },
-];
-
 export default function Layout() {
+  const { t } = useLanguage();
+
+  const navItems = [
+    { to: '/', label: t('nav.projects'), icon: IconLayoutGrid, end: true },
+    { to: '/new', label: t('nav.newProject'), icon: IconCirclePlus },
+    { to: '/roadmap', label: t('nav.roadmap'), icon: IconRoute },
+    { to: '/glossary', label: t('nav.glossary'), icon: IconVocabulary },
+    { to: '/profile', label: t('nav.profile'), icon: IconUserCircle },
+  ];
+
   return (
     <div className="app-shell">
       <header className="app-topbar">
@@ -24,6 +28,7 @@ export default function Layout() {
           <div className="logo-mark">ر</div>
           <span>رفيق</span>
         </div>
+        <LanguageSwitcher />
         <div className="app-avatar">ع</div>
       </header>
 
