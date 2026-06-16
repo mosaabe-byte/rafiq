@@ -4,20 +4,9 @@ import {
   IconLock, IconCloud, IconCloudOff,
 } from '@tabler/icons-react';
 import { supabase } from '../lib/supabase';
+import { useLanguage } from '../i18n/LanguageContext';
 import './Roadmap.css';
 
-// المراحل السبع التي يمر بها كل مشروع — قلب خارطة الطريق
-const phases = [
-  { n: 1, key: 'التخطيط', title: 'التخطيط', desc: 'حدّد الفكرة، الجمهور، والهدف. ارسم ملامح المشروع قبل أي كود.' },
-  { n: 2, key: 'التصميم', title: 'التصميم', desc: 'صمّم الشاشات وتجربة المستخدم. كيف يبدو المشروع وكيف يُستعمل.' },
-  { n: 3, key: 'الإعداد', title: 'الإعداد', desc: 'جهّز بيئة العمل والأدوات: المحرر، اللغة، المكتبات الأساسية.' },
-  { n: 4, key: 'البناء', title: 'البناء', desc: 'اكتب الكود وابنِ الشاشات والمزايا الأساسية، واحدة تلو الأخرى.' },
-  { n: 5, key: 'الربط', title: 'الربط', desc: 'اربط الأجزاء معاً: التنقل، الحالة، والمنطق الداخلي.' },
-  { n: 6, key: 'البيانات', title: 'البيانات', desc: 'احفظ بيانات المستخدم محلياً أو في قاعدة بيانات.' },
-  { n: 7, key: 'السحابة', title: 'السحابة والنشر', desc: 'اربط بقاعدة سحابية وانشر المشروع على الإنترنت للعالم.' },
-];
-
-// يستخرج رقم المرحلة من نص مثل "المرحلة 7: السحابة"
 function phaseNumber(phaseText) {
   if (!phaseText) return 1;
   const m = String(phaseText).match(/\d+/);
@@ -25,10 +14,21 @@ function phaseNumber(phaseText) {
 }
 
 export default function Roadmap() {
+  const { t } = useLanguage();
   const [projects, setProjects] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [cloudOk, setCloudOk] = useState(true);
+
+  const phases = [
+    { n: 1, title: t('roadmap.phase1title'), desc: t('roadmap.phase1desc') },
+    { n: 2, title: t('roadmap.phase2title'), desc: t('roadmap.phase2desc') },
+    { n: 3, title: t('roadmap.phase3title'), desc: t('roadmap.phase3desc') },
+    { n: 4, title: t('roadmap.phase4title'), desc: t('roadmap.phase4desc') },
+    { n: 5, title: t('roadmap.phase5title'), desc: t('roadmap.phase5desc') },
+    { n: 6, title: t('roadmap.phase6title'), desc: t('roadmap.phase6desc') },
+    { n: 7, title: t('roadmap.phase7title'), desc: t('roadmap.phase7desc') },
+  ];
 
   useEffect(() => {
     async function fetchProjects() {
@@ -58,28 +58,27 @@ export default function Roadmap() {
       <div className="rm-header">
         <div className="rm-title">
           <IconRoute size={20} className="rm-icon" />
-          <span>خارطة الطريق</span>
+          <span>{t('roadmap.title')}</span>
         </div>
-        <p>رحلة مشروعك عبر سبع مراحل — من الفكرة إلى النشر</p>
+        <p>{t('roadmap.subtitle')}</p>
       </div>
 
       {loading ? (
         <div className="rm-loading">
-          <IconLoader2 size={22} className="spin" /> جارٍ تحميل مشاريعك...
+          <IconLoader2 size={22} className="spin" /> {t('roadmap.loading')}
         </div>
       ) : !cloudOk ? (
         <div className="rm-empty">
           <IconCloudOff size={28} />
-          <p>تعذّر الاتصال بالسحابة. تحقق من اتصالك وحاول مجدداً.</p>
+          <p>{t('roadmap.cloudOff')}</p>
         </div>
       ) : projects.length === 0 ? (
         <div className="rm-empty">
           <IconRoute size={28} />
-          <p>لا توجد مشاريع بعد. أضف مشروعاً من شاشة "جديد" لترى خارطته هنا.</p>
+          <p>{t('roadmap.empty')}</p>
         </div>
       ) : (
         <>
-          {/* اختيار المشروع */}
           <div className="project-picker">
             {projects.map((p) => (
               <button
@@ -93,12 +92,10 @@ export default function Roadmap() {
             ))}
           </div>
 
-          {/* شريط الحالة السحابية */}
           <div className="cloud-bar">
-            <IconCloud size={14} /> متصل بالسحابة — خارطة محدّثة من أي جهاز
+            <IconCloud size={14} /> {t('roadmap.cloud')}
           </div>
 
-          {/* الخط الزمني للمراحل */}
           <div className="timeline">
             {phases.map((ph) => {
               const isDone = ph.n < currentPhase;
@@ -117,9 +114,9 @@ export default function Roadmap() {
                   </div>
                   <div className="phase-content">
                     <div className="phase-head">
-                      <span className="phase-num">المرحلة {ph.n}</span>
+                      <span className="phase-num">{t('roadmap.phaseLabel')} {ph.n}</span>
                       <span className="phase-title">{ph.title}</span>
-                      {isCurrent && <span className="phase-badge">أنت هنا</span>}
+                      {isCurrent && <span className="phase-badge">{t('roadmap.youAreHere')}</span>}
                     </div>
                     <p className="phase-desc">{ph.desc}</p>
                   </div>
@@ -128,16 +125,15 @@ export default function Roadmap() {
             })}
           </div>
 
-          {/* ملخص التقدّم */}
           {selected && (
             <div className="progress-summary">
               <div className="ps-text">
-                <strong>{selected.name}</strong> في المرحلة {currentPhase} من {phases.length}
+                <strong>{selected.name}</strong> {t('roadmap.summaryIn')} {currentPhase} {t('roadmap.summaryOf')} {phases.length}
               </div>
               <div className="ps-bar">
                 <div className="ps-fill" style={{ width: `${(currentPhase / phases.length) * 100}%` }} />
               </div>
-              <div className="ps-percent">{Math.round((currentPhase / phases.length) * 100)}% من الرحلة</div>
+              <div className="ps-percent">{Math.round((currentPhase / phases.length) * 100)}% {t('roadmap.summaryPercent')}</div>
             </div>
           )}
         </>
