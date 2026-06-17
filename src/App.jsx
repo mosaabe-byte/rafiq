@@ -1,5 +1,7 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from './auth/AuthContext';
 import Layout from './components/Layout';
+import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import NewProject from './pages/NewProject';
 import Roadmap from './pages/Roadmap';
@@ -7,11 +9,26 @@ import Glossary from './pages/Glossary';
 import Profile from './pages/Profile';
 import './pages/pages.css';
 
+function PrivateRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return null; // ينتظر التحقق من الجلسة قبل أي قرار
+  if (!user) return <Navigate to="/login" replace />;
+  return children;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Layout />
+            </PrivateRoute>
+          }
+        >
           <Route index element={<Dashboard />} />
           <Route path="new" element={<NewProject />} />
           <Route path="roadmap" element={<Roadmap />} />

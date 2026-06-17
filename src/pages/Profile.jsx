@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import {
   IconChartBar, IconVocabulary, IconTrophy, IconHistory,
-  IconFlame, IconArrowLeft,
+  IconFlame, IconArrowLeft, IconLogout,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext';
+import { useLanguage } from '../i18n/LanguageContext';
 import './Profile.css';
 
 const STORAGE_KEY = 'rafiq_projects';
@@ -34,6 +36,8 @@ const activities = [
 ];
 
 export default function Profile() {
+  const { signOut } = useAuth();
+  const { t } = useLanguage();
   const [projectCount, setProjectCount] = useState(0);
 
   useEffect(() => {
@@ -50,6 +54,10 @@ export default function Profile() {
   const xpMax = 500;
   const xpPct = Math.round((xp / xpMax) * 100);
 
+  async function handleSignOut() {
+    await signOut();
+  }
+
   return (
     <div className="profile">
       <div className="profile-hero">
@@ -61,6 +69,9 @@ export default function Profile() {
             <span className="level-pill">في تقدّم</span>
           </div>
         </div>
+        <button className="signout-btn" onClick={handleSignOut}>
+          <IconLogout size={16} /> {t('auth.signOut')}
+        </button>
       </div>
 
       <div className="xp-section">

@@ -1,0 +1,129 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-50, #f7f7fb);
+  padding: 20px;
+}
+
+.login-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 32px 28px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 24px;
+}
+
+.login-logo .logo-mark {
+  width: 34px;
+  height: 34px;
+  background: var(--purple);
+  color: var(--white);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.login-card h2 {
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: var(--gray-900);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--gray-400);
+}
+
+.login-form input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--gray-100);
+  font-size: 14px;
+}
+
+.login-error {
+  background: #FEEAEA;
+  color: #C0392B;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 18px 0;
+  color: var(--gray-200);
+  font-size: 12px;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.login-divider span {
+  padding: 0 10px;
+}
+
+.btn-google {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--gray-100);
+  background: var(--white);
+  color: var(--gray-900);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-google:hover {
+  background: var(--gray-50, #f7f7fb);
+}
+
+.login-switch {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 13px;
+  color: var(--gray-400);
+}
+
+.login-switch button {
+  background: none;
+  border: none;
+  color: var(--purple);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 4px;
+}
