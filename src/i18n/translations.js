@@ -42,7 +42,7 @@ export const translations = {
       title:"Mes projets", cloud:"Connecté au cloud",
       cloudOff:"Hors ligne",
       statProjects:"Projets",
-      tip:"Conseil : terminez une étape avant d'en commencer une nouvelle.",
+      tip:"Conseil: terminez une etape avant d'en commencer une nouvelle.",
       filterAll:"Tous", filterActive:"En cours", filterDone:"Terminés", filterPaused:"En pause",
       statusActive:"En cours", statusDone:"Terminé", statusPaused:"En pause",
       loading:"Chargement...",
