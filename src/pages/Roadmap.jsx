@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   IconRoute, IconCheck, IconLoader2, IconCircleDot,
-  IconLock, IconCloud, IconCloudOff,
+IconLock, IconCloud, IconCloudOff, IconChevronDown,
 } from '@tabler/icons-react';
 import { supabase } from '../lib/supabase';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -19,6 +19,7 @@ export default function Roadmap() {
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [cloudOk, setCloudOk] = useState(true);
+const [openGuide, setOpenGuide] = useState(null);
 
   const phases = [
     { n: 1, title: t('roadmap.phase1title'), desc: t('roadmap.phase1desc') },
@@ -112,13 +113,29 @@ export default function Roadmap() {
                     </div>
                     {ph.n < phases.length && <div className={'phase-line ' + (isDone ? 'done' : '')} />}
                   </div>
-                  <div className="phase-content">
-                    <div className="phase-head">
+<div className="phase-content">
+                    <button
+                      className="phase-head phase-toggle"
+                      onClick={() => setOpenGuide(openGuide === ph.n ? null : ph.n)}
+                    >
                       <span className="phase-num">{t('roadmap.phaseLabel')} {ph.n}</span>
                       <span className="phase-title">{ph.title}</span>
                       {isCurrent && <span className="phase-badge">{t('roadmap.youAreHere')}</span>}
-                    </div>
+                      <IconChevronDown
+                        size={16}
+                        className={'phase-chevron' + (openGuide === ph.n ? ' open' : '')}
+                      />
+                    </button>
                     <p className="phase-desc">{ph.desc}</p>
+                    {openGuide === ph.n && (
+                      <div className="phase-guide">
+                        <ol className="guide-steps">
+                          {(t('roadmap.guides')[ph.n]?.steps || []).map((step, i) => (
+                            <li key={i}>{step}</li>
+                          ))}
+                        </ol>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
