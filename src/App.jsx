@@ -8,6 +8,7 @@ import Roadmap from './pages/Roadmap';
 import Glossary from './pages/Glossary';
 import Profile from './pages/Profile';
 import './pages/pages.css';
+import Chat from "./pages/Chat";
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="roadmap" element={<Roadmap />} />
           <Route path="glossary" element={<Glossary />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="chat" element={<Chat />} />
         </Route>
       </Routes>
     </BrowserRouter>
