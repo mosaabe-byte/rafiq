@@ -130,7 +130,7 @@ const [openGuide, setOpenGuide] = useState(null);
                     </button>
                     <p className="phase-desc">{ph.desc}</p>
                     {openGuide === ph.n && (
-{openGuide === ph.n && (
+
                       <div className="phase-guide">
                         <ol className="guide-steps">
                           {(t('roadmap.guides')[ph.n]?.steps || []).map((step, i) => (
