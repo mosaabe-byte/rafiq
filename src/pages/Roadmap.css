@@ -247,3 +247,19 @@
   line-height: 1.6;
   color: #374151;
 }
+.ask-rafiq-btn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.ask-rafiq-btn:hover {
+  opacity: 0.9;
+}

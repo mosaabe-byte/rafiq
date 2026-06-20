@@ -1,11 +1,13 @@
 // src/pages/Chat.jsx
 import ReactMarkdown from "react-markdown";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../auth/AuthContext";
 
 export default function Chat() {
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
 
   const [projects, setProjects] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState("");
@@ -19,15 +21,29 @@ export default function Chat() {
   // تحميل قائمة المشاريع عند فتح الصفحة
   useEffect(() => {
     async function loadProjects() {
-  const { data, error } = await supabase
+      const { data, error } = await supabase
         .from("projects")
         .select("id, name, emoji, level, phase, progress, platform")
         .order("created_at", { ascending: false });
 
-      if (!error && data) setProjects(data);
+      if (!error && data) {
+        setProjects(data);
+
+        // إن جاء المستخدم من خارطة الطريق برابط فيه مشروع، اختره تلقائياً
+        const fromUrl = searchParams.get("project");
+        if (fromUrl && data.some((p) => String(p.id) === fromUrl)) {
+          setSelectedProjectId(fromUrl);
+
+          // وإن جاء معه اسم مرحلة، نملأ حقل الإدخال بسؤال جاهز عنها
+          const phaseFromUrl = searchParams.get("phase");
+          if (phaseFromUrl) {
+            setInput(`أين وصلت في مرحلة «${phaseFromUrl}»؟ وما الخطوة التالية التي أنصح بها؟`);
+          }
+        }
+      }
     }
     loadProjects();
-  }, []);
+  }, [searchParams]);
 
   // عند اختيار مشروع: نحمّل محادثته السابقة أو نُنشئ محادثة جديدة
   useEffect(() => {

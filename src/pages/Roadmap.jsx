@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   IconRoute, IconCheck, IconLoader2, IconCircleDot,
 IconLock, IconCloud, IconCloudOff, IconChevronDown,
@@ -15,6 +16,7 @@ function phaseNumber(phaseText) {
 
 export default function Roadmap() {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -128,12 +130,25 @@ const [openGuide, setOpenGuide] = useState(null);
                     </button>
                     <p className="phase-desc">{ph.desc}</p>
                     {openGuide === ph.n && (
+{openGuide === ph.n && (
                       <div className="phase-guide">
                         <ol className="guide-steps">
                           {(t('roadmap.guides')[ph.n]?.steps || []).map((step, i) => (
                             <li key={i}>{step}</li>
                           ))}
                         </ol>
+                        {selected && (
+                          <button
+                            className="ask-rafiq-btn"
+                            onClick={() =>
+                              navigate(
+                                `/chat?project=${selected.id}&phase=${encodeURIComponent(ph.title)}`
+                              )
+                            }
+                          >
+                            🤖 {t('roadmap.askRafiq')}
+                          </button>
+                        )}
                       </div>
                     )}
                   </div>
