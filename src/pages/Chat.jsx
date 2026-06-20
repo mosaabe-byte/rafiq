@@ -18,9 +18,9 @@ export default function Chat() {
   // تحميل قائمة المشاريع عند فتح الصفحة
   useEffect(() => {
     async function loadProjects() {
-      const { data, error } = await supabase
+  const { data, error } = await supabase
         .from("projects")
-        .select("id, name, emoji")
+        .select("id, name, emoji, level, phase, progress, platform")
         .order("created_at", { ascending: false });
 
       if (!error && data) setProjects(data);
@@ -86,9 +86,11 @@ export default function Chat() {
     loadOrCreateConversation();
   }, [selectedProjectId, user]);
 
-  async function sendMessage() {
+    async function sendMessage() {
     const text = input.trim();
     if (!text || loading || !conversationId) return;
+
+    const selectedProject = projects.find((p) => p.id === Number(selectedProjectId));
 
     const newMessages = [...messages, { role: "user", content: text }];
     setMessages(newMessages);
@@ -109,6 +111,7 @@ export default function Chat() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
+          project: selectedProject,
         }),
       });
 

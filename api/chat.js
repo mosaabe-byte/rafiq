@@ -2,14 +2,31 @@
 // حارس وسيط آمن بين واجهة رفيق و Claude.
 // المفتاح يُقرأ من متغيّر بيئة في Vercel، ولا يظهر أبداً في الكود.
 
+function buildSystemPrompt(project) {
+  const base =
+    "أنت «رفيق»، مساعد ودود يرافق المطوّر العربي المبتدئ. اشرح بالعربية ببساطة ووضوح، بخطوات صغيرة قابلة للاختبار، وتحقّق بعد كل خطوة قبل الانتقال للتالية، وبأسلوب مشجّع وهادئ.";
+
+  if (!project) return base;
+
+  const context = `
+
+سياق المستخدم الحالي (استخدمه لتُخصّص ردودك، ورحّب به بوعي بمكانه دون أن تُكرر كل هذه المعلومات حرفياً في كل رد):
+- اسم المشروع: ${project.name || "غير محدّد"}
+- مستوى المستخدم: ${project.level || "غير محدّد"}
+- المرحلة الحالية: ${project.phase || "غير محدّدة"}
+- نسبة التقدّم: ${project.progress ?? 0}%
+- النظام الأساسي: ${project.platform || "غير محدّد"}`;
+
+  return base + context;
+}
+
 export default async function handler(req, res) {
-  // نقبل فقط طلبات من نوع POST
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    const { messages } = req.body;
+    const { messages, project } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "messages مطلوبة" });
@@ -25,8 +42,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
         max_tokens: 1024,
-        system:
-          "أنت «رفيق»، مساعد ودود يرافق المطوّر العربي المبتدئ. اشرح بالعربية ببساطة ووضوح، بخطوات صغيرة، وبأسلوب مشجّع.",
+        system: buildSystemPrompt(project),
         messages: messages,
       }),
     });
@@ -38,7 +54,6 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    // نستخرج نص الجواب من رد Claude
     const reply = data.content
       .map((block) => (block.type === "text" ? block.text : ""))
       .join("");
