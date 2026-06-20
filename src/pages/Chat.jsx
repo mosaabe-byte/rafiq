@@ -1,4 +1,5 @@
 // src/pages/Chat.jsx
+import ReactMarkdown from "react-markdown";
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../auth/AuthContext";
@@ -207,7 +208,11 @@ export default function Chat() {
                 maxWidth: "80%",
               }}
             >
-              {m.content}
+              {m.role === "assistant" ? (
+                <ReactMarkdown>{m.content}</ReactMarkdown>
+              ) : (
+                m.content
+              )}
             </span>
           </div>
         ))}
