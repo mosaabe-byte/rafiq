@@ -43,7 +43,7 @@ export default async function handler(req, res) {
       .map((block) => (block.type === "text" ? block.text : ""))
       .join("");
 
-    return res.status(200).json({ reply });
+    return res.status(200).json({ reply, usage: data.usage });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
