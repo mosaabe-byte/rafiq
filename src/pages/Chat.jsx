@@ -172,7 +172,7 @@ export default function Chat() {
       style={{
         maxWidth: 760,
         margin: "0 auto",
-        height: "calc(100vh - 150px)",
+        height: "calc(100vh - 120px)",
         display: "flex",
         flexDirection: "column",
         padding: "12px 16px 0",
