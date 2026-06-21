@@ -1,8 +1,8 @@
 .newproject {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 60px);
-  max-height: calc(100vh - 60px);
+  height: calc(100vh - 140px);
+  max-height: calc(100vh - 140px);
 }
 
 .np-header {
