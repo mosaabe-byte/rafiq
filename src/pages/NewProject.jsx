@@ -104,7 +104,20 @@ export default function NewProject() {
 
   async function saveProject(project) {
     setSaving(true);
-    const { error } = await supabase.from('projects').insert([project]);
+
+    // جلب المستخدم الحالي لربط المشروع به
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      setSaving(false);
+      if (mode === 'chat') {
+        setMessages((prev) => [...prev, { from: 'bot', text: 'يجب تسجيل الدخول أولاً لحفظ المشروع.' }]);
+      }
+      return;
+    }
+
+    const { error } = await supabase
+      .from('projects')
+      .insert([{ ...project, user_id: user.id }]);
     setSaving(false);
     if (error) {
       console.error('تعذّر حفظ المشروع:', error.message);
