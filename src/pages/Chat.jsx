@@ -1,7 +1,8 @@
 // src/pages/Chat.jsx
-import ReactMarkdown from "react-markdown";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../auth/AuthContext";
 
@@ -17,6 +18,7 @@ export default function Chat() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [copiedIndex, setCopiedIndex] = useState(null);
 
   // تحميل قائمة المشاريع عند فتح الصفحة
   useEffect(() => {
@@ -29,12 +31,10 @@ export default function Chat() {
       if (!error && data) {
         setProjects(data);
 
-        // إن جاء المستخدم من خارطة الطريق برابط فيه مشروع، اختره تلقائياً
         const fromUrl = searchParams.get("project");
         if (fromUrl && data.some((p) => String(p.id) === fromUrl)) {
           setSelectedProjectId(fromUrl);
 
-          // وإن جاء معه اسم مرحلة، نملأ حقل الإدخال بسؤال جاهز عنها
           const phaseFromUrl = searchParams.get("phase");
           if (phaseFromUrl) {
             setInput(`أين وصلت في مرحلة «${phaseFromUrl}»؟ وما الخطوة التالية التي أنصح بها؟`);
@@ -54,7 +54,6 @@ export default function Chat() {
       setMessages([]);
       setConversationId(null);
 
-      // 1. نبحث عن محادثة سابقة لهذا المشروع
       const { data: existing, error: findError } = await supabase
         .from("conversations")
         .select("id")
@@ -71,7 +70,6 @@ export default function Chat() {
 
       let convId = existing?.id;
 
-      // 2. إن لم توجد، نُنشئ محادثة جديدة
       if (!convId) {
         const { data: created, error: createError } = await supabase
           .from("conversations")
@@ -88,7 +86,6 @@ export default function Chat() {
 
       setConversationId(convId);
 
-      // 3. نحمّل رسائل هذه المحادثة (إن وُجدت)
       const { data: msgs, error: msgsError } = await supabase
         .from("messages")
         .select("role, content")
@@ -103,7 +100,7 @@ export default function Chat() {
     loadOrCreateConversation();
   }, [selectedProjectId, user]);
 
-    async function sendMessage() {
+  async function sendMessage() {
     const text = input.trim();
     if (!text || loading || !conversationId) return;
 
@@ -114,7 +111,6 @@ export default function Chat() {
     setInput("");
     setLoading(true);
 
-    // حفظ رسالة المستخدم في القاعدة
     await supabase.from("messages").insert({
       conversation_id: conversationId,
       user_id: user.id,
@@ -137,7 +133,6 @@ export default function Chat() {
       if (data.reply) {
         setMessages([...newMessages, { role: "assistant", content: data.reply }]);
 
-        // حفظ رد رفيق + عدد التوكنات
         await supabase.from("messages").insert({
           conversation_id: conversationId,
           user_id: user.id,
@@ -162,9 +157,29 @@ export default function Chat() {
     }
   }
 
+  async function copyMessage(text, index) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedIndex(index);
+      setTimeout(() => setCopiedIndex(null), 1500);
+    } catch (err) {
+      // نسخ احتياطي إن لم يدعم المتصفّح clipboard API
+    }
+  }
+
   return (
-    <div style={{ maxWidth: 700, margin: "0 auto", padding: 16 }} dir="rtl">
-      <h2>محادثة رفيق</h2>
+    <div
+      style={{
+        maxWidth: 760,
+        margin: "0 auto",
+        height: "calc(100vh - 80px)",
+        display: "flex",
+        flexDirection: "column",
+        padding: "12px 16px 0",
+      }}
+      dir="rtl"
+    >
+      <h2 style={{ margin: "0 0 10px" }}>محادثة رفيق</h2>
 
       <select
         value={selectedProjectId}
@@ -174,7 +189,8 @@ export default function Chat() {
           padding: "10px 12px",
           borderRadius: 8,
           border: "1px solid #ccc",
-          marginBottom: 12,
+          marginBottom: 10,
+          flexShrink: 0,
         }}
       >
         <option value="">اختر مشروعاً للمحادثة عنه...</option>
@@ -185,14 +201,17 @@ export default function Chat() {
         ))}
       </select>
 
+      {/* منطقة الرسائل: تتمدّد وتتمرّر وحدها */}
       <div
         style={{
+          flex: 1,
+          overflowY: "auto",
           border: "1px solid #ddd",
           borderRadius: 12,
           padding: 16,
-          minHeight: 300,
           marginBottom: 12,
           background: "#fafafa",
+          minHeight: 0,
         }}
       >
         {!selectedProjectId && (
@@ -211,32 +230,63 @@ export default function Chat() {
           <div
             key={i}
             style={{
-              textAlign: m.role === "user" ? "left" : "right",
-              margin: "8px 0",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: m.role === "user" ? "flex-start" : "flex-end",
+              margin: "10px 0",
             }}
           >
-            <span
+            <div
               style={{
-                display: "inline-block",
-                padding: "8px 12px",
+                padding: "10px 14px",
                 borderRadius: 12,
-                background: m.role === "user" ? "#d4eaff" : "#e8e8e8",
-                maxWidth: "80%",
+                background: m.role === "user" ? "#d4eaff" : "#ffffff",
+                border: m.role === "user" ? "none" : "1px solid #e5e5e5",
+                maxWidth: "85%",
+                lineHeight: 1.7,
+                overflowWrap: "anywhere",
               }}
+              className="rafiq-bubble"
             >
               {m.role === "assistant" ? (
-                <ReactMarkdown>{m.content}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>
               ) : (
                 m.content
               )}
-            </span>
+            </div>
+
+            {m.role === "assistant" && (
+              <button
+                onClick={() => copyMessage(m.content, i)}
+                style={{
+                  marginTop: 4,
+                  padding: "3px 10px",
+                  fontSize: 12,
+                  border: "1px solid #ddd",
+                  borderRadius: 6,
+                  background: "#fff",
+                  color: "#555",
+                  cursor: "pointer",
+                }}
+              >
+                {copiedIndex === i ? "✓ تم النسخ" : "📋 نسخ"}
+              </button>
+            )}
           </div>
         ))}
 
         {loading && <p style={{ color: "#888" }}>رفيق يكتب…</p>}
       </div>
 
-      <div style={{ display: "flex", gap: 8 }}>
+      {/* منطقة الإدخال: ثابتة أسفل الشاشة دائماً */}
+      <div
+        style={{
+          display: "flex",
+          gap: 8,
+          paddingBottom: 12,
+          flexShrink: 0,
+        }}
+      >
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -260,6 +310,7 @@ export default function Chat() {
             background: "#2563eb",
             color: "white",
             cursor: selectedProjectId ? "pointer" : "not-allowed",
+            flexShrink: 0,
           }}
         >
           إرسال

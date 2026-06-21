@@ -30,3 +30,31 @@ body {
 }
 button { font-family: var(--font); cursor: pointer; }
 a { text-decoration: none; color: inherit; }
+.rafiq-bubble table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 8px 0;
+  font-size: 14px;
+}
+.rafiq-bubble th,
+.rafiq-bubble td {
+  border: 1px solid #ddd;
+  padding: 6px 10px;
+  text-align: right;
+}
+.rafiq-bubble th {
+  background: #f0f4ff;
+  font-weight: 600;
+}
+.rafiq-bubble pre {
+  background: #f5f5f5;
+  padding: 10px;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+.rafiq-bubble code {
+  background: #f0f0f0;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 13px;
+}
