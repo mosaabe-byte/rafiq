@@ -1,8 +1,11 @@
-import { useState } from 'react';
-import { IconSearch, IconVolume } from '@tabler/icons-react';
+import { useState, useEffect } from 'react';
+import { IconSearch, IconVolume, IconPlus, IconTrash, IconX, IconLoader2 } from '@tabler/icons-react';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../auth/AuthContext';
 import './Glossary.css';
 
-const terms = [
+// المصطلحات الأساسية (معجم رفيق المشترك للجميع)
+const baseTerms = [
   { en: 'Wireframe', ph: 'وَيِر-فْرِيم', ar: 'المخطط الهيكلي', def: 'رسم بسيط يُظهر تخطيط الشاشة دون ألوان أو تفاصيل — مثل مخطط منزل قبل البناء.', tags: ['تصميم', 'تخطيط'] },
   { en: 'UI Kit', ph: 'يُو-آي كِيت', ar: 'مجموعة عناصر الواجهة', def: 'مجموعة جاهزة من الأزرار والألوان والخطوط تُستخدم لتوحيد شكل التطبيق.', tags: ['تصميم'] },
   { en: 'Data Model', ph: 'دَيتَا مودِل', ar: 'نموذج البيانات', def: 'خريطة تُوضح البيانات التي يتعامل معها التطبيق وعلاقاتها — مثل: طالب له درجات.', tags: ['بيانات', 'تخطيط'] },
@@ -23,18 +26,48 @@ const terms = [
   { en: 'Hot Reload', ph: 'هوت ريلود', ar: 'التحديث الفوري', def: 'تحديث التطبيق في المتصفح تلقائياً فور حفظ الملف — دون إعادة تحميل يدوية.', tags: ['أدوات', 'تطوير'] },
 ];
 
+const emptyForm = { en: '', ph: '', ar: '', def: '', context: '', example: '', tags: '' };
+
 export default function Glossary() {
+  const { user } = useAuth();
   const [query, setQuery] = useState('');
+  const [personalTerms, setPersonalTerms] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState(emptyForm);
+  const [saving, setSaving] = useState(false);
+  const [formError, setFormError] = useState('');
+
+  // تحميل المصطلحات الشخصية
+  useEffect(() => {
+    if (!user) return;
+    async function loadPersonal() {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('glossary_terms')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!error && data) setPersonalTerms(data);
+      setLoading(false);
+    }
+    loadPersonal();
+  }, [user]);
+
+  // دمج المصدرين: الأساسي + الشخصي (مع وسم المصدر)
+  const allTerms = [
+    ...personalTerms.map((t) => ({ ...t, source: 'personal' })),
+    ...baseTerms.map((t) => ({ ...t, source: 'base' })),
+  ];
 
   const q = query.trim().toLowerCase();
   const visible = !q
-    ? terms
-    : terms.filter(
+    ? allTerms
+    : allTerms.filter(
         (t) =>
           t.en.toLowerCase().includes(q) ||
-          t.ar.includes(query.trim()) ||
-          t.def.includes(query.trim()) ||
-          t.tags.some((tag) => tag.includes(query.trim()))
+          (t.ar || '').includes(query.trim()) ||
+          (t.def || '').includes(query.trim()) ||
+          (t.tags || []).some((tag) => tag.includes(query.trim()))
       );
 
   function speak(text) {
@@ -48,11 +81,79 @@ export default function Glossary() {
     }
   }
 
+  async function saveTerm() {
+    const en = form.en.trim();
+    const ar = form.ar.trim();
+    const def = form.def.trim();
+
+    if (!en || !ar || !def) {
+      setFormError('المصطلح الإنجليزي والترجمة والتعريف حقول مطلوبة.');
+      return;
+    }
+
+    // فحص التكرار (في الأساسي والشخصي)
+    const existsInBase = baseTerms.some((t) => t.en.toLowerCase() === en.toLowerCase());
+    const existsInPersonal = personalTerms.some((t) => t.en.toLowerCase() === en.toLowerCase());
+    if (existsInBase || existsInPersonal) {
+      setFormError(`المصطلح «${en}» موجود مسبقاً في المعجم.`);
+      return;
+    }
+
+    setSaving(true);
+    setFormError('');
+
+    const tagsArray = form.tags
+      .split(/[,،]/)
+      .map((t) => t.trim())
+      .filter(Boolean);
+
+    const { data, error } = await supabase
+      .from('glossary_terms')
+      .insert({
+        user_id: user.id,
+        en,
+        ph: form.ph.trim() || null,
+        ar,
+        def,
+        context: form.context.trim() || null,
+        example: form.example.trim() || null,
+        tags: tagsArray,
+      })
+      .select()
+      .single();
+
+    setSaving(false);
+
+    if (error) {
+      // قد يكون خطأ التكرار من قيد قاعدة البيانات
+      if (error.code === '23505') {
+        setFormError(`المصطلح «${en}» موجود مسبقاً في معجمك.`);
+      } else {
+        setFormError('تعذّر الحفظ. حاول مرة أخرى.');
+      }
+      return;
+    }
+
+    setPersonalTerms((prev) => [data, ...prev]);
+    setForm(emptyForm);
+    setShowForm(false);
+  }
+
+  async function deleteTerm(id) {
+    const { error } = await supabase.from('glossary_terms').delete().eq('id', id);
+    if (!error) setPersonalTerms((prev) => prev.filter((t) => t.id !== id));
+  }
+
+  const personalCount = personalTerms.length;
+
   return (
     <div className="glossary">
       <div className="glossary-header">
         <h1>المعجم التقني</h1>
-        <p>{terms.length} مصطلحاً — المصطلح الإنجليزي بنطقه ومعناه بالعربية</p>
+        <p>
+          {baseTerms.length} مصطلحاً أساسياً
+          {personalCount > 0 && ` + ${personalCount} من إضافتك`}
+        </p>
       </div>
 
       <div className="search-wrap">
@@ -65,31 +166,79 @@ export default function Glossary() {
         />
       </div>
 
+      <button className="add-term-btn" onClick={() => { setShowForm(true); setFormError(''); }}>
+        <IconPlus size={16} /> أضف مصطلحاً التبس عليك
+      </button>
+
+      {showForm && (
+        <div className="term-form">
+          <div className="form-head">
+            <span>مصطلح جديد في معجمك</span>
+            <button className="form-close" onClick={() => { setShowForm(false); setForm(emptyForm); setFormError(''); }}>
+              <IconX size={16} />
+            </button>
+          </div>
+
+          <input className="form-input" placeholder="المصطلح بالإنجليزية * (مثل: Frontend)"
+            value={form.en} onChange={(e) => setForm({ ...form, en: e.target.value })} />
+          <input className="form-input" placeholder="النطق بحروف عربية (مثل: فْرونت-إند)"
+            value={form.ph} onChange={(e) => setForm({ ...form, ph: e.target.value })} />
+          <input className="form-input" placeholder="الترجمة العربية * (مثل: الواجهة الأمامية)"
+            value={form.ar} onChange={(e) => setForm({ ...form, ar: e.target.value })} />
+          <textarea className="form-input form-textarea" placeholder="تعريف مبسّط * — اشرحه بكلماتك أو بتشبيه"
+            value={form.def} onChange={(e) => setForm({ ...form, def: e.target.value })} />
+          <input className="form-input" placeholder="في سياقنا (اختياري) — أين قابلتَ هذا المصطلح؟"
+            value={form.context} onChange={(e) => setForm({ ...form, context: e.target.value })} />
+          <input className="form-input" placeholder="مثال ملموس (اختياري)"
+            value={form.example} onChange={(e) => setForm({ ...form, example: e.target.value })} />
+          <input className="form-input" placeholder="وسوم مفصولة بفاصلة (اختياري) — مثل: برمجة، خادم"
+            value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
+
+          {formError && <div className="form-error">{formError}</div>}
+
+          <button className="form-save" onClick={saveTerm} disabled={saving}>
+            {saving ? (<><IconLoader2 size={16} className="spin" /> جارٍ الحفظ...</>) : 'احفظ في معجمي'}
+          </button>
+        </div>
+      )}
+
       <div className="terms-count">
-        {visible.length === 0
+        {loading
+          ? 'جارٍ تحميل معجمك...'
+          : visible.length === 0
           ? 'لا توجد نتائج — جرّب كلمة أخرى'
-          : visible.length + ' من ' + terms.length + ' مصطلحاً'}
+          : visible.length + ' مصطلحاً'}
       </div>
 
       <div className="terms-list">
         {visible.map((t) => (
-          <div key={t.en} className="term-card">
+          <div key={t.source === 'personal' ? t.id : 'base-' + t.en} className="term-card">
             <div className="term-head">
               <span className="term-en">{t.en}</span>
-              <span className="term-ph">{t.ph}</span>
+              {t.ph && <span className="term-ph">{t.ph}</span>}
               <button className="speak-btn" onClick={() => speak(t.en)} title="استمع للنطق">
                 <IconVolume size={15} />
               </button>
+              {t.source === 'personal' && <span className="term-badge">أضفتُه</span>}
+              {t.source === 'personal' && (
+                <button className="term-delete" onClick={() => deleteTerm(t.id)} title="حذف">
+                  <IconTrash size={14} />
+                </button>
+              )}
             </div>
             <div className="term-ar">{t.ar}</div>
             <div className="term-def">{t.def}</div>
-            <div className="term-tags">
-              {t.tags.map((tag) => (
-                <button key={tag} className="term-tag" onClick={() => setQuery(tag)}>
-                  {tag}
-                </button>
-              ))}
-            </div>
+            {t.context && <div className="term-context">📍 في سياقنا: {t.context}</div>}
+            {t.example && <div className="term-example">💡 مثال: {t.example}</div>}
+            {(t.tags || []).length > 0 && (
+              <div className="term-tags">
+                {t.tags.map((tag) => (
+                  <button key={tag} className="term-tag" onClick={() => setQuery(tag)}>
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>
