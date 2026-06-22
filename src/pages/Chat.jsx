@@ -6,9 +6,14 @@ import remarkGfm from "remark-gfm";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../auth/AuthContext";
 
+const DAILY_LIMIT = 10; // الحدّ اليومي لرسائل المستخدم المجاني
+
 export default function Chat() {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
+
+  const [todayCount, setTodayCount] = useState(0);
+  const [limitReached, setLimitReached] = useState(false);
 
   const [projects, setProjects] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState("");
@@ -44,6 +49,29 @@ export default function Chat() {
     }
     loadProjects();
   }, [searchParams]);
+// عدّ رسائل المستخدم المُرسَلة اليوم (للحدّ اليومي)
+  useEffect(() => {
+    if (!user) return;
+
+    async function countTodayMessages() {
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const { count, error } = await supabase
+        .from("messages")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .eq("role", "user")
+        .gte("created_at", startOfDay.toISOString());
+
+      if (!error && typeof count === "number") {
+        setTodayCount(count);
+        setLimitReached(count >= DAILY_LIMIT);
+      }
+    }
+
+    countTodayMessages();
+  }, [user]);
 
   // عند اختيار مشروع: نحمّل محادثته السابقة أو نُنشئ محادثة جديدة
   useEffect(() => {
@@ -104,7 +132,18 @@ export default function Chat() {
     const text = input.trim();
     if (!text || loading || !conversationId) return;
 
+    // فحص الحدّ اليومي قبل الإرسال
+    if (todayCount >= DAILY_LIMIT) {
+      setLimitReached(true);
+      return;
+    }
+
     const selectedProject = projects.find((p) => p.id === Number(selectedProjectId));
+
+    // تحديث العدّاد المحلي فوراً
+    const newCount = todayCount + 1;
+    setTodayCount(newCount);
+    if (newCount >= DAILY_LIMIT) setLimitReached(true);
 
     const newMessages = [...messages, { role: "user", content: text }];
     setMessages(newMessages);
@@ -278,6 +317,29 @@ export default function Chat() {
         {loading && <p style={{ color: "#888" }}>رفيق يكتب…</p>}
       </div>
 
+      {/* تنبيه بلوغ الحدّ اليومي */}
+      {limitReached && (
+        <div
+          style={{
+            background: "#fff7ed",
+            border: "1px solid #fed7aa",
+            borderRadius: 10,
+            padding: "12px 14px",
+            marginBottom: 10,
+            color: "#9a3412",
+            fontSize: 14,
+            lineHeight: 1.7,
+            flexShrink: 0,
+          }}
+        >
+          🌙 وصلت إلى حدّك اليومي ({DAILY_LIMIT} رسائل). عُد غداً لمواصلة رحلتك مع رفيق.
+          <br />
+          <span style={{ fontSize: 13, color: "#c2410c" }}>
+            قريباً ستتمكّن من رفع هذا الحدّ ومواصلة المحادثة بلا توقّف.
+          </span>
+        </div>
+      )}
+
       {/* منطقة الإدخال: ثابتة أسفل الشاشة دائماً */}
       <div
         style={{
@@ -291,8 +353,14 @@ export default function Chat() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-          placeholder={selectedProjectId ? "اكتب رسالتك هنا…" : "اختر مشروعاً أولاً"}
-          disabled={!selectedProjectId}
+          placeholder={
+            limitReached
+              ? "وصلت حدّك اليومي — عُد غداً"
+              : selectedProjectId
+              ? "اكتب رسالتك هنا…"
+              : "اختر مشروعاً أولاً"
+          }
+          disabled={!selectedProjectId || limitReached}
           style={{
             flex: 1,
             padding: "10px 12px",
@@ -302,14 +370,14 @@ export default function Chat() {
         />
         <button
           onClick={sendMessage}
-          disabled={loading || !selectedProjectId}
+          disabled={loading || !selectedProjectId || limitReached}
           style={{
             padding: "10px 20px",
             borderRadius: 8,
             border: "none",
-            background: "#2563eb",
+            background: limitReached ? "#9ca3af" : "#2563eb",
             color: "white",
-            cursor: selectedProjectId ? "pointer" : "not-allowed",
+            cursor: selectedProjectId && !limitReached ? "pointer" : "not-allowed",
             flexShrink: 0,
           }}
         >
