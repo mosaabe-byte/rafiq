@@ -250,3 +250,28 @@
   margin-top: 6px;
   line-height: 1.6;
 }
+.ask-rafiq-define {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px;
+  background: linear-gradient(135deg, #7c3aed, #5b21b6);
+  color: #fff;
+  border: none;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.ask-rafiq-define:hover { opacity: 0.92; }
+.ask-rafiq-define:disabled { opacity: 0.6; }
+.define-hint {
+  font-size: 12px;
+  color: var(--gray-500, #6b7280);
+  line-height: 1.6;
+  padding: 0 2px;
+}

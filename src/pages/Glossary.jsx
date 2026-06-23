@@ -37,6 +37,43 @@ export default function Glossary() {
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState('');
+  const [generating, setGenerating] = useState(false);
+
+  async function askRafiqToDefine() {
+    const term = form.en.trim();
+    if (!term) {
+      setFormError('اكتب المصطلح أولاً ثم اطلب من رفيق شرحه.');
+      return;
+    }
+    setGenerating(true);
+    setFormError('');
+    try {
+      const res = await fetch('/api/define', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ term }),
+      });
+      const data = await res.json();
+      if (data.result) {
+        const r = data.result;
+        setForm((prev) => ({
+          ...prev,
+          en: r.en || prev.en,
+          ph: r.ph || '',
+          ar: r.ar || '',
+          def: r.def || '',
+          example: r.example || '',
+          tags: Array.isArray(r.tags) ? r.tags.join('، ') : '',
+        }));
+      } else {
+        setFormError(data.error || 'تعذّر توليد الشرح. حاول مرة أخرى.');
+      }
+    } catch (e) {
+      setFormError('تعذّر الاتصال برفيق. حاول مرة أخرى.');
+    } finally {
+      setGenerating(false);
+    }
+  }
 
   // تحميل المصطلحات الشخصية
   useEffect(() => {
@@ -181,6 +218,12 @@ export default function Glossary() {
 
           <input className="form-input" placeholder="المصطلح بالإنجليزية * (مثل: Frontend)"
             value={form.en} onChange={(e) => setForm({ ...form, en: e.target.value })} />
+
+          <button className="ask-rafiq-define" onClick={askRafiqToDefine} disabled={generating}>
+            {generating ? (<><IconLoader2 size={15} className="spin" /> رفيق يشرح المصطلح...</>) : '✨ اسأل رفيق أن يشرحه لك'}
+          </button>
+          <div className="define-hint">اكتب المصطلح فقط واترك رفيق يملأ الباقي — ثم راجِع وعدّل ما تشاء قبل الحفظ.</div>
+
           <input className="form-input" placeholder="النطق بحروف عربية (مثل: فْرونت-إند)"
             value={form.ph} onChange={(e) => setForm({ ...form, ph: e.target.value })} />
           <input className="form-input" placeholder="الترجمة العربية * (مثل: الواجهة الأمامية)"
