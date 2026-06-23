@@ -21,7 +21,48 @@ export default function Roadmap() {
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [cloudOk, setCloudOk] = useState(true);
-const [openGuide, setOpenGuide] = useState(null);
+  const [openGuide, setOpenGuide] = useState(null);
+  const [celebration, setCelebration] = useState(null); // {type: 'phase'|'project', text}
+  const [advancing, setAdvancing] = useState(false);
+
+  async function completePhase() {
+    if (!selected || advancing) return;
+    setAdvancing(true);
+
+    const current = phaseNumber(selected.phase);
+    const isLastPhase = current >= phases.length;
+    const nextPhase = isLastPhase ? current : current + 1;
+
+    // عنوان المرحلة الجديدة (مثل: "المرحلة 4: البناء")
+    const nextTitle = phases.find((p) => p.n === nextPhase)?.title || '';
+    const newPhaseText = `${t('roadmap.phaseLabel')} ${nextPhase}: ${nextTitle}`;
+    const newProgress = Math.round((nextPhase / phases.length) * 100);
+
+    const { error } = await supabase
+      .from('projects')
+      .update({ phase: newPhaseText, progress: newProgress })
+      .eq('id', selected.id);
+
+    if (!error) {
+      // تحديث محلي فوري
+      setProjects((prev) =>
+        prev.map((p) =>
+          p.id === selected.id ? { ...p, phase: newPhaseText, progress: newProgress } : p
+        )
+      );
+
+      const justCompleted = phases.find((p) => p.n === current)?.title || '';
+
+      if (isLastPhase) {
+        setCelebration({ type: 'project', text: selected.name });
+      } else {
+        setCelebration({ type: 'phase', text: justCompleted });
+        setTimeout(() => setCelebration(null), 4000);
+      }
+    }
+
+    setAdvancing(false);
+  }
 
   const phases = [
     { n: 1, title: t('roadmap.phase1title'), desc: t('roadmap.phase1desc') },
@@ -58,6 +99,31 @@ const [openGuide, setOpenGuide] = useState(null);
 
   return (
     <div className="roadmap">
+      {/* شريط تهنئة المرحلة */}
+      {celebration?.type === 'phase' && (
+        <div className="phase-celebration">
+          🎉 أكملت مرحلة «{celebration.text}» — خطوة أقرب لتطبيقك!
+        </div>
+      )}
+
+      {/* بطاقة احتفال إكمال المشروع */}
+      {celebration?.type === 'project' && (
+        <div className="project-celebration-overlay" onClick={() => setCelebration(null)}>
+          <div className="project-celebration-card" onClick={(e) => e.stopPropagation()}>
+            <div className="celebration-emoji">🚀</div>
+            <h2>مبروك! أنهيت رحلتك</h2>
+            <p>
+              أكملت كل مراحل «{celebration.text}» من الفكرة إلى النشر.
+              <br />
+              هذا أول تطبيق لك — والأول دائماً الأصعب والأجمل.
+            </p>
+            <button className="celebration-close" onClick={() => setCelebration(null)}>
+              متابعة رحلتي ✨
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="rm-header">
         <div className="rm-title">
           <IconRoute size={20} className="rm-icon" />
@@ -147,6 +213,16 @@ const [openGuide, setOpenGuide] = useState(null);
                             }
                           >
                             🤖 {t('roadmap.askRafiq')}
+                          </button>
+                        )}
+                        {isCurrent && (
+                          <button
+                            className="complete-phase-btn"
+                            onClick={completePhase}
+                            disabled={advancing}
+                          >
+                            {advancing ? <IconLoader2 size={15} className="spin" /> : <IconCheck size={15} />}
+                            {ph.n >= phases.length ? 'أنهيتُ المشروع! 🚀' : 'أكملتُ هذه المرحلة'}
                           </button>
                         )}
                       </div>
