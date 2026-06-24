@@ -20,6 +20,26 @@ export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm);
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  // إظهار الترحيب مرة واحدة فقط لكل مستخدم (عبر المتصفّح)
+  useEffect(() => {
+    try {
+      const seen = localStorage.getItem('rafiq_welcome_seen');
+      if (!seen) setShowWelcome(true);
+    } catch (e) {
+      // بعض المتصفّحات تمنع localStorage — نتجاهل بهدوء
+    }
+  }, []);
+
+  function dismissWelcome() {
+    try {
+      localStorage.setItem('rafiq_welcome_seen', '1');
+    } catch (e) {
+      // تجاهل بهدوء
+    }
+    setShowWelcome(false);
+  }
 
   const statusLabel = {
     active: t('home.statusActive'),
@@ -113,6 +133,35 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
+      {showWelcome && (
+        <div className="welcome-overlay" onClick={dismissWelcome}>
+          <div className="welcome-card" onClick={(e) => e.stopPropagation()}>
+            <div className="welcome-icon"><IconSparkles size={30} /></div>
+            <h2>أهلاً بك في رفيق</h2>
+            <p className="welcome-sub">رفيقك لبناء أوّل تطبيق لك — خطوة بخطوة، بلا خوف.</p>
+
+            <div className="welcome-steps">
+              <div className="welcome-step">
+                <span className="ws-emoji">🗺️</span>
+                <span>ابدأ بمشروع جديد، وسأرافقك عبر 7 مراحل من الفكرة إلى النشر.</span>
+              </div>
+              <div className="welcome-step">
+                <span className="ws-emoji">💬</span>
+                <span>اسألني أيّ شيء في أيّ وقت — أنا هنا لأشرح وأرافق، لا لأحكم.</span>
+              </div>
+              <div className="welcome-step">
+                <span className="ws-emoji">📖</span>
+                <span>كلّ مصطلح يلتبس عليك، أضِفه لمعجمك الشخصي وسأشرحه لك.</span>
+              </div>
+            </div>
+
+            <button className="welcome-btn" onClick={dismissWelcome}>
+              لنبدأ رحلتنا ✨
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="cloud-status">
         {cloudOk ? (
           <span className="cloud-ok"><IconCloud size={14} /> {t('home.cloud')}</span>
