@@ -24,6 +24,38 @@ export default function Chat() {
   const [loading, setLoading] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
+  const [reportingIndex, setReportingIndex] = useState(null);
+  const [reportReason, setReportReason] = useState("");
+  const [reportSending, setReportSending] = useState(false);
+  const [reportedIndexes, setReportedIndexes] = useState([]);
+
+  async function submitReport(messageIndex) {
+    if (reportSending) return;
+    setReportSending(true);
+
+    const reportedMsg = messages[messageIndex]?.content || "";
+    // سؤال المستخدم الذي سبق رد رفيق (للسياق)
+    const prevUserMsg =
+      messageIndex > 0 && messages[messageIndex - 1]?.role === "user"
+        ? messages[messageIndex - 1].content
+        : null;
+
+    const { error } = await supabase.from("error_reports").insert({
+      user_id: user.id,
+      project_id: selectedProjectId ? Number(selectedProjectId) : null,
+      reported_message: reportedMsg,
+      user_question: prevUserMsg,
+      reason: reportReason.trim() || null,
+    });
+
+    setReportSending(false);
+
+    if (!error) {
+      setReportedIndexes((prev) => [...prev, messageIndex]);
+      setReportingIndex(null);
+      setReportReason("");
+    }
+  }
 
   // تحميل قائمة المشاريع عند فتح الصفحة
   useEffect(() => {
@@ -295,21 +327,115 @@ export default function Chat() {
             </div>
 
             {m.role === "assistant" && (
-              <button
-                onClick={() => copyMessage(m.content, i)}
+              <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
+                <button
+                  onClick={() => copyMessage(m.content, i)}
+                  style={{
+                    padding: "3px 10px",
+                    fontSize: 12,
+                    border: "1px solid #ddd",
+                    borderRadius: 6,
+                    background: "#fff",
+                    color: "#555",
+                    cursor: "pointer",
+                  }}
+                >
+                  {copiedIndex === i ? "✓ تم النسخ" : "📋 نسخ"}
+                </button>
+
+                {reportedIndexes.includes(i) ? (
+                  <span style={{ fontSize: 12, color: "#16a34a", padding: "3px 6px" }}>
+                    ✓ شكراً لإبلاغك
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setReportingIndex(reportingIndex === i ? null : i);
+                      setReportReason("");
+                    }}
+                    style={{
+                      padding: "3px 10px",
+                      fontSize: 12,
+                      border: "1px solid #ddd",
+                      borderRadius: 6,
+                      background: "#fff",
+                      color: "#999",
+                      cursor: "pointer",
+                    }}
+                  >
+                    🚩 إبلاغ
+                  </button>
+                )}
+              </div>
+            )}
+
+            {reportingIndex === i && (
+              <div
                 style={{
-                  marginTop: 4,
-                  padding: "3px 10px",
-                  fontSize: 12,
-                  border: "1px solid #ddd",
-                  borderRadius: 6,
-                  background: "#fff",
-                  color: "#555",
-                  cursor: "pointer",
+                  marginTop: 8,
+                  padding: 12,
+                  border: "1px solid #fecaca",
+                  borderRadius: 10,
+                  background: "#fff7f7",
+                  width: "85%",
                 }}
               >
-                {copiedIndex === i ? "✓ تم النسخ" : "📋 نسخ"}
-              </button>
+                <div style={{ fontSize: 13, color: "#991b1b", marginBottom: 8 }}>
+                  ما الخطأ في هذا الرد؟ (اختياري — يساعدنا على تحسين رفيق)
+                </div>
+                <textarea
+                  value={reportReason}
+                  onChange={(e) => setReportReason(e.target.value)}
+                  placeholder="مثلاً: معلومة غير دقيقة، أو لم يفهم سؤالي…"
+                  style={{
+                    width: "100%",
+                    minHeight: 50,
+                    padding: 8,
+                    borderRadius: 8,
+                    border: "1px solid #ddd",
+                    fontSize: 13,
+                    fontFamily: "inherit",
+                    direction: "rtl",
+                    resize: "vertical",
+                    boxSizing: "border-box",
+                  }}
+                />
+                <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                  <button
+                    onClick={() => submitReport(i)}
+                    disabled={reportSending}
+                    style={{
+                      padding: "7px 16px",
+                      fontSize: 13,
+                      border: "none",
+                      borderRadius: 8,
+                      background: "#dc2626",
+                      color: "#fff",
+                      cursor: "pointer",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {reportSending ? "جارٍ الإرسال…" : "إرسال البلاغ"}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setReportingIndex(null);
+                      setReportReason("");
+                    }}
+                    style={{
+                      padding: "7px 16px",
+                      fontSize: 13,
+                      border: "1px solid #ddd",
+                      borderRadius: 8,
+                      background: "#fff",
+                      color: "#555",
+                      cursor: "pointer",
+                    }}
+                  >
+                    إلغاء
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         ))}
