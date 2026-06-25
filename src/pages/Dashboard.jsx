@@ -1,9 +1,9 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { IconRoute2 } from '@tabler/icons-react';
 import {
   IconUser, IconDeviceMobile, IconPlus,
   IconSparkles, IconTrash, IconPencil, IconX, IconCloud, IconCloudOff,
-  IconChevronLeft,
+  IconChevronLeft, IconRoute2,
 } from '@tabler/icons-react';
 import { supabase } from '../lib/supabase';
 import { useLanguage } from '../i18n/LanguageContext';
