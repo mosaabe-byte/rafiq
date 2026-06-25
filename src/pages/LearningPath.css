@@ -1,0 +1,80 @@
+.learnpath {
+  padding: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.learnpath-header {
+  margin-bottom: 18px;
+}
+.learnpath-header h1 {
+  font-size: 22px;
+  color: #1F2937;
+  margin: 0 0 4px;
+}
+.learnpath-header p {
+  font-size: 14px;
+  color: #6B7280;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.session-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 14px;
+  padding: 14px;
+  cursor: pointer;
+  text-align: right;
+  font-family: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.session-card:hover {
+  border-color: #534AB7;
+  box-shadow: 0 2px 8px rgba(83, 74, 183, 0.08);
+}
+
+.session-num {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #EEEDFE;
+  color: #534AB7;
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.session-body {
+  flex: 1;
+  min-width: 0;
+}
+.session-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 2px;
+}
+.session-sub {
+  font-size: 12.5px;
+  color: #6B7280;
+  line-height: 1.5;
+}
+
+.session-arrow {
+  flex-shrink: 0;
+  color: #9CA3AF;
+}
