@@ -38,6 +38,7 @@
   text-align: right;
   font-family: inherit;
   transition: border-color 0.15s, box-shadow 0.15s;
+  text-decoration: none;
 }
 .session-card:hover {
   border-color: #534AB7;

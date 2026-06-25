@@ -10,6 +10,7 @@ import Profile from './pages/Profile';
 import './pages/pages.css';
 import Chat from "./pages/Chat";
 import LearningPath from './pages/LearningPath';
+import SessionDetail from './pages/SessionDetail';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="chat" element={<Chat />} />
           <Route path="learn" element={<LearningPath />} />
+          <Route path="learn/:id" element={<SessionDetail />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { IconCircleCheck, IconCircleDashed, IconChevronLeft } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
+import { IconChevronLeft } from '@tabler/icons-react';
 import './LearningPath.css';
 
 // الجلسات الـ13 — مخّ التجربة: من جهاز فارغ إلى تطبيق منشور
@@ -20,8 +20,6 @@ const sessions = [
 ];
 
 export default function LearningPath() {
-  const [openSession, setOpenSession] = useState(null);
-
   return (
     <div className="learnpath">
       <div className="learnpath-header">
@@ -31,10 +29,10 @@ export default function LearningPath() {
 
       <div className="sessions-list">
         {sessions.map((s) => (
-          <button
+          <Link
             key={s.n}
-            className={'session-card' + (openSession === s.n ? ' open' : '')}
-            onClick={() => setOpenSession(openSession === s.n ? null : s.n)}
+            to={'/learn/' + s.n}
+            className="session-card"
           >
             <div className="session-num">{s.n}</div>
             <div className="session-body">
@@ -42,7 +40,7 @@ export default function LearningPath() {
               <div className="session-sub">{s.sub}</div>
             </div>
             <IconChevronLeft size={18} className="session-arrow" />
-          </button>
+          </Link>
         ))}
       </div>
     </div>
