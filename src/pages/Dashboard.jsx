@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { IconRoute2 } from '@tabler/icons-react';
 import {
   IconUser, IconDeviceMobile, IconPlus,
   IconSparkles, IconTrash, IconPencil, IconX, IconCloud, IconCloudOff,
+  IconChevronLeft,
 } from '@tabler/icons-react';
 import { supabase } from '../lib/supabase';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -169,6 +171,14 @@ export default function Dashboard() {
           <span className="cloud-off"><IconCloudOff size={14} /> {t('home.cloudOff')}</span>
         )}
       </div>
+<Link to="/learn" className="learn-banner">
+        <div className="learn-banner-icon"><IconRoute2 size={26} /></div>
+        <div className="learn-banner-text">
+          <div className="learn-banner-title">رحلة التعلّم</div>
+          <div className="learn-banner-sub">من جهاز فارغ إلى تطبيق منشور — 13 محطة ترافقك خطوة بخطوة</div>
+        </div>
+        <IconChevronLeft size={20} className="learn-banner-arrow" />
+      </Link>
 
       <div className="stats-strip">
         <div className="stat-box"><div className="stat-n">{counts.all}</div><div className="stat-l">{t('home.statProjects')}</div></div>
