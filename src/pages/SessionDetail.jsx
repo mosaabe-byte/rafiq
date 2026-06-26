@@ -3,6 +3,7 @@ import { IconArrowRight, IconCopy, IconCheck, IconCircleCheck, IconBulb, IconAle
 import { useState } from 'react';
 import { learningContent } from '../data/learningContent';
 import './SessionDetail.css';
+import LessonChat from '../components/LessonChat';
 
 export default function SessionDetail() {
   const { id } = useParams();
@@ -129,6 +130,13 @@ export default function SessionDetail() {
       ))}
 
       <Link to="/learn" className="sd-done">أنهيت هذه المحطة — رجوع للرحلة</Link>
+      <LessonChat
+        lessonTitle={session.title}
+        lessonIntro={session.intro}
+        lessonContent={session.sections.map((sec) =>
+          sec.title + ': ' + sec.steps.map((st) => st.text).join(' | ')
+        ).join('\n')}
+      />
     </div>
   );
 }
