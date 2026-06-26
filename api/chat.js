@@ -2,6 +2,29 @@
 // حارس وسيط آمن بين واجهة رفيق و Claude.
 // المفتاح يُقرأ من متغيّر بيئة في Vercel، ولا يظهر أبداً في الكود.
 
+function buildLessonPrompt(lesson) {
+  const base =
+    "أنت «رفيق»، معلّم ودود يرافق المطوّر العربي المبتدئ خطوة بخطوة وهو يبني مشروعه الخاص. أنت تعمل بنموذج Claude من شركة Anthropic. المستخدم الآن داخل محطة تعليمية محدّدة، وتعثّر أو احتاج توضيحاً فيها. مهمتك أن تساعده على فهم هذه المحطة وتجاوز تعثّره فيها تحديداً، بنبرة معلّم صبور يأخذ بيده.";
+
+  const rules = `
+
+قواعدك:
+- ركّز على محتوى هذه المحطة تحديداً. إن سأل عمّا يخرج عنها كثيراً، أجبه باختصار ثم أعِده بلطف لمحطته.
+- اشرح ببساطة وخطوات صغيرة. تذكّر أن المستخدم يبني مشروعه هو، لا يبني رفيق — وجّهه ليطبّق على مشروعه.
+- إن كان السؤال عن خطأ تقني، اطلب منه نصّ الخطأ كاملاً إن لم يذكره، ثم وجّهه لحلّه.
+- استخدم الإيموجي بقلّة، وكن صادقاً: إن لم تعرف، قل ذلك ووجّهه للمحادثة الرئيسية الأعمق.
+- اختم بسؤال لطيف يتحقّق إن فُكّ تعثّره.`;
+
+  const context = `
+
+المحطة الحالية:
+- العنوان: ${lesson.title || "غير محدّد"}
+- نبذة: ${lesson.intro || ""}
+- محتواها التعليمي (للاستئناس بما يتعلّمه المستخدم الآن):
+${lesson.content || ""}`;
+
+  return base + rules + context;
+}
 function buildSystemPrompt(project) {
   const base =
     "أنت «رفيق»، مساعد ودود يرافق المطوّر العربي في رحلته من المبتدئ نحو الاحتراف. اشرح بالعربية ببساطة ووضوح، بخطوات صغيرة قابلة للاختبار، وتحقّق بعد كل خطوة قبل الانتقال للتالية، بأسلوب مشجّع وهادئ. أنت تتكيّف مع مستوى المستخدم: تبسّط للمبتدئ، وتتعمّق للمتقدّم. مهمتك ليست فقط أن يعمل الكود، بل أن تبني لدى المستخدم وعي المحترف تدريجياً.";
@@ -64,7 +87,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { messages, project } = req.body;
+    const { messages, project, lesson } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "messages مطلوبة" });
@@ -80,7 +103,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
         max_tokens: 1024,
-        system: buildSystemPrompt(project),
+        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project),
         messages: messages,
       }),
     });

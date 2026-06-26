@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { IconArrowRight, IconCopy, IconCheck, IconCircleCheck, IconBulb, IconAlertTriangle } from '@tabler/icons-react';
+import { IconArrowRight, IconCopy, IconCheck, IconCircleCheck, IconBulb, IconAlertTriangle, IconChevronDown, IconFileCode } from '@tabler/icons-react';
 import { useState } from 'react';
 import { learningContent } from '../data/learningContent';
 import './SessionDetail.css';
@@ -8,6 +8,7 @@ export default function SessionDetail() {
   const { id } = useParams();
   const session = learningContent[id];
   const [copiedIdx, setCopiedIdx] = useState(null);
+  const [openCode, setOpenCode] = useState({});
 
   if (!session) {
     return (
@@ -28,6 +29,9 @@ export default function SessionDetail() {
   }
 
   let codeCounter = 0;
+  function toggleCode(idx) {
+    setOpenCode((prev) => ({ ...prev, [idx]: !prev[idx] }));
+  }
 
   return (
     <div className="session-detail">
@@ -93,6 +97,28 @@ export default function SessionDetail() {
                     <div className="sd-verify-head"><IconCircleCheck size={16} /> النتيجة المتوقّعة</div>
                     <div className="sd-verify-out">{step.text}</div>
                     {step.note && <div className="sd-verify-note">{step.note}</div>}
+                  </div>
+                );
+              }
+              if (step.type === 'codeblock') {
+                const idx = codeCounter++;
+                const isOpen = openCode[idx];
+                return (
+                  <div key={sti} className="sd-codeblock">
+                    <button className="sd-codeblock-head" onClick={() => toggleCode(idx)}>
+                      <IconFileCode size={16} />
+                      <span className="sd-codeblock-label">{step.label || 'الكود الكامل'}</span>
+                      <IconChevronDown size={16} className={'sd-cb-chevron' + (isOpen ? ' open' : '')} />
+                    </button>
+                    {isOpen && (
+                      <div className="sd-codeblock-body">
+                        <button className="sd-cb-copy" onClick={() => copyCode(step.text, 'cb' + idx)}>
+                          {copiedIdx === 'cb' + idx ? <IconCheck size={14} /> : <IconCopy size={14} />}
+                          {copiedIdx === 'cb' + idx ? 'تم النسخ' : 'نسخ'}
+                        </button>
+                        <pre><code>{step.text}</code></pre>
+                      </div>
+                    )}
                   </div>
                 );
               }
