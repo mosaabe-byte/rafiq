@@ -285,10 +285,11 @@ export default function Glossary() {
     <div className="glossary">
       <div className="glossary-header">
         <h1>{t('glossary.title')}</h1>
-        <p>
-          {tt('glossary.countBase', { n: baseTerms.length })}
-          {personalCount > 0 && ' ' + tt('glossary.countPersonal', { n: personalCount })}
-        </p>
+       <p>
+          {personalCount > 0
+            ? tt('glossary.countBase', { n: baseTerms.length }) + ' ' + tt('glossary.countPersonal', { n: personalCount })
+            : tt('glossary.countBase', { n: baseTerms.length })}
+        </p> 
       </div>
 
       <div className="search-wrap">
