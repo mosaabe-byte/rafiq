@@ -2,9 +2,43 @@ import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { IconMessageCircle, IconX, IconSend } from '@tabler/icons-react';
+import { useLanguage } from '../i18n/LanguageContext';
 import './LessonChat.css';
 
+// نصوص النافذة بثلاث لغات
+const UI = {
+  ar: {
+    fab: 'تعثّرت؟ اسأل رفيق',
+    empty: 'تعثّرت في خطوة؟ لم تفهم شيئاً؟ اسألني وسأساعدك في هذه المحطة تحديداً.',
+    placeholder: 'اكتب سؤالك عن هذه المحطة…',
+    typing: 'رفيق يكتب…',
+    errServer: 'حدث خطأ: ',
+    errConn: 'تعذّر الاتصال بالخادم.',
+    unknown: 'غير معروف',
+  },
+  fr: {
+    fab: 'Bloqué ? Demande à Rafiq',
+    empty: 'Bloqué sur une étape ? Pose ta question, je t\'aide sur cette étape précisément.',
+    placeholder: 'Écris ta question sur cette étape…',
+    typing: 'Rafiq écrit…',
+    errServer: 'Erreur : ',
+    errConn: 'Impossible de se connecter au serveur.',
+    unknown: 'inconnu',
+  },
+  en: {
+    fab: 'Stuck? Ask Rafiq',
+    empty: 'Stuck on a step? Ask me and I\'ll help you with this lesson specifically.',
+    placeholder: 'Type your question about this lesson…',
+    typing: 'Rafiq is typing…',
+    errServer: 'Error: ',
+    errConn: 'Could not connect to the server.',
+    unknown: 'unknown',
+  },
+};
+
 export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) {
+  const { lang } = useLanguage();
+  const t = UI[lang] || UI.ar;
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -29,6 +63,7 @@ export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) 
             title: lessonTitle,
             intro: lessonIntro,
             content: lessonContent,
+            lang: lang,
           },
         }),
       });
@@ -37,10 +72,10 @@ export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) 
       if (data.reply) {
         setMessages([...newMessages, { role: 'assistant', content: data.reply }]);
       } else {
-        setMessages([...newMessages, { role: 'assistant', content: 'حدث خطأ: ' + (data.error || 'غير معروف') }]);
+        setMessages([...newMessages, { role: 'assistant', content: t.errServer + (data.error || t.unknown) }]);
       }
     } catch (err) {
-      setMessages([...newMessages, { role: 'assistant', content: 'تعذّر الاتصال بالخادم.' }]);
+      setMessages([...newMessages, { role: 'assistant', content: t.errConn }]);
     } finally {
       setLoading(false);
     }
@@ -52,7 +87,7 @@ export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) 
       {!open && (
         <button className="lesson-chat-fab" onClick={() => setOpen(true)}>
           <IconMessageCircle size={20} />
-          <span>تعثّرت؟ اسأل رفيق</span>
+          <span>{t.fab}</span>
         </button>
       )}
 
@@ -71,9 +106,7 @@ export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) 
 
           <div className="lc-messages">
             {messages.length === 0 && (
-              <p className="lc-empty">
-                تعثّرت في خطوة؟ لم تفهم شيئاً؟ اسألني وسأساعدك في هذه المحطة تحديداً.
-              </p>
+              <p className="lc-empty">{t.empty}</p>
             )}
             {messages.map((m, i) => (
               <div key={i} className={'lc-msg ' + (m.role === 'user' ? 'lc-user' : 'lc-bot')}>
@@ -84,7 +117,7 @@ export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) 
                 </div>
               </div>
             ))}
-            {loading && <p className="lc-typing">رفيق يكتب…</p>}
+            {loading && <p className="lc-typing">{t.typing}</p>}
           </div>
 
           <div className="lc-input-row">
@@ -92,7 +125,7 @@ export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) 
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && send()}
-              placeholder="اكتب سؤالك عن هذه المحطة…"
+              placeholder={t.placeholder}
             />
             <button onClick={send} disabled={loading}>
               <IconSend size={18} />
