@@ -174,8 +174,8 @@ export default function Dashboard() {
 <Link to="/learn" className="learn-banner">
         <div className="learn-banner-icon"><IconRoute2 size={26} /></div>
         <div className="learn-banner-text">
-          <div className="learn-banner-title">رحلة التعلّم</div>
-          <div className="learn-banner-sub">من جهاز فارغ إلى تطبيق منشور — 13 محطة ترافقك خطوة بخطوة</div>
+          <div className="learn-banner-title">{t('home.learnBannerTitle')}</div>
+          <div className="learn-banner-sub">{t('home.learnBannerSub')}</div>
         </div>
         <IconChevronLeft size={20} className="learn-banner-arrow" />
       </Link>
