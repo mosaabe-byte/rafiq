@@ -23,7 +23,7 @@
   font-family: var(--font);
   color: var(--gray-900);
   outline: none;
-  direction: rtl;
+  direction: inherit;
   transition: border-color 0.15s;
 }
 .search-wrap input:focus { border-color: var(--purple); }
@@ -186,7 +186,7 @@
   background: #fff;
   font-size: 14px;
   font-family: inherit;
-  direction: rtl;
+  direction: inherit;
   outline: none;
   box-sizing: border-box;
 }
