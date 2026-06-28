@@ -1,73 +1,114 @@
 import { useState, useEffect } from 'react';
-import { IconChartBar, IconArrowLeft, IconLogout, IconLoader2 } from '@tabler/icons-react';
+import { IconChartBar, IconArrowLeft, IconLogout, IconLoader2, IconTrophy, IconRoute2 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
 import { useLanguage } from '../i18n/LanguageContext';
 import './Profile.css';
 
-// خريطة رمز اللغة إلى locale لعرض التاريخ
 const LOCALES = { ar: 'ar', fr: 'fr-FR', en: 'en-US' };
+const PHASE_NUMBERS = [1, 2, 3, 4, 5, 6, 7];
+
+// استخراج رقم المرحلة (1–7) من نصّ phase الحرّ، مثل «المرحلة 3: الإعداد» → 3
+function extractPhaseNumber(phaseText) {
+  if (!phaseText) return null;
+  const m = String(phaseText).match(/(\d+)/);
+  if (!m) return null;
+  const n = parseInt(m[1], 10);
+  return n >= 1 && n <= 7 ? n : null;
+}
+
+// تعريف الإنجازات: لكل واحد شرط يُفحص من البيانات الحقيقية
+function computeBadges(data) {
+  return [
+    { key: 'firstProject', icon: '🚀', earned: data.projectCount >= 1 },
+    { key: 'glossaryBuilder', icon: '📚', earned: data.termCount >= 5 },
+    { key: 'firstChat', icon: '💬', earned: data.conversationCount >= 1 },
+    { key: 'achiever', icon: '🎯', earned: data.hasCompletedProject },
+    { key: 'publisher', icon: '🌐', earned: data.hasPublishedProject },
+    { key: 'inspector', icon: '🔍', earned: data.reportCount >= 1 },
+  ];
+}
 
 export default function Profile() {
   const { user, displayName, signOut } = useAuth();
   const { lang, t } = useLanguage();
 
   const [stats, setStats] = useState({ projects: 0, terms: 0, conversations: 0, avgProgress: 0 });
-  const [loadingStats, setLoadingStats] = useState(true);
+  const [phaseCounts, setPhaseCounts] = useState({});
+  const [badges, setBadges] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
     let cancelled = false;
 
-    async function loadStats() {
-      setLoadingStats(true);
+    async function loadAll() {
+      setLoading(true);
 
-      // عدد المشاريع + متوسّط التقدّم (نجلب progress لحسابه)
       const projectsRes = await supabase
         .from('projects')
-        .select('progress', { count: 'exact' })
+        .select('progress, phase')
         .eq('user_id', user.id);
 
-      // عدد المصطلحات الشخصية
       const termsRes = await supabase
         .from('glossary_terms')
         .select('id', { count: 'exact', head: true })
         .eq('user_id', user.id);
 
-      // عدد المحادثات
       const convRes = await supabase
         .from('conversations')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+
+      const reportsRes = await supabase
+        .from('error_reports')
         .select('id', { count: 'exact', head: true })
         .eq('user_id', user.id);
 
       if (cancelled) return;
 
       const projectRows = projectsRes.data || [];
-      const projectCount = projectsRes.count ?? projectRows.length;
+      const projectCount = projectRows.length;
       const avgProgress =
-        projectRows.length > 0
-          ? Math.round(projectRows.reduce((sum, p) => sum + (p.progress || 0), 0) / projectRows.length)
+        projectCount > 0
+          ? Math.round(projectRows.reduce((sum, p) => sum + (p.progress || 0), 0) / projectCount)
           : 0;
 
-      setStats({
-        projects: projectCount,
-        terms: termsRes.count ?? 0,
-        conversations: convRes.count ?? 0,
-        avgProgress,
+      const counts = {};
+      let hasPublishedProject = false;
+      let hasCompletedProject = false;
+      projectRows.forEach((p) => {
+        const n = extractPhaseNumber(p.phase);
+        if (n) counts[n] = (counts[n] || 0) + 1;
+        if (n === 7) hasPublishedProject = true;
+        if ((p.progress || 0) >= 100) hasCompletedProject = true;
       });
-      setLoadingStats(false);
+
+      const termCount = termsRes.count ?? 0;
+      const conversationCount = convRes.count ?? 0;
+      const reportCount = reportsRes.count ?? 0;
+
+      setStats({ projects: projectCount, terms: termCount, conversations: conversationCount, avgProgress });
+      setPhaseCounts(counts);
+      setBadges(computeBadges({
+        projectCount, termCount, conversationCount, reportCount,
+        hasPublishedProject, hasCompletedProject,
+      }));
+      setLoading(false);
     }
 
-    loadStats();
+    loadAll();
     return () => { cancelled = true; };
   }, [user]);
 
   const initial = (displayName || '?').trim().charAt(0).toUpperCase();
-
   const memberSince = user?.created_at
     ? new Date(user.created_at).toLocaleDateString(LOCALES[lang] || 'ar', { year: 'numeric', month: 'long' })
     : '';
+
+  const maxPhaseCount = Math.max(1, ...PHASE_NUMBERS.map((n) => phaseCounts[n] || 0));
+  const earnedCount = badges.filter((b) => b.earned).length;
 
   async function handleSignOut() {
     await signOut();
@@ -88,34 +129,79 @@ export default function Profile() {
         </button>
       </div>
 
-      <div className="profile-section">
-        <h2><IconChartBar size={16} /> {t('profile.statsTitle')}</h2>
-
-        {loadingStats ? (
+      {loading ? (
+        <div className="profile-section">
           <div className="profile-loading">
             <IconLoader2 size={18} className="spin" /> {t('profile.loadingStats')}
           </div>
-        ) : (
-          <div className="profile-stats">
-            <div className="ps-box">
-              <div className="ps-n">{stats.projects}</div>
-              <div className="ps-l">{t('profile.statProjects')}</div>
-            </div>
-            <div className="ps-box">
-              <div className="ps-n">{stats.terms}</div>
-              <div className="ps-l">{t('profile.statTerms')}</div>
-            </div>
-            <div className="ps-box">
-              <div className="ps-n">{stats.conversations}</div>
-              <div className="ps-l">{t('profile.statConversations')}</div>
-            </div>
-            <div className="ps-box">
-              <div className="ps-n">{stats.avgProgress}%</div>
-              <div className="ps-l">{t('profile.statAvgProgress')}</div>
+        </div>
+      ) : (
+        <>
+          {/* الإحصاءات الحيّة */}
+          <div className="profile-section">
+            <h2><IconChartBar size={16} /> {t('profile.statsTitle')}</h2>
+            <div className="profile-stats">
+              <div className="ps-box">
+                <div className="ps-n">{stats.projects}</div>
+                <div className="ps-l">{t('profile.statProjects')}</div>
+              </div>
+              <div className="ps-box">
+                <div className="ps-n">{stats.terms}</div>
+                <div className="ps-l">{t('profile.statTerms')}</div>
+              </div>
+              <div className="ps-box">
+                <div className="ps-n">{stats.conversations}</div>
+                <div className="ps-l">{t('profile.statConversations')}</div>
+              </div>
+              <div className="ps-box">
+                <div className="ps-n">{stats.avgProgress}%</div>
+                <div className="ps-l">{t('profile.statAvgProgress')}</div>
+              </div>
             </div>
           </div>
-        )}
-      </div>
+
+          {/* مشاريعك عبر المراحل */}
+          <div className="profile-section">
+            <h2><IconRoute2 size={16} /> {t('profile.phasesTitle')}</h2>
+            {stats.projects === 0 ? (
+              <p className="profile-empty">{t('profile.phasesEmpty')}</p>
+            ) : (
+              <div className="phases-list">
+                {PHASE_NUMBERS.map((n) => {
+                  const c = phaseCounts[n] || 0;
+                  const pct = Math.round((c / maxPhaseCount) * 100);
+                  return (
+                    <div key={n} className="phase-row">
+                      <span className="phase-name">{t('roadmap.phase' + n + 'title')}</span>
+                      <div className="phase-track">
+                        <div className="phase-fill" style={{ width: (c === 0 ? 0 : Math.max(pct, 8)) + '%' }} />
+                      </div>
+                      <span className="phase-count">{c}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* الإنجازات الحقيقية */}
+          <div className="profile-section">
+            <h2>
+              <IconTrophy size={16} /> {t('profile.badgesTitle')}
+              <span className="badges-counter">{earnedCount}/{badges.length}</span>
+            </h2>
+            <div className="badges-grid">
+              {badges.map((b) => (
+                <div key={b.key} className={'badge-card' + (b.earned ? ' earned' : ' locked')}>
+                  <div className="badge-icon">{b.icon}</div>
+                  <div className="badge-name">{t('profile.badge_' + b.key + '_name')}</div>
+                  <div className="badge-desc">{t('profile.badge_' + b.key + '_desc')}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
       <Link to="/" className="next-step-card">
         <div className="ns-icon"><IconArrowLeft size={16} /></div>

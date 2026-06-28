@@ -78,8 +78,77 @@
   font-size: 13px;
   padding: 8px 0;
 }
+.profile-empty {
+  font-size: 13px;
+  color: var(--gray-400);
+  line-height: 1.7;
+}
 .spin { animation: profile-spin 0.9s linear infinite; }
 @keyframes profile-spin { to { transform: rotate(360deg); } }
+
+/* مشاريعك عبر المراحل */
+.phases-list { display: flex; flex-direction: column; gap: 9px; }
+.phase-row { display: flex; align-items: center; gap: 10px; }
+.phase-name {
+  font-size: 12px;
+  color: var(--gray-600);
+  width: 90px;
+  flex-shrink: 0;
+}
+.phase-track {
+  flex: 1;
+  height: 8px;
+  background: var(--gray-100);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.phase-fill {
+  height: 100%;
+  background: var(--purple);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+.phase-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-600);
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* الإنجازات */
+.badges-counter {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--purple);
+  margin-inline-start: auto;
+}
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.badge-card {
+  border: 1px solid var(--gray-100);
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  background: var(--white);
+}
+.badge-card.earned {
+  border-color: var(--purple-mid);
+  background: var(--purple-light);
+}
+.badge-card.locked { opacity: 0.4; }
+.badge-icon { font-size: 22px; margin-bottom: 6px; }
+.badge-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 2px;
+}
+.badge-desc { font-size: 10px; color: var(--gray-400); line-height: 1.5; }
 
 .next-step-card {
   margin: 18px 18px 0;
