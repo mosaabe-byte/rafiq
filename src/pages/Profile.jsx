@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
-import { IconChartBar, IconArrowLeft, IconLogout, IconLoader2, IconTrophy, IconRoute2 } from '@tabler/icons-react';
+import {
+  IconChartBar, IconArrowLeft, IconLogout, IconLoader2, IconTrophy,
+  IconRoute2, IconHistory, IconFolderPlus, IconVocabulary, IconMessage,
+} from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
@@ -9,7 +12,6 @@ import './Profile.css';
 const LOCALES = { ar: 'ar', fr: 'fr-FR', en: 'en-US' };
 const PHASE_NUMBERS = [1, 2, 3, 4, 5, 6, 7];
 
-// استخراج رقم المرحلة (1–7) من نصّ phase الحرّ، مثل «المرحلة 3: الإعداد» → 3
 function extractPhaseNumber(phaseText) {
   if (!phaseText) return null;
   const m = String(phaseText).match(/(\d+)/);
@@ -18,7 +20,6 @@ function extractPhaseNumber(phaseText) {
   return n >= 1 && n <= 7 ? n : null;
 }
 
-// تعريف الإنجازات: لكل واحد شرط يُفحص من البيانات الحقيقية
 function computeBadges(data) {
   return [
     { key: 'firstProject', icon: '🚀', earned: data.projectCount >= 1 },
@@ -30,6 +31,15 @@ function computeBadges(data) {
   ];
 }
 
+// منطق الخطوة الذكية: يُرجع مفتاح الاقتراح حسب حالة المستخدم (الأهمّ أولاً)
+function computeNextStep(data) {
+  if (data.projectCount === 0) return { key: 'addProject', to: '/' };
+  if (data.conversationCount === 0) return { key: 'tryChat', to: '/chat' };
+  if (data.termCount === 0) return { key: 'buildGlossary', to: '/glossary' };
+  if (!data.hasPublishedProject) return { key: 'reachDeploy', to: '/roadmap' };
+  return { key: 'keepGoing', to: '/learn' };
+}
+
 export default function Profile() {
   const { user, displayName, signOut } = useAuth();
   const { lang, t } = useLanguage();
@@ -37,6 +47,8 @@ export default function Profile() {
   const [stats, setStats] = useState({ projects: 0, terms: 0, conversations: 0, avgProgress: 0 });
   const [phaseCounts, setPhaseCounts] = useState({});
   const [badges, setBadges] = useState([]);
+  const [activity, setActivity] = useState([]);
+  const [nextStep, setNextStep] = useState({ key: 'addProject', to: '/' });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -48,13 +60,15 @@ export default function Profile() {
 
       const projectsRes = await supabase
         .from('projects')
-        .select('progress, phase')
+        .select('name, progress, phase, created_at')
         .eq('user_id', user.id);
 
       const termsRes = await supabase
         .from('glossary_terms')
-        .select('id', { count: 'exact', head: true })
-        .eq('user_id', user.id);
+        .select('en, created_at', { count: 'exact' })
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(3);
 
       const convRes = await supabase
         .from('conversations')
@@ -89,11 +103,26 @@ export default function Profile() {
       const conversationCount = convRes.count ?? 0;
       const reportCount = reportsRes.count ?? 0;
 
+      // بناء سجلّ النشاط: آخر مشاريع + آخر مصطلحات، مرتّبة زمنياً
+      const events = [];
+      projectRows.forEach((p) => {
+        if (p.created_at) events.push({ type: 'project', label: p.name, at: p.created_at });
+      });
+      (termsRes.data || []).forEach((tm) => {
+        if (tm.created_at) events.push({ type: 'term', label: tm.en, at: tm.created_at });
+      });
+      events.sort((a, b) => new Date(b.at) - new Date(a.at));
+      const recentActivity = events.slice(0, 5);
+
       setStats({ projects: projectCount, terms: termCount, conversations: conversationCount, avgProgress });
       setPhaseCounts(counts);
       setBadges(computeBadges({
         projectCount, termCount, conversationCount, reportCount,
         hasPublishedProject, hasCompletedProject,
+      }));
+      setActivity(recentActivity);
+      setNextStep(computeNextStep({
+        projectCount, termCount, conversationCount, hasPublishedProject,
       }));
       setLoading(false);
     }
@@ -109,6 +138,21 @@ export default function Profile() {
 
   const maxPhaseCount = Math.max(1, ...PHASE_NUMBERS.map((n) => phaseCounts[n] || 0));
   const earnedCount = badges.filter((b) => b.earned).length;
+
+  // تنسيق تاريخ الحدث (يوم وشهر) حسب اللغة
+  function fmtDate(at) {
+    try {
+      return new Date(at).toLocaleDateString(LOCALES[lang] || 'ar', { day: 'numeric', month: 'short' });
+    } catch (e) {
+      return '';
+    }
+  }
+
+  const activityIcon = {
+    project: <IconFolderPlus size={14} />,
+    term: <IconVocabulary size={14} />,
+    chat: <IconMessage size={14} />,
+  };
 
   async function handleSignOut() {
     await signOut();
@@ -200,14 +244,37 @@ export default function Profile() {
               ))}
             </div>
           </div>
+
+          {/* رحلتك الحقيقية */}
+          <div className="profile-section">
+            <h2><IconHistory size={16} /> {t('profile.activityTitle')}</h2>
+            {activity.length === 0 ? (
+              <p className="profile-empty">{t('profile.activityEmpty')}</p>
+            ) : (
+              <div className="activity-list">
+                {activity.map((a, i) => (
+                  <div key={i} className="activity-item">
+                    <div className="act-icon">{activityIcon[a.type]}</div>
+                    <div className="act-content">
+                      <div className="act-text">
+                        {t('profile.activity_' + a.type)} <span className="act-label">{a.label}</span>
+                      </div>
+                      <div className="act-time">{fmtDate(a.at)}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </>
       )}
 
-      <Link to="/" className="next-step-card">
+      {/* الخطوة القادمة الذكية */}
+      <Link to={nextStep.to} className="next-step-card">
         <div className="ns-icon"><IconArrowLeft size={16} /></div>
         <div className="ns-text">
           <div className="ns-title">{t('profile.nextTitle')}</div>
-          <div className="ns-sub">{t('profile.nextSub')}</div>
+          <div className="ns-sub">{t('profile.next_' + nextStep.key)}</div>
         </div>
       </Link>
     </div>
