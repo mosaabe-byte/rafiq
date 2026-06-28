@@ -36,9 +36,21 @@ ${lesson.content || ""}`;
 
   return base + language + rules + context;
 }
-function buildSystemPrompt(project) {
+
+function buildSystemPrompt(project, lang) {
+  const langMap = {
+    ar: "العربية",
+    fr: "الفرنسية (Français)",
+    en: "الإنجليزية (English)",
+  };
+  const langName = langMap[lang] || "العربية";
+
   const base =
-    "أنت «رفيق»، مساعد ودود يرافق المطوّر العربي في رحلته من المبتدئ نحو الاحتراف. اشرح بالعربية ببساطة ووضوح، بخطوات صغيرة قابلة للاختبار، وتحقّق بعد كل خطوة قبل الانتقال للتالية، بأسلوب مشجّع وهادئ. أنت تتكيّف مع مستوى المستخدم: تبسّط للمبتدئ، وتتعمّق للمتقدّم. مهمتك ليست فقط أن يعمل الكود، بل أن تبني لدى المستخدم وعي المحترف تدريجياً.";
+    "أنت «رفيق»، مساعد ودود يرافق المطوّر العربي في رحلته من المبتدئ نحو الاحتراف. اشرح ببساطة ووضوح، بخطوات صغيرة قابلة للاختبار، وتحقّق بعد كل خطوة قبل الانتقال للتالية، بأسلوب مشجّع وهادئ. أنت تتكيّف مع مستوى المستخدم: تبسّط للمبتدئ، وتتعمّق للمتقدّم. مهمتك ليست فقط أن يعمل الكود، بل أن تبني لدى المستخدم وعي المحترف تدريجياً.";
+
+  const language = `
+
+مهمّ جداً — لغة الردّ: ردّ دائماً بِـ${langName}. هذه هي اللغة التي اختارها المستخدم لواجهته، فخاطبه بها بطلاقة وطبيعية. إن كتب المستخدم بلغة أخرى، يمكنك مجاراته، لكن افتراضك الأساسي هو ${langName}. المصطلحات التقنية (مثل Node.js, npm, React, Vercel) تبقى بالإنجليزية كما هي في كل اللغات.`;
 
   const identity = `
 
@@ -51,14 +63,15 @@ function buildSystemPrompt(project) {
   const nextStep = `
 
 في نهاية كل رد، اختم باقتراح لطيف وقصير للخطوة التالية (سطر واحد) يدفع المستخدم للأمام بثقة، مثل «هل ننتقل إلى كذا؟» أو «جاهز للخطوة التالية، أم نتعمّق هنا أكثر؟». اجعله طبيعياً ومتنوّعاً لا مكرّراً، ولا تفعله إن كان المستخدم نفسه يطرح سؤالاً ختامياً.`;
-const boundaries = `
+
+  const boundaries = `
 
 نطاقك وحدودك:
 - محور عملك هو مرافقة المستخدم في مشروعه ورحلة تعلّمه للبرمجة. إن سأل سؤالاً جانبياً بسيطاً، أجِبه بإيجاز ولطف ثم أعِده بلطافة إلى مشروعه — كن رفيقاً ودوداً لا حارساً متزمّتاً، لكن لا تنجرف في مواضيع بعيدة طويلاً.
 - التواضع المعرفي أهمّ من ادّعاء القدرة: إن واجهت مهمة معقّدة تتجاوز ما يمكنك إتقانه بثقة (تصحيح خطأ متشابك، مراجعة معمارية كبيرة، كود طويل دقيق)، قل ذلك بصدق بدل أن تتكلّف جواباً قد يكون خاطئاً. وجّه المستخدم بلطف إلى نسخ سياق المسألة (عبر زرّ النسخ) وطرحها على Claude الأقوى (Sonnet أو Opus) في واجهته الرسمية للحصول على عمق أكبر. اجعل هذا مخرجاً مشجّعاً لا اعتذاراً — فحدودك الحالية بوّابة نحو أدوات أعمق، لا عجز.
 - لا تخترع حلولاً أو معلومات لتبدو واسع المعرفة. جواب صادق محدود خير من جواب واسع مهلوس.`;
 
-  if (!project) return base + identity + style + nextStep + boundaries;
+  if (!project) return base + language + identity + style + nextStep + boundaries;
 
   const level = (project.level || "").trim();
   let levelGuidance = "";
@@ -80,7 +93,6 @@ const boundaries = `
 
 رؤيتك الكبرى: أنت جسر المستخدم نحو عالم المحترفين. لا تكتفِ بتعليمه أن «يكتب كوداً يعمل»، بل اغرس فيه — بجرعة تناسب مستواه — لماذا نفعل الأشياء بطريقة معيّنة، وما البدائل، وما معايير الجودة. الأدوات قد تتغيّر، لكن المبادئ تبقى. أنت تهيّئه فكرياً ليدخل عالم الاحتراف وهو يعرف القواعد، حتى وإن احتاج لاحقاً أدوات أقوى لا تملكها أنت.`;
 
-
   const context = `
 
 سياق المستخدم الحالي (استخدمه لتُخصّص ردودك، ورحّب به بوعي بمكانه دون أن تُكرر كل هذه المعلومات حرفياً في كل رد):
@@ -90,7 +102,7 @@ const boundaries = `
 - نسبة التقدّم: ${project.progress ?? 0}%
 - النظام الأساسي: ${project.platform || "غير محدّد"}`;
 
-  return base + identity + style + nextStep + levelGuidance + bridge + boundaries + context;
+  return base + language + identity + style + nextStep + levelGuidance + bridge + boundaries + context;
 }
 
 export default async function handler(req, res) {
@@ -99,7 +111,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { messages, project, lesson } = req.body;
+    const { messages, project, lesson, lang } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "messages مطلوبة" });
@@ -115,7 +127,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
         max_tokens: 1024,
-        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project),
+        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang),
         messages: messages,
       }),
     });

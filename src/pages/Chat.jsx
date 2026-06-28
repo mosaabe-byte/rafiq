@@ -5,11 +5,14 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../auth/AuthContext";
+import { useLanguage } from "../i18n/LanguageContext";
+import "./Chat.css";
 
 const DAILY_LIMIT = 10; // الحدّ اليومي لرسائل المستخدم المجاني
 
 export default function Chat() {
   const { user } = useAuth();
+  const { lang, t } = useLanguage();
   const [searchParams] = useSearchParams();
 
   const [todayCount, setTodayCount] = useState(0);
@@ -29,12 +32,22 @@ export default function Chat() {
   const [reportSending, setReportSending] = useState(false);
   const [reportedIndexes, setReportedIndexes] = useState([]);
 
+  // استبدال {n} أو {phase} داخل نص الترجمة
+  function tt(key, vars) {
+    let str = t(key);
+    if (vars) {
+      Object.keys(vars).forEach((k) => {
+        str = str.replace("{" + k + "}", vars[k]);
+      });
+    }
+    return str;
+  }
+
   async function submitReport(messageIndex) {
     if (reportSending) return;
     setReportSending(true);
 
     const reportedMsg = messages[messageIndex]?.content || "";
-    // سؤال المستخدم الذي سبق رد رفيق (للسياق)
     const prevUserMsg =
       messageIndex > 0 && messages[messageIndex - 1]?.role === "user"
         ? messages[messageIndex - 1].content
@@ -74,14 +87,16 @@ export default function Chat() {
 
           const phaseFromUrl = searchParams.get("phase");
           if (phaseFromUrl) {
-            setInput(`أين وصلت في مرحلة «${phaseFromUrl}»؟ وما الخطوة التالية التي أنصح بها؟`);
+            setInput(tt("chat.lessonPhasePrompt", { phase: phaseFromUrl }));
           }
         }
       }
     }
     loadProjects();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
-// عدّ رسائل المستخدم المُرسَلة اليوم (للحدّ اليومي)
+
+  // عدّ رسائل المستخدم المُرسَلة اليوم (للحدّ اليومي)
   useEffect(() => {
     if (!user) return;
 
@@ -164,7 +179,6 @@ export default function Chat() {
     const text = input.trim();
     if (!text || loading || !conversationId) return;
 
-    // فحص الحدّ اليومي قبل الإرسال
     if (todayCount >= DAILY_LIMIT) {
       setLimitReached(true);
       return;
@@ -172,7 +186,6 @@ export default function Chat() {
 
     const selectedProject = projects.find((p) => p.id === Number(selectedProjectId));
 
-    // تحديث العدّاد المحلي فوراً
     const newCount = todayCount + 1;
     setTodayCount(newCount);
     if (newCount >= DAILY_LIMIT) setLimitReached(true);
@@ -196,6 +209,7 @@ export default function Chat() {
         body: JSON.stringify({
           messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
           project: selectedProject,
+          lang,
         }),
       });
 
@@ -215,13 +229,13 @@ export default function Chat() {
       } else {
         setMessages([
           ...newMessages,
-          { role: "assistant", content: "حدث خطأ: " + (data.error || "غير معروف") },
+          { role: "assistant", content: t("chat.errorPrefix") + (data.error || t("chat.errorUnknown")) },
         ]);
       }
     } catch (err) {
       setMessages([
         ...newMessages,
-        { role: "assistant", content: "تعذّر الاتصال بالخادم." },
+        { role: "assistant", content: t("chat.connFailed") },
       ]);
     } finally {
       setLoading(false);
@@ -239,32 +253,15 @@ export default function Chat() {
   }
 
   return (
-    <div
-      style={{
-        maxWidth: 760,
-        margin: "0 auto",
-        height: "calc(100vh - 120px)",
-        display: "flex",
-        flexDirection: "column",
-        padding: "12px 16px 0",
-      }}
-      dir="rtl"
-    >
-      <h2 style={{ margin: "0 0 10px" }}>محادثة رفيق</h2>
+    <div className="chat-page">
+      <h2 className="chat-title">{t("chat.title")}</h2>
 
       <select
+        className="chat-select"
         value={selectedProjectId}
         onChange={(e) => setSelectedProjectId(e.target.value)}
-        style={{
-          width: "100%",
-          padding: "10px 12px",
-          borderRadius: 8,
-          border: "1px solid #ccc",
-          marginBottom: 10,
-          flexShrink: 0,
-        }}
       >
-        <option value="">اختر مشروعاً للمحادثة عنه...</option>
+        <option value="">{t("chat.selectProject")}</option>
         {projects.map((p) => (
           <option key={p.id} value={p.id}>
             {p.emoji} {p.name}
@@ -273,52 +270,22 @@ export default function Chat() {
       </select>
 
       {/* منطقة الرسائل: تتمدّد وتتمرّر وحدها */}
-      <div
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          border: "1px solid #ddd",
-          borderRadius: 12,
-          padding: 16,
-          marginBottom: 12,
-          background: "#fafafa",
-          minHeight: 0,
-        }}
-      >
+      <div className="chat-messages">
         {!selectedProjectId && (
-          <p style={{ color: "#888" }}>اختر مشروعاً أعلاه لتبدأ أو تكمل محادثتك معه.</p>
+          <p className="chat-hint">{t("chat.pickToStart")}</p>
         )}
 
         {selectedProjectId && loadingHistory && (
-          <p style={{ color: "#888" }}>جاري تحميل المحادثة السابقة…</p>
+          <p className="chat-hint">{t("chat.loadingHistory")}</p>
         )}
 
         {selectedProjectId && !loadingHistory && messages.length === 0 && (
-          <p style={{ color: "#888" }}>اكتب سؤالك الأول لرفيق…</p>
+          <p className="chat-hint">{t("chat.firstQuestion")}</p>
         )}
 
         {messages.map((m, i) => (
-          <div
-            key={i}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: m.role === "user" ? "flex-start" : "flex-end",
-              margin: "10px 0",
-            }}
-          >
-            <div
-              style={{
-                padding: "10px 14px",
-                borderRadius: 12,
-                background: m.role === "user" ? "#d4eaff" : "#ffffff",
-                border: m.role === "user" ? "none" : "1px solid #e5e5e5",
-                maxWidth: "85%",
-                lineHeight: 1.7,
-                overflowWrap: "anywhere",
-              }}
-              className="rafiq-bubble"
-            >
+          <div key={i} className={"chat-row " + (m.role === "user" ? "user" : "assistant")}>
+            <div className="rafiq-bubble">
               {m.role === "assistant" ? (
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>
               ) : (
@@ -327,112 +294,48 @@ export default function Chat() {
             </div>
 
             {m.role === "assistant" && (
-              <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
-                <button
-                  onClick={() => copyMessage(m.content, i)}
-                  style={{
-                    padding: "3px 10px",
-                    fontSize: 12,
-                    border: "1px solid #ddd",
-                    borderRadius: 6,
-                    background: "#fff",
-                    color: "#555",
-                    cursor: "pointer",
-                  }}
-                >
-                  {copiedIndex === i ? "✓ تم النسخ" : "📋 نسخ"}
+              <div className="chat-actions">
+                <button className="chat-action-btn" onClick={() => copyMessage(m.content, i)}>
+                  {copiedIndex === i ? t("chat.copied") : t("chat.copy")}
                 </button>
 
                 {reportedIndexes.includes(i) ? (
-                  <span style={{ fontSize: 12, color: "#16a34a", padding: "3px 6px" }}>
-                    ✓ شكراً لإبلاغك
-                  </span>
+                  <span className="chat-report-thanks">{t("chat.reportThanks")}</span>
                 ) : (
                   <button
+                    className="chat-action-btn report"
                     onClick={() => {
                       setReportingIndex(reportingIndex === i ? null : i);
                       setReportReason("");
                     }}
-                    style={{
-                      padding: "3px 10px",
-                      fontSize: 12,
-                      border: "1px solid #ddd",
-                      borderRadius: 6,
-                      background: "#fff",
-                      color: "#999",
-                      cursor: "pointer",
-                    }}
                   >
-                    🚩 إبلاغ
+                    {t("chat.report")}
                   </button>
                 )}
               </div>
             )}
 
             {reportingIndex === i && (
-              <div
-                style={{
-                  marginTop: 8,
-                  padding: 12,
-                  border: "1px solid #fecaca",
-                  borderRadius: 10,
-                  background: "#fff7f7",
-                  width: "85%",
-                }}
-              >
-                <div style={{ fontSize: 13, color: "#991b1b", marginBottom: 8 }}>
-                  ما الخطأ في هذا الرد؟ (اختياري — يساعدنا على تحسين رفيق)
-                </div>
+              <div className="chat-report-box">
+                <div className="chat-report-q">{t("chat.reportQuestion")}</div>
                 <textarea
+                  className="chat-report-textarea"
                   value={reportReason}
                   onChange={(e) => setReportReason(e.target.value)}
-                  placeholder="مثلاً: معلومة غير دقيقة، أو لم يفهم سؤالي…"
-                  style={{
-                    width: "100%",
-                    minHeight: 50,
-                    padding: 8,
-                    borderRadius: 8,
-                    border: "1px solid #ddd",
-                    fontSize: 13,
-                    fontFamily: "inherit",
-                    direction: "rtl",
-                    resize: "vertical",
-                    boxSizing: "border-box",
-                  }}
+                  placeholder={t("chat.reportPlaceholder")}
                 />
-                <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-                  <button
-                    onClick={() => submitReport(i)}
-                    disabled={reportSending}
-                    style={{
-                      padding: "7px 16px",
-                      fontSize: 13,
-                      border: "none",
-                      borderRadius: 8,
-                      background: "#dc2626",
-                      color: "#fff",
-                      cursor: "pointer",
-                      fontWeight: 600,
-                    }}
-                  >
-                    {reportSending ? "جارٍ الإرسال…" : "إرسال البلاغ"}
+                <div className="chat-report-actions">
+                  <button className="chat-report-send" onClick={() => submitReport(i)} disabled={reportSending}>
+                    {reportSending ? t("chat.reportSending") : t("chat.reportSend")}
                   </button>
                   <button
+                    className="chat-report-cancel"
                     onClick={() => {
                       setReportingIndex(null);
                       setReportReason("");
                     }}
-                    style={{
-                      padding: "7px 16px",
-                      fontSize: 13,
-                      border: "1px solid #ddd",
-                      borderRadius: 8,
-                      background: "#fff",
-                      color: "#555",
-                      cursor: "pointer",
-                    }}
                   >
-                    إلغاء
+                    {t("chat.cancel")}
                   </button>
                 </div>
               </div>
@@ -440,74 +343,40 @@ export default function Chat() {
           </div>
         ))}
 
-        {loading && <p style={{ color: "#888" }}>رفيق يكتب…</p>}
+        {loading && <p className="chat-hint">{t("chat.typing")}</p>}
       </div>
 
       {/* تنبيه بلوغ الحدّ اليومي */}
       {limitReached && (
-        <div
-          style={{
-            background: "#fff7ed",
-            border: "1px solid #fed7aa",
-            borderRadius: 10,
-            padding: "12px 14px",
-            marginBottom: 10,
-            color: "#9a3412",
-            fontSize: 14,
-            lineHeight: 1.7,
-            flexShrink: 0,
-          }}
-        >
-          🌙 وصلت إلى حدّك اليومي ({DAILY_LIMIT} رسائل). عُد غداً لمواصلة رحلتك مع رفيق.
+        <div className="chat-limit">
+          {tt("chat.limitTitle", { n: DAILY_LIMIT })}
           <br />
-          <span style={{ fontSize: 13, color: "#c2410c" }}>
-            قريباً ستتمكّن من رفع هذا الحدّ ومواصلة المحادثة بلا توقّف.
-          </span>
+          <span className="chat-limit-sub">{t("chat.limitSub")}</span>
         </div>
       )}
 
       {/* منطقة الإدخال: ثابتة أسفل الشاشة دائماً */}
-      <div
-        style={{
-          display: "flex",
-          gap: 8,
-          paddingBottom: 12,
-          flexShrink: 0,
-        }}
-      >
+      <div className="chat-input-row">
         <input
+          className="chat-input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           placeholder={
             limitReached
-              ? "وصلت حدّك اليومي — عُد غداً"
+              ? t("chat.inputLimitReached")
               : selectedProjectId
-              ? "اكتب رسالتك هنا…"
-              : "اختر مشروعاً أولاً"
+              ? t("chat.inputPlaceholder")
+              : t("chat.inputPickFirst")
           }
           disabled={!selectedProjectId || limitReached}
-          style={{
-            flex: 1,
-            padding: "10px 12px",
-            borderRadius: 8,
-            border: "1px solid #ccc",
-          }}
         />
         <button
+          className="chat-send"
           onClick={sendMessage}
           disabled={loading || !selectedProjectId || limitReached}
-          style={{
-            padding: "10px 20px",
-            borderRadius: 8,
-            border: "none",
-            background: limitReached ? "#9ca3af" : "#2563eb",
-            color: "white",
-            cursor: selectedProjectId && !limitReached ? "pointer" : "not-allowed",
-            flexShrink: 0,
-          }}
         >
-          إرسال
+          {t("chat.send")}
         </button>
       </div>
     </div>
