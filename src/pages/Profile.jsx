@@ -60,7 +60,7 @@ export default function Profile() {
 
       const projectsRes = await supabase
         .from('projects')
-        .select('name, progress, phase, created_at')
+        .select('name, progress, phase, phase_number, created_at')
         .eq('user_id', user.id);
 
       const termsRes = await supabase
@@ -93,7 +93,8 @@ export default function Profile() {
       let hasPublishedProject = false;
       let hasCompletedProject = false;
       projectRows.forEach((p) => {
-        const n = extractPhaseNumber(p.phase);
+        // نفضّل phase_number الموثوق، ونرجع للاستخراج من النصّ للبيانات القديمة فقط
+        const n = p.phase_number || extractPhaseNumber(p.phase);
         if (n) counts[n] = (counts[n] || 0) + 1;
         if (n === 7) hasPublishedProject = true;
         if ((p.progress || 0) >= 100) hasCompletedProject = true;
