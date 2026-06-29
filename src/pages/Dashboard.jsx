@@ -11,10 +11,27 @@ import './Dashboard.css';
 
 const statusBg = { active: '#EEEDFE', done: '#E1F5EE', paused: '#FAEEDA' };
 
-const emptyForm = { name: '', emoji: '📁', status: 'active', level: 'مبتدئ', platform: 'ويب', progress: 0, phase: 'المرحلة 1: التخطيط' };
+const PHASE_NUMBERS = [1, 2, 3, 4, 5, 6, 7];
+
+// أسماء المراحل بالعربية للتخزين المرجعي في عمود phase (للتوافق مع البيانات القديمة)
+const PHASE_AR = {
+  1: 'التخطيط',
+  2: 'التصميم',
+  3: 'الإعداد',
+  4: 'البناء',
+  5: 'الربط',
+  6: 'البيانات',
+  7: 'السحابة والنشر',
+};
+
+// النموذج الفارغ يبدأ بالمرحلة 1
+const emptyForm = {
+  name: '', emoji: '📁', status: 'active', level: 'مبتدئ',
+  platform: 'ويب', progress: 0, phase_number: 1,
+};
 
 export default function Dashboard() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [filter, setFilter] = useState('all');
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +41,6 @@ export default function Dashboard() {
   const [form, setForm] = useState(emptyForm);
   const [showWelcome, setShowWelcome] = useState(false);
 
-  // إظهار الترحيب مرة واحدة فقط لكل مستخدم (عبر المتصفّح)
   useEffect(() => {
     try {
       const seen = localStorage.getItem('rafiq_welcome_seen');
@@ -55,6 +71,16 @@ export default function Dashboard() {
     { key: 'done',   label: t('home.filterDone') },
     { key: 'paused', label: t('home.filterPaused') },
   ];
+
+  // اسم المرحلة المعروض حسب اللغة (من ترجمات خارطة الطريق)
+  function phaseLabel(n) {
+    return t('roadmap.phaseLabel') + ' ' + n + ': ' + t('roadmap.phase' + n + 'title');
+  }
+
+  // النصّ المخزّن في عمود phase (يبقى عربياً مرجعياً للتوافق)
+  function phaseTextForStorage(n) {
+    return 'المرحلة ' + n + ': ' + (PHASE_AR[n] || '');
+  }
 
   useEffect(() => {
     async function fetchProjects() {
@@ -93,6 +119,12 @@ export default function Dashboard() {
 
   function openEdit(project) {
     setEditingId(project.id);
+    // إن لم يكن للمشروع phase_number (بيانات قديمة)، نستخرجه من النصّ، وإلا 1
+    let pn = project.phase_number;
+    if (!pn && project.phase) {
+      const m = String(project.phase).match(/(\d+)/);
+      if (m) pn = parseInt(m[1], 10);
+    }
     setForm({
       name: project.name,
       emoji: project.emoji,
@@ -100,7 +132,7 @@ export default function Dashboard() {
       level: project.level,
       platform: project.platform,
       progress: project.progress,
-      phase: project.phase,
+      phase_number: pn && pn >= 1 && pn <= 7 ? pn : 1,
     });
     setShowModal(true);
   }
@@ -108,10 +140,22 @@ export default function Dashboard() {
   async function saveProject() {
     if (!form.name.trim()) return;
 
+    // نبني الحمولة: phase_number (الجديد) + phase النصّي (للتوافق)، متزامنين
+    const payload = {
+      name: form.name,
+      emoji: form.emoji,
+      status: form.status,
+      level: form.level,
+      platform: form.platform,
+      progress: form.progress,
+      phase_number: form.phase_number,
+      phase: phaseTextForStorage(form.phase_number),
+    };
+
     if (editingId) {
       const { data, error } = await supabase
         .from('projects')
-        .update(form)
+        .update(payload)
         .eq('id', editingId)
         .select();
       if (error) { console.error('تعذّر حفظ التعديل:', error.message); return; }
@@ -119,7 +163,7 @@ export default function Dashboard() {
     } else {
       const { data, error } = await supabase
         .from('projects')
-        .insert([form])
+        .insert([payload])
         .select();
       if (error) { console.error('تعذّرت الإضافة:', error.message); return; }
       setProjects((prev) => [...prev, data[0]]);
@@ -131,6 +175,17 @@ export default function Dashboard() {
     const { error } = await supabase.from('projects').delete().eq('id', id);
     if (error) { console.error('تعذّر الحذف:', error.message); return; }
     setProjects((prev) => prev.filter((p) => p.id !== id));
+  }
+
+  // عرض اسم المرحلة في بطاقة المشروع حسب اللغة (نفضّل phase_number إن وُجد)
+  function cardPhaseLabel(p) {
+    let n = p.phase_number;
+    if (!n && p.phase) {
+      const m = String(p.phase).match(/(\d+)/);
+      if (m) n = parseInt(m[1], 10);
+    }
+    if (n && n >= 1 && n <= 7) return phaseLabel(n);
+    return p.phase || '';
   }
 
   return (
@@ -171,7 +226,8 @@ export default function Dashboard() {
           <span className="cloud-off"><IconCloudOff size={14} /> {t('home.cloudOff')}</span>
         )}
       </div>
-<Link to="/learn" className="learn-banner">
+
+      <Link to="/learn" className="learn-banner">
         <div className="learn-banner-icon"><IconRoute2 size={26} /></div>
         <div className="learn-banner-text">
           <div className="learn-banner-title">{t('home.learnBannerTitle')}</div>
@@ -229,7 +285,7 @@ export default function Dashboard() {
               </div>
               <div className="pc-prog">
                 <div className="pc-prog-hdr">
-                  <span>{p.phase}</span>
+                  <span>{cardPhaseLabel(p)}</span>
                   <span className="pct">{p.progress}%</span>
                 </div>
                 <div className="pc-track">
@@ -294,12 +350,14 @@ export default function Dashboard() {
 
               <label className="field">
                 <span>{t('home.fieldPhase')}</span>
-                <input
-                  type="text"
-                  value={form.phase}
-                  onChange={(e) => setForm({ ...form, phase: e.target.value })}
-                  placeholder={t('home.fieldPhasePlaceholder')}
-                />
+                <select
+                  value={form.phase_number}
+                  onChange={(e) => setForm({ ...form, phase_number: Number(e.target.value) })}
+                >
+                  {PHASE_NUMBERS.map((n) => (
+                    <option key={n} value={n}>{phaseLabel(n)}</option>
+                  ))}
+                </select>
               </label>
 
               <label className="field">
@@ -308,7 +366,7 @@ export default function Dashboard() {
                   type="range"
                   min="0"
                   max="100"
-                                    value={form.progress}
+                  value={form.progress}
                   onChange={(e) => setForm({ ...form, progress: Number(e.target.value) })}
                 />
               </label>
