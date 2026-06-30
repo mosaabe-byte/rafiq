@@ -636,4 +636,381 @@ export default App;`,
       },
     ],
   },
+  3: {
+    title: {
+      ar: 'لوحة المشاريع الحيّة',
+      fr: 'Le tableau de bord des projets',
+      en: 'The Live Projects Dashboard',
+    },
+    description: {
+      ar: 'اعرض قائمة بطاقات، مرّر لها بيانات، احسب إحصاءات، وأضف فلترة',
+      fr: 'Affichez une liste de cartes, passez-leur des données, calculez des statistiques, et ajoutez un filtrage',
+      en: 'Display a list of cards, pass them data, compute statistics, and add filtering',
+    },
+    intro: {
+      ar: 'في المحطة السابقة بنيت مكوّناً واحداً. الآن سنبني لوحة كاملة: عدّة بطاقات من بيانات، إحصاءات تُحسب تلقائياً، وفلترة تتجاوب مع المستخدم. هذه أول واجهة حقيقية «حيّة» تبنيها. سنفهم كل مفهوم قبل أن نكتبه — تذكّر، أنت تبني لوحة مشروعك أنت.',
+      fr: "Dans l'étape précédente, vous avez construit un seul composant. Maintenant, nous allons construire un tableau de bord complet : plusieurs cartes à partir de données, des statistiques calculées automatiquement, et un filtrage qui répond à l'utilisateur. C'est la première vraie interface « vivante » que vous construisez. Nous comprendrons chaque concept avant de l'écrire — souvenez-vous, c'est le tableau de bord de votre projet que vous construisez.",
+      en: "In the previous station you built a single component. Now we'll build a complete dashboard: several cards from data, statistics computed automatically, and filtering that responds to the user. This is the first truly \"live\" interface you build. We'll understand each concept before writing it — remember, it's your own project's dashboard you're building.",
+    },
+    sections: [
+      {
+        title: {
+          ar: 'من بطاقة واحدة إلى قائمة',
+          fr: "D'une carte à une liste",
+          en: 'From One Card to a List',
+        },
+        subtitle: {
+          ar: 'المفهوم: كيف نعرض عدّة عناصر من بيانات؟',
+          fr: 'Le concept : comment afficher plusieurs éléments à partir de données ?',
+          en: 'The concept: how do we display multiple items from data?',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'تخيّل أن عندك قائمة مشاريع، وتريد بطاقة لكل مشروع. هل تكتب البطاقة عشر مرّات يدوياً؟ لا. في React نخبر الواجهة: «لكل عنصر في القائمة، اصنع بطاقة». الأداة التي تفعل هذا اسمها map — تمرّ على كل عنصر وتُنتج له واجهة.',
+              fr: "Imaginez que vous avez une liste de projets, et vous voulez une carte pour chaque projet. Écririez-vous la carte dix fois à la main ? Non. En React, on dit à l'interface : « pour chaque élément de la liste, fabrique une carte ». L'outil qui fait cela s'appelle map — il parcourt chaque élément et lui produit une interface.",
+              en: "Imagine you have a list of projects, and you want a card for each one. Would you write the card ten times by hand? No. In React, we tell the interface: \"for each item in the list, make a card.\" The tool that does this is called map — it goes through each item and produces an interface for it.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'لنبدأ ببيانات بسيطة. في تطبيق حقيقي تأتي البيانات من قاعدة بيانات (ستتعلّم ذلك في محطة لاحقة)، لكن الآن سنكتبها يدوياً لنركّز على الفكرة.',
+              fr: "Commençons par des données simples. Dans une vraie application, les données viennent d'une base de données (vous l'apprendrez dans une étape ultérieure), mais pour l'instant nous les écrirons à la main pour nous concentrer sur l'idée.",
+              en: "Let's start with simple data. In a real app, data comes from a database (you'll learn that in a later station), but for now we'll write it by hand to focus on the idea.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '✍️',
+            text: {
+              ar: 'في App.jsx، أنشئ قائمة مشاريع بسيطة فوق دالة App، وجرّب عرضها بـ map:',
+              fr: 'Dans App.jsx, créez une liste de projets simple au-dessus de la fonction App, et essayez de l\'afficher avec map :',
+              en: 'In App.jsx, create a simple projects list above the App function, and try displaying it with map:',
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'App.jsx', fr: 'App.jsx', en: 'App.jsx' },
+            code: `import { useState } from 'react';
+
+const myProjects = [
+  { id: 1, name: 'مشروعي الأول', status: 'جارٍ' },
+  { id: 2, name: 'فكرة تطبيق', status: 'مكتمل' },
+  { id: 3, name: 'متجر صغير', status: 'متوقف' },
+];
+
+function App() {
+  return (
+    <div>
+      <h1>مشاريعي</h1>
+      {myProjects.map((project) => (
+        <div key={project.id}>
+          <h3>{project.name}</h3>
+          <p>{project.status}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default App;`,
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'لاحظ key={project.id}: React يحتاج معرّفاً فريداً لكل عنصر في القائمة ليتتبّعها. اجعلها دائماً قيمة فريدة مثل id. ستراها في كل قائمة تبنيها.',
+              fr: "Remarquez key={project.id} : React a besoin d'un identifiant unique pour chaque élément de la liste afin de les suivre. Utilisez toujours une valeur unique comme id. Vous la verrez dans chaque liste que vous construisez.",
+              en: 'Notice key={project.id}: React needs a unique identifier for each list item to track them. Always use a unique value like id. You\'ll see it in every list you build.',
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'ثلاث بطاقات تظهر، واحدة لكل مشروع',
+              fr: 'Trois cartes apparaissent, une pour chaque projet',
+              en: 'Three cards appear, one for each project',
+            },
+            note: {
+              ar: 'إن ظهرت البطاقات الثلاث، فقد تعلّمت عرض قائمة من البيانات — أساس كل تطبيق يعرض محتوى.',
+              fr: 'Si les trois cartes apparaissent, vous avez appris à afficher une liste de données — la base de toute application qui affiche du contenu.',
+              en: 'If the three cards appear, you\'ve learned to display a list from data — the foundation of every app that shows content.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'مكوّن البطاقة و props',
+          fr: 'Le composant carte et les props',
+          en: 'The Card Component and props',
+        },
+        subtitle: {
+          ar: 'المفهوم الجديد: كيف يستقبل المكوّن بيانات مختلفة؟',
+          fr: 'Le nouveau concept : comment un composant reçoit-il des données différentes ?',
+          en: 'The new concept: how does a component receive different data?',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'بطاقاتنا الآن مكتوبة داخل App مباشرة. الأفضل أن نصنع مكوّن «بطاقة» مستقلاً، ونمرّر له بيانات كل مشروع. لكن كيف يستقبل المكوّن بيانات مختلفة في كل مرّة؟ عبر props.',
+              fr: "Nos cartes sont actuellement écrites directement dans App. Il vaut mieux créer un composant « carte » indépendant, et lui passer les données de chaque projet. Mais comment un composant reçoit-il des données différentes à chaque fois ? Via les props.",
+              en: "Our cards are currently written directly inside App. It's better to make an independent \"card\" component and pass it each project's data. But how does a component receive different data each time? Through props.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'props (اختصار properties) هي البيانات التي يمرّرها المكوّن الأب إلى الابن — مثل وسائط تمرّرها لدالة. تخيّل قالب بطاقة فارغاً، وأنت تملؤه ببيانات مختلفة كل مرّة. هذا هو props.',
+              fr: "props (abréviation de properties) sont les données que le composant parent passe à l'enfant — comme des arguments que vous passez à une fonction. Imaginez un modèle de carte vide, que vous remplissez avec des données différentes à chaque fois. C'est cela, props.",
+              en: 'props (short for properties) are the data the parent component passes to the child — like arguments you pass to a function. Imagine an empty card template that you fill with different data each time. That\'s props.',
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '📄',
+            text: {
+              ar: 'أنشئ ملفاً جديداً ProjectCard.jsx في مجلّد src:',
+              fr: 'Créez un nouveau fichier ProjectCard.jsx dans le dossier src :',
+              en: 'Create a new file ProjectCard.jsx in the src folder:',
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'ProjectCard.jsx', fr: 'ProjectCard.jsx', en: 'ProjectCard.jsx' },
+            code: `function ProjectCard({ name, status }) {
+  return (
+    <div className="card">
+      <h3>{name}</h3>
+      <p>الحالة: {status}</p>
+    </div>
+  );
+}
+
+export default ProjectCard;`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'لاحظ { name, status } بين قوسي الدالة: هذه هي props التي يستقبلها المكوّن. أي قيمة تمرّرها له ستظهر مكانها. الآن لنستعمله في App بدل البطاقة المكتوبة يدوياً.',
+              fr: "Remarquez { name, status } entre les parenthèses de la fonction : ce sont les props que le composant reçoit. Toute valeur que vous lui passez apparaîtra à sa place. Maintenant, utilisons-le dans App à la place de la carte écrite à la main.",
+              en: "Notice { name, status } between the function's parentheses: these are the props the component receives. Any value you pass it will appear in its place. Now let's use it in App instead of the hand-written card.",
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'App.jsx (محدّث)', fr: 'App.jsx (mis à jour)', en: 'App.jsx (updated)' },
+            code: `import ProjectCard from './ProjectCard';
+
+const myProjects = [
+  { id: 1, name: 'مشروعي الأول', status: 'جارٍ' },
+  { id: 2, name: 'فكرة تطبيق', status: 'مكتمل' },
+  { id: 3, name: 'متجر صغير', status: 'متوقف' },
+];
+
+function App() {
+  return (
+    <div>
+      <h1>مشاريعي</h1>
+      {myProjects.map((project) => (
+        <ProjectCard
+          key={project.id}
+          name={project.name}
+          status={project.status}
+        />
+      ))}
+    </div>
+  );
+}
+
+export default App;`,
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'هذا جوهر React: مكوّنات صغيرة قابلة لإعادة الاستخدام، تتغذّى ببيانات مختلفة عبر props. مكوّن ProjectCard واحد يخدم كل مشاريعك.',
+              fr: "C'est l'essence de React : de petits composants réutilisables, alimentés par des données différentes via les props. Un seul composant ProjectCard sert tous vos projets.",
+              en: "This is the essence of React: small reusable components, fed different data through props. One ProjectCard component serves all your projects.",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'نفس البطاقات الثلاث، لكن من مكوّن واحد قابل لإعادة الاستخدام',
+              fr: 'Les mêmes trois cartes, mais à partir d\'un seul composant réutilisable',
+              en: 'The same three cards, but from one reusable component',
+            },
+            note: {
+              ar: 'فهمت props الآن — أحد أهمّ مفاهيم React على الإطلاق. كل تطبيق احترافي مبنيّ على هذا.',
+              fr: 'Vous avez compris props maintenant — l\'un des concepts les plus importants de React. Toute application professionnelle est bâtie là-dessus.',
+              en: 'You\'ve understood props now — one of React\'s most important concepts ever. Every professional app is built on this.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'الإحصاءات وأشرطة التقدّم',
+          fr: 'Les statistiques et les barres de progression',
+          en: 'Statistics and Progress Bars',
+        },
+        subtitle: {
+          ar: 'احسب أرقاماً من بياناتك واعرضها',
+          fr: 'Calculez des nombres à partir de vos données et affichez-les',
+          en: 'Compute numbers from your data and display them',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'اللوحة الحيّة تعرض أرقاماً مفيدة: كم مشروعاً لديك؟ كم منها مكتمل؟ هذه ليست أرقاماً نكتبها يدوياً — بل نحسبها من البيانات نفسها، فتتحدّث تلقائياً كلّما تغيّرت.',
+              fr: "Le tableau de bord vivant affiche des nombres utiles : combien de projets avez-vous ? Combien sont terminés ? Ce ne sont pas des nombres écrits à la main — nous les calculons à partir des données elles-mêmes, donc ils se mettent à jour automatiquement à chaque changement.",
+              en: "The live dashboard shows useful numbers: how many projects do you have? How many are done? These aren't hand-written numbers — we compute them from the data itself, so they update automatically whenever it changes.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '🔢',
+            text: {
+              ar: 'في App، قبل return، احسب بعض الإحصاءات البسيطة:',
+              fr: 'Dans App, avant le return, calculez quelques statistiques simples :',
+              en: 'In App, before the return, compute a few simple statistics:',
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'إحصاءات في App.jsx', fr: 'Statistiques dans App.jsx', en: 'Statistics in App.jsx' },
+            code: `const total = myProjects.length;
+const done = myProjects.filter((p) => p.status === 'مكتمل').length;`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'الأول يعطي العدد الكلّي (طول القائمة). الثاني يستعمل filter ليُبقي المشاريع المكتملة فقط، ثم يعدّها. اعرضهما في الواجهة:',
+              fr: "Le premier donne le total (la longueur de la liste). Le second utilise filter pour ne garder que les projets terminés, puis les compte. Affichez-les dans l'interface :",
+              en: 'The first gives the total (the list length). The second uses filter to keep only completed projects, then counts them. Display them in the interface:',
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'عرض الإحصاءات', fr: 'Afficher les statistiques', en: 'Display the statistics' },
+            code: `<div className="stats">
+  <span>الإجمالي: {total}</span>
+  <span>المكتملة: {done}</span>
+</div>`,
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'هذه قوّة البيانات الحيّة: أضف مشروعاً جديداً للقائمة، وسترى الأرقام تتغيّر وحدها دون أن تلمسها. الواجهة تتبع البيانات دائماً.',
+              fr: "C'est la puissance des données vivantes : ajoutez un nouveau projet à la liste, et vous verrez les nombres changer tout seuls sans y toucher. L'interface suit toujours les données.",
+              en: "This is the power of live data: add a new project to the list, and you'll see the numbers change on their own without touching them. The interface always follows the data.",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'يظهر «الإجمالي: 3» و«المكتملة: 1»',
+              fr: 'Affiche « Total : 3 » et « Terminés : 1 »',
+              en: 'Shows "Total: 3" and "Done: 1"',
+            },
+            note: {
+              ar: 'الأرقام تُحسب من بياناتك لا تُكتب يدوياً — هذا الفرق بين لوحة حيّة ولوحة ميّتة.',
+              fr: 'Les nombres sont calculés à partir de vos données, pas écrits à la main — c\'est la différence entre un tableau de bord vivant et un mort.',
+              en: 'The numbers are computed from your data, not hand-written — this is the difference between a live dashboard and a dead one.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'الفلترة',
+          fr: 'Le filtrage',
+          en: 'Filtering',
+        },
+        subtitle: {
+          ar: 'دع المستخدم يختار ما يراه — تطبيق عملي للحالة',
+          fr: "Laissez l'utilisateur choisir ce qu'il voit — application pratique de l'état",
+          en: 'Let the user choose what they see — a practical use of state',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'الآن نجمع كل ما تعلّمناه: نضيف أزراراً تتيح للمستخدم عرض كل المشاريع، أو المكتملة فقط، أو الجارية فقط. سنستعمل الحالة (State) التي تعلّمناها في المحطة 2 لتذكّر الفلتر المختار.',
+              fr: "Maintenant, nous rassemblons tout ce que nous avons appris : nous ajoutons des boutons qui permettent à l'utilisateur d'afficher tous les projets, ou seulement les terminés, ou seulement ceux en cours. Nous utiliserons l'état (State) appris à l'étape 2 pour retenir le filtre choisi.",
+              en: "Now we bring together everything we've learned: we add buttons that let the user show all projects, or only completed ones, or only active ones. We'll use the state we learned in station 2 to remember the chosen filter.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '✍️',
+            text: {
+              ar: 'أضف حالة الفلتر في أعلى App، ثم قائمة مفلترة تُحسب منها:',
+              fr: 'Ajoutez l\'état du filtre en haut de App, puis une liste filtrée calculée à partir de lui :',
+              en: 'Add the filter state at the top of App, then a filtered list computed from it:',
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'الفلترة في App.jsx', fr: 'Le filtrage dans App.jsx', en: 'Filtering in App.jsx' },
+            code: `const [filter, setFilter] = useState('الكل');
+
+const visibleProjects =
+  filter === 'الكل'
+    ? myProjects
+    : myProjects.filter((p) => p.status === filter);`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'المتغيّر filter يحفظ الاختيار الحالي. وقائمة visibleProjects تعرض الكل أو المفلتر حسبه. الآن أضف أزرار الفلترة، واعرض القائمة المفلترة بدل الأصلية:',
+              fr: "La variable filter garde le choix actuel. Et la liste visibleProjects affiche tout ou le filtré selon lui. Maintenant, ajoutez les boutons de filtrage, et affichez la liste filtrée au lieu de l'originale :",
+              en: "The filter variable holds the current choice. And the visibleProjects list shows all or the filtered set based on it. Now add the filter buttons, and display the filtered list instead of the original:",
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'أزرار الفلترة والعرض', fr: 'Boutons de filtrage et affichage', en: 'Filter buttons and display' },
+            code: `<div className="filters">
+  <button onClick={() => setFilter('الكل')}>الكل</button>
+  <button onClick={() => setFilter('جارٍ')}>جارٍ</button>
+  <button onClick={() => setFilter('مكتمل')}>مكتمل</button>
+</div>
+
+{visibleProjects.map((project) => (
+  <ProjectCard
+    key={project.id}
+    name={project.name}
+    status={project.status}
+  />
+))}`,
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'الضغط على زرّ يُظهر المشاريع المطابقة فقط',
+              fr: 'Cliquer sur un bouton n\'affiche que les projets correspondants',
+              en: 'Clicking a button shows only the matching projects',
+            },
+            note: {
+              ar: 'إن تغيّرت البطاقات المعروضة مع كل زرّ، فقد بنيت لوحة تفاعلية حقيقية! جمعت map و props و State و filter في تجربة واحدة.',
+              fr: 'Si les cartes affichées changent avec chaque bouton, vous avez construit un vrai tableau de bord interactif ! Vous avez réuni map, props, State et filter en une seule expérience.',
+              en: 'If the displayed cards change with each button, you\'ve built a real interactive dashboard! You\'ve combined map, props, State, and filter in one experience.',
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'ما بنيته هنا هو نموذج مصغّر للوحة رفيق نفسها التي تستعملها! بطاقات من بيانات، إحصاءات محسوبة، وفلترة بالحالة. أنت تفهم الآن كيف بُنيت التطبيقات التي تستعملها يومياً. أحسنت!',
+              fr: "Ce que vous avez construit ici est une version miniature du tableau de bord de Rafiq lui-même que vous utilisez ! Des cartes à partir de données, des statistiques calculées, et un filtrage par l'état. Vous comprenez maintenant comment sont construites les applications que vous utilisez chaque jour. Bravo !",
+              en: "What you've built here is a miniature version of Rafiq's own dashboard that you use! Cards from data, computed statistics, and filtering by state. You now understand how the apps you use daily are built. Well done!",
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
