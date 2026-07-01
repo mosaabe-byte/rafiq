@@ -89,20 +89,20 @@ const sessions = [
   },
   {
     n: 9,
-    title: { ar: 'شاشة الفكرة', fr: "L'écran de l'idée", en: 'Idea Screen' },
+    title: { ar: 'من الفكرة إلى الخطّة', fr: "De l'idée au plan", en: 'From Idea to Plan' },
     sub: {
-      ar: 'محادثة موجّهة تحوّل فكرة غامضة إلى مشروع',
-      fr: 'Une conversation guidée qui transforme une idée vague en projet',
-      en: 'A guided conversation that turns a vague idea into a project',
+      ar: 'حوّل فكرة غامضة إلى خطّة واضحة بميزات قابلة للتنفيذ',
+      fr: 'Transformez une idée vague en un plan clair avec des fonctionnalités réalisables',
+      en: 'Turn a vague idea into a clear plan with actionable features',
     },
   },
   {
     n: 10,
-    title: { ar: 'لصق الفكرة', fr: 'Coller votre idée', en: 'Paste Your Idea' },
+    title: { ar: 'تحسين التصميم والتجربة', fr: "Améliorer le design et l'expérience", en: 'Improving Design and Experience' },
     sub: {
-      ar: 'وضع ثانٍ لشاشة جديد — الصق فكرتك جاهزة',
-      fr: "Un second mode pour l'écran « nouveau » — collez votre idée déjà prête",
-      en: 'A second mode for the "new" screen — paste your idea ready-made',
+      ar: 'اجعل واجهتك أجمل وأوضح: الألوان، التباعد، الرسائل الواضحة',
+      fr: "Rendez votre interface plus belle et plus claire : couleurs, espacement, messages clairs",
+      en: 'Make your interface prettier and clearer: colors, spacing, clear messages',
     },
   },
   {
@@ -125,11 +125,11 @@ const sessions = [
   },
   {
     n: 13,
-    title: { ar: 'شاشة الطريق', fr: "L'écran de la feuille de route", en: 'Roadmap Screen' },
+    title: { ar: 'رحلتك القادمة', fr: 'Votre prochain voyage', en: 'Your Next Journey' },
     sub: {
-      ar: 'المراحل السبع — اكتمال الشاشات الخمس',
-      fr: 'Les sept étapes — l\'achèvement des cinq écrans',
-      en: 'The seven phases — completion of the five screens',
+      ar: 'راجع ما تعلّمته، واكتشف كيف تواصل النموّ بنفسك',
+      fr: 'Révisez ce que vous avez appris, et découvrez comment continuer à grandir par vous-même',
+      en: "Review what you've learned, and discover how to keep growing on your own",
     },
   },
 ];
