@@ -1603,4 +1603,294 @@ useEffect(() => {
       },
     ],
   },
+  6: {
+    title: {
+      ar: 'ملف المطوّر',
+      fr: 'Le profil du développeur',
+      en: 'The Developer Profile',
+    },
+    description: {
+      ar: 'ابنِ صفحة تلخّص هويّتك ونشاطك بإحصاءات حقيقية وشارات',
+      fr: "Construisez une page qui résume votre identité et votre activité avec de vraies statistiques et des badges",
+      en: 'Build a page that summarizes your identity and activity with real statistics and badges',
+    },
+    intro: {
+      ar: 'بنيت في المحطات السابقة أدواتٍ عدّة: لوحة مشاريع، ومعجماً. الآن سنبني صفحة تجمعها في صورة واحدة: ملفّك كمطوّر. سنتعلّم مهارة جديدة مهمّة: قراءة بيانات من عدّة مصادر محفوظة، وحساب إحصاءات صادقة منها. القاعدة الذهبية هنا: لا رقم يظهر إلا محسوباً من بيانات حقيقية. تذكّر: أنت تبني ملفّك أنت.',
+      fr: "Dans les étapes précédentes, vous avez construit plusieurs outils : un tableau de bord de projets, et un glossaire. Maintenant, nous allons construire une page qui les rassemble en une seule image : votre profil de développeur. Nous apprendrons une nouvelle compétence importante : lire des données de plusieurs sources sauvegardées, et en calculer des statistiques honnêtes. La règle d'or ici : aucun nombre n'apparaît sans être calculé à partir de données réelles. Souvenez-vous : c'est votre propre profil que vous construisez.",
+      en: "In the previous stations you built several tools: a projects dashboard, and a glossary. Now we'll build a page that gathers them into one picture: your developer profile. We'll learn an important new skill: reading data from several saved sources, and computing honest statistics from them. The golden rule here: no number appears unless computed from real data. Remember: it's your own profile you're building.",
+    },
+    sections: [
+      {
+        title: {
+          ar: 'ما ملف المطوّر؟',
+          fr: 'Qu\'est-ce que le profil du développeur ?',
+          en: 'What Is the Developer Profile?',
+        },
+        subtitle: {
+          ar: 'المفهوم: صفحة تلخّص هويّتك ونشاطك',
+          fr: 'Le concept : une page qui résume votre identité et votre activité',
+          en: 'The concept: a page that summarizes your identity and activity',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'ملف المطوّر صفحة تجمع من أنت وماذا أنجزت: اسمك، وكم مشروعاً بنيت، وكم مصطلحاً في معجمك، وما الإنجازات التي حقّقتها. إنها مرآة تعكس رحلتك — تحفّزك حين ترى تقدّمك بوضوح.',
+              fr: "Le profil du développeur est une page qui rassemble qui vous êtes et ce que vous avez accompli : votre nom, combien de projets vous avez construits, combien de termes dans votre glossaire, et quelles réalisations vous avez obtenues. C'est un miroir qui reflète votre parcours — il vous motive quand vous voyez clairement vos progrès.",
+              en: "The developer profile is a page that gathers who you are and what you've accomplished: your name, how many projects you built, how many terms in your glossary, and what achievements you earned. It's a mirror reflecting your journey — motivating you when you see your progress clearly.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'مبدأ مهمّ: كل رقم في هذه الصفحة سيُحسب من بياناتك الحقيقية — لا نكتب أرقاماً وهميّة. صفحة صادقة تعرض القليل الحقيقي خير من صفحة مزيّنة بأرقام مخترعة.',
+              fr: "Un principe important : chaque nombre sur cette page sera calculé à partir de vos vraies données — nous n'écrivons pas de nombres fictifs. Une page honnête qui affiche peu de vrai vaut mieux qu'une page ornée de nombres inventés.",
+              en: 'An important principle: every number on this page will be computed from your real data — we don\'t write fake numbers. An honest page showing a little truth is better than one decorated with invented numbers.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'بطاقة الهويّة',
+          fr: 'La carte d\'identité',
+          en: 'The Identity Card',
+        },
+        subtitle: {
+          ar: 'اعرض اسمك ومعلوماتك الأساسية',
+          fr: 'Affichez votre nom et vos informations de base',
+          en: 'Display your name and basic information',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'لنبدأ بالجزء العلوي: بطاقة تعرض اسم المطوّر وحرفه الأول كصورة رمزية. سنجعل الاسم قابلاً للحفظ، فيبقى بعد إغلاق الصفحة — بنفس نمط الحفظ الذي أتقنته.',
+              fr: "Commençons par la partie supérieure : une carte qui affiche le nom du développeur et sa première lettre comme avatar. Nous rendrons le nom sauvegardable, pour qu'il reste après la fermeture de la page — avec le même modèle de sauvegarde que vous maîtrisez.",
+              en: "Let's start with the top part: a card showing the developer's name and their first letter as an avatar. We'll make the name saveable, so it stays after closing the page — with the same saving pattern you mastered.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '✍️',
+            text: {
+              ar: 'أنشئ بطاقة هويّة باسم محفوظ، في «App»:',
+              fr: 'Créez une carte d\'identité avec un nom sauvegardé, dans « App » :',
+              en: 'Create an identity card with a saved name, in "App":',
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'App.jsx', fr: 'App.jsx', en: 'App.jsx' },
+            code: `import { useState, useEffect } from 'react';
+
+function App() {
+  const [name, setName] = useState(() => {
+    return localStorage.getItem('devName') || '';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('devName', name);
+  }, [name]);
+
+  const initial = name.trim() ? name.trim()[0] : '؟';
+
+  return (
+    <div>
+      <div className="id-card">
+        <div className="avatar">{initial}</div>
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="اسمك"
+        />
+      </div>
+    </div>
+  );
+}
+
+export default App;`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'لاحظ المتغيّر «initial»: يأخذ أول حرف من الاسم كصورة رمزية، أو علامة استفهام إن كان فارغاً. تفصيل بسيط يعطي طابعاً شخصياً. والاسم يُحفظ تلقائياً بنمطك المعروف.',
+              fr: "Remarquez la variable « initial » : elle prend la première lettre du nom comme avatar, ou un point d'interrogation s'il est vide. Un petit détail qui donne une touche personnelle. Et le nom est sauvegardé automatiquement selon votre modèle connu.",
+              en: 'Notice the "initial" variable: it takes the first letter of the name as an avatar, or a question mark if empty. A small detail that adds a personal touch. And the name saves automatically with your known pattern.',
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'تكتب اسمك فيظهر الحرف الأول، ويبقى بعد إعادة فتح الصفحة',
+              fr: 'Vous tapez votre nom, la première lettre apparaît, et il reste après la réouverture de la page',
+              en: 'You type your name, the first letter appears, and it stays after reopening the page',
+            },
+            note: {
+              ar: 'بطاقة هويّتك جاهزة ومحفوظة. الآن لنملأها بإحصاءات حقيقية من نشاطك.',
+              fr: "Votre carte d'identité est prête et sauvegardée. Maintenant, remplissons-la de vraies statistiques de votre activité.",
+              en: 'Your identity card is ready and saved. Now let\'s fill it with real statistics from your activity.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'الإحصاءات الحقيقية',
+          fr: 'Les statistiques réelles',
+          en: 'Real Statistics',
+        },
+        subtitle: {
+          ar: 'اقرأ بياناتك المحفوظة واحسب منها',
+          fr: 'Lisez vos données sauvegardées et calculez à partir d\'elles',
+          en: 'Read your saved data and compute from it',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'هنا المهارة الجديدة: صفحة الملف ستقرأ البيانات التي حفظتها في المحطات السابقة — مشاريعك (بمفتاح myProjects) ومصطلحاتك (بمفتاح myGlossary) — وتحسب منها إحصاءات. هكذا يظهر عملك السابق في ملفّك، حيّاً وصادقاً.',
+              fr: "Voici la nouvelle compétence : la page de profil lira les données que vous avez sauvegardées dans les étapes précédentes — vos projets (clé myProjects) et vos termes (clé myGlossary) — et en calculera des statistiques. Ainsi, votre travail précédent apparaît dans votre profil, vivant et honnête.",
+              en: "Here's the new skill: the profile page will read the data you saved in previous stations — your projects (key myProjects) and terms (key myGlossary) — and compute statistics from it. So your previous work appears in your profile, live and honest.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '🔢',
+            text: {
+              ar: 'اقرأ المصدرين المحفوظين واحسب أعدادهما، في «App»:',
+              fr: 'Lisez les deux sources sauvegardées et calculez leurs nombres, dans « App » :',
+              en: 'Read the two saved sources and compute their counts, in "App":',
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'قراءة وحساب الإحصاءات', fr: 'Lire et calculer les statistiques', en: 'Read and compute statistics' },
+            code: `const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
+const glossary = JSON.parse(localStorage.getItem('myGlossary')) || [];
+
+const projectCount = projects.length;
+const termCount = glossary.length;`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'نقرأ كل مصدر من الذاكرة، وإن لم يوجد نستعمل قائمة فارغة (عبر || []) لتفادي الأخطاء. ثم نحسب العدد بـ «length». الآن اعرض هذه الأرقام في بطاقات:',
+              fr: "Nous lisons chaque source depuis la mémoire, et si elle n'existe pas nous utilisons une liste vide (via || []) pour éviter les erreurs. Puis nous calculons le nombre avec « length ». Maintenant, affichez ces nombres dans des cartes :",
+              en: "We read each source from memory, and if it doesn't exist we use an empty list (via || []) to avoid errors. Then we compute the count with \"length\". Now display these numbers in cards:",
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'عرض الإحصاءات', fr: 'Afficher les statistiques', en: 'Display statistics' },
+            code: `<div className="stats">
+  <div className="stat-box">
+    <div className="stat-num">{projectCount}</div>
+    <div className="stat-label">مشاريعك</div>
+  </div>
+  <div className="stat-box">
+    <div className="stat-num">{termCount}</div>
+    <div className="stat-label">مصطلحاتك</div>
+  </div>
+</div>`,
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'تظهر أعداد مشاريعك ومصطلحاتك الحقيقية من المحطات السابقة',
+              fr: 'Les nombres réels de vos projets et termes des étapes précédentes apparaissent',
+              en: 'The real counts of your projects and terms from previous stations appear',
+            },
+            note: {
+              ar: 'إن ظهرت أرقامك الحقيقية، فقد تعلّمت تجميع البيانات من مصادر متعدّدة — مهارة أساسية في كل تطبيق يعرض ملخّصات.',
+              fr: "Si vos vrais nombres apparaissent, vous avez appris à agréger des données de plusieurs sources — une compétence essentielle dans toute application qui affiche des résumés.",
+              en: 'If your real numbers appear, you\'ve learned to aggregate data from multiple sources — an essential skill in every app that shows summaries.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'الشارات',
+          fr: 'Les badges',
+          en: 'Badges',
+        },
+        subtitle: {
+          ar: 'إنجازات تُحسب من بياناتك الحقيقية',
+          fr: 'Des réalisations calculées à partir de vos vraies données',
+          en: 'Achievements computed from your real data',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'الشارة إنجاز يُحقّق حين يبلغ المستخدم هدفاً. الجميل أنها تُحسب من بياناتك: «أضفت أول مشروع» تُضيء حين يكون عدد مشاريعك واحداً على الأقل. لا شارة وهميّة — كلٌّ لها شرط حقيقي يُفحص.',
+              fr: "Un badge est une réalisation débloquée quand l'utilisateur atteint un objectif. Le beau, c'est qu'il se calcule à partir de vos données : « Vous avez ajouté un premier projet » s'allume quand votre nombre de projets est d'au moins un. Aucun badge fictif — chacun a une condition réelle qui est vérifiée.",
+              en: "A badge is an achievement unlocked when the user reaches a goal. The beauty is it's computed from your data: \"You added a first project\" lights up when your project count is at least one. No fake badge — each has a real condition that is checked.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '🏅',
+            text: {
+              ar: 'عرّف شارات بشروط حقيقية، واعرضها مضيئة أو باهتة حسب تحقّقها:',
+              fr: 'Définissez des badges avec des conditions réelles, et affichez-les allumés ou éteints selon leur réalisation :',
+              en: 'Define badges with real conditions, and display them lit or dimmed based on whether they\'re earned:',
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'الشارات في App.jsx', fr: 'Les badges dans App.jsx', en: 'Badges in App.jsx' },
+            code: `const badges = [
+  { icon: '🚀', label: 'أول مشروع', earned: projectCount >= 1 },
+  { icon: '📚', label: 'جامع المصطلحات', earned: termCount >= 5 },
+  { icon: '🏗️', label: 'بنّاء نشيط', earned: projectCount >= 3 },
+];
+
+// في الواجهة:
+<div className="badges">
+  {badges.map((badge) => (
+    <div
+      key={badge.label}
+      className={badge.earned ? 'badge earned' : 'badge locked'}
+    >
+      <span>{badge.icon}</span>
+      <span>{badge.label}</span>
+    </div>
+  ))}
+</div>`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'كل شارة كائن فيه شرط «earned» يُحسب من بياناتك (مثل projectCount >= 1). في العرض، نعطي الشارة صنفاً مختلفاً حسب تحقّقها، فتظهر مضيئة أو باهتة. أرقامك الحقيقية هي ما يقرّر.',
+              fr: "Chaque badge est un objet avec une condition « earned » calculée à partir de vos données (comme projectCount >= 1). À l'affichage, nous donnons au badge une classe différente selon sa réalisation, il apparaît donc allumé ou éteint. Ce sont vos vrais nombres qui décident.",
+              en: "Each badge is an object with an \"earned\" condition computed from your data (like projectCount >= 1). In display, we give the badge a different class based on whether it's earned, so it appears lit or dimmed. Your real numbers are what decide.",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'الشارات المحقّقة تظهر مضيئة، والباقية باهتة، حسب بياناتك',
+              fr: 'Les badges obtenus apparaissent allumés, les autres éteints, selon vos données',
+              en: 'Earned badges appear lit, the rest dimmed, based on your data',
+            },
+            note: {
+              ar: 'مبروك! بنيت ملف مطوّر كاملاً وصادقاً: هويّة محفوظة، إحصاءات مجمّعة من مصادر متعدّدة، وشارات محسوبة من إنجازك الحقيقي.',
+              fr: "Félicitations ! Vous avez construit un profil de développeur complet et honnête : une identité sauvegardée, des statistiques agrégées de plusieurs sources, et des badges calculés à partir de votre vraie réalisation.",
+              en: 'Congratulations! You built a complete, honest developer profile: a saved identity, statistics aggregated from multiple sources, and badges computed from your real achievement.',
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'ما بنيته هنا يشبه صفحة «ملفي» في رفيق نفسه الذي تستعمله! كل ما تعلّمته يتجمّع الآن في صورة واحدة متماسكة. في المحطات القادمة سنأخذ مشروعك إلى العالم: السحابة، ثم النشر على الإنترنت. أحسنت، أنت تقترب!',
+              fr: "Ce que vous avez construit ici ressemble à la page « Mon profil » dans Rafiq lui-même que vous utilisez ! Tout ce que vous avez appris se rassemble maintenant en une seule image cohérente. Dans les prochaines étapes, nous emmènerons votre projet vers le monde : le cloud, puis la publication sur Internet. Bien joué, vous approchez !",
+              en: "What you built here resembles the \"My profile\" page in Rafiq itself that you use! Everything you learned now gathers into one coherent picture. In coming stations we'll take your project to the world: the cloud, then publishing online. Well done, you're getting close!",
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
