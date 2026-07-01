@@ -1893,4 +1893,207 @@ const termCount = glossary.length;`,
       },
     ],
   },
+  7: {
+    title: {
+      ar: 'القاعدة السحابية',
+      fr: 'La base de données cloud',
+      en: 'The Cloud Database',
+    },
+    description: {
+      ar: 'افهم الفرق بين الحفظ المحلي والسحابي، وكيف يبدو الاتصال بقاعدة حقيقية',
+      fr: "Comprenez la différence entre la sauvegarde locale et cloud, et à quoi ressemble la connexion à une vraie base de données",
+      en: 'Understand the difference between local and cloud saving, and what connecting to a real database looks like',
+    },
+    intro: {
+      ar: 'حتى الآن، حفظت بياناتك على جهازك عبر ذاكرة المتصفّح. تعمل جيداً، لكن لها حدّ: البيانات لا تغادر جهازك. ماذا لو أراد المستخدم رؤية مشاريعه من هاتفه وحاسوبه معاً؟ هنا تدخل «القاعدة السحابية». في هذه المحطة سنفهم الفكرة بعمق، ونرى كيف يبدو الاتصال بقاعدة حقيقية — دون أن نغرق في إعداد كامل. الفهم أولاً، والتطبيق الكامل حين تكون جاهزاً. تذكّر: أنت تقود رحلة مشروعك.',
+      fr: "Jusqu'ici, vous avez sauvegardé vos données sur votre appareil via la mémoire du navigateur. Cela fonctionne bien, mais a une limite : les données ne quittent pas votre appareil. Et si l'utilisateur voulait voir ses projets depuis son téléphone et son ordinateur à la fois ? C'est là qu'entre la « base de données cloud ». Dans cette étape, nous comprendrons l'idée en profondeur, et verrons à quoi ressemble la connexion à une vraie base — sans nous noyer dans une configuration complète. La compréhension d'abord, l'application complète quand vous serez prêt. Souvenez-vous : vous menez le parcours de votre projet.",
+      en: "So far, you've saved your data on your device via browser memory. It works well, but has a limit: the data doesn't leave your device. What if the user wanted to see their projects from their phone and computer at once? That's where the \"cloud database\" comes in. In this station we'll understand the idea deeply, and see what connecting to a real database looks like — without drowning in a full setup. Understanding first, full application when you're ready. Remember: you lead your project's journey.",
+    },
+    sections: [
+      {
+        title: {
+          ar: 'المحلي مقابل السحابي',
+          fr: 'Local contre cloud',
+          en: 'Local versus Cloud',
+        },
+        subtitle: {
+          ar: 'المفهوم: أين تعيش بياناتك؟',
+          fr: 'Le concept : où vivent vos données ?',
+          en: 'The concept: where does your data live?',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'الحفظ الذي تعلّمته (في ذاكرة المتصفّح) يشبه دفتراً في درج مكتبك: مفيد، لكنه في مكان واحد. إن ذهبت لمكان آخر، لا تجده. القاعدة السحابية تشبه دفتراً في خزنة على الإنترنت: تصل إليه من أي جهاز، في أي مكان.',
+              fr: "La sauvegarde que vous avez apprise (dans la mémoire du navigateur) ressemble à un carnet dans le tiroir de votre bureau : utile, mais en un seul endroit. Si vous allez ailleurs, vous ne le trouvez pas. La base de données cloud ressemble à un carnet dans un coffre sur Internet : vous y accédez depuis n'importe quel appareil, n'importe où.",
+              en: "The saving you learned (in browser memory) is like a notebook in your desk drawer: useful, but in one place. If you go elsewhere, you can't find it. The cloud database is like a notebook in a vault on the Internet: you reach it from any device, anywhere.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'الفرق الجوهري: الحفظ المحلي على جهاز واحد لمستخدم واحد. السحابي على خادم مركزي، يصل إليه المستخدم من كل أجهزته، ويمكن أن يُشارك بين عدّة مستخدمين. لكلٍّ مكانه المناسب.',
+              fr: "La différence essentielle : la sauvegarde locale est sur un seul appareil pour un seul utilisateur. Le cloud est sur un serveur central, accessible par l'utilisateur depuis tous ses appareils, et partageable entre plusieurs utilisateurs. Chacun a sa place appropriée.",
+              en: "The essential difference: local saving is on one device for one user. Cloud is on a central server, reachable by the user from all their devices, and shareable among several users. Each has its right place.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'ليس السحابي «أفضل» دائماً. للمشاريع الصغيرة أو البيانات الخاصّة بجهاز واحد، الحفظ المحلي أبسط وأسرع. اختر الأداة حسب الحاجة، لا حسب ما هو «أحدث».',
+              fr: "Le cloud n'est pas toujours « meilleur ». Pour les petits projets ou les données propres à un seul appareil, la sauvegarde locale est plus simple et plus rapide. Choisissez l'outil selon le besoin, pas selon ce qui est « le plus récent ».",
+              en: 'Cloud isn\'t always "better." For small projects or single-device data, local saving is simpler and faster. Choose the tool by need, not by what\'s "newest."',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'ما قاعدة البيانات السحابية؟',
+          fr: 'Qu\'est-ce qu\'une base de données cloud ?',
+          en: 'What Is a Cloud Database?',
+        },
+        subtitle: {
+          ar: 'خزانة منظّمة لبياناتك على الإنترنت',
+          fr: 'Une armoire organisée pour vos données sur Internet',
+          en: 'An organized cabinet for your data on the Internet',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'قاعدة البيانات خزانة منظّمة: بدل أوراق متناثرة، لديك جداول مرتّبة. تخيّل جدول «المشاريع»: كل صفّ مشروع، وكل عمود معلومة (الاسم، الحالة، التاريخ). القاعدة السحابية هي هذا الجدول، لكن على خادم على الإنترنت لا على جهازك.',
+              fr: "Une base de données est une armoire organisée : au lieu de feuilles éparpillées, vous avez des tableaux ordonnés. Imaginez un tableau « projets » : chaque ligne est un projet, et chaque colonne une information (le nom, l'état, la date). La base de données cloud est ce tableau, mais sur un serveur sur Internet, pas sur votre appareil.",
+              en: "A database is an organized cabinet: instead of scattered papers, you have ordered tables. Imagine a \"projects\" table: each row is a project, and each column an piece of info (name, status, date). The cloud database is this table, but on a server on the Internet, not on your device.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'هناك خدمات تقدّم قواعد بيانات سحابية جاهزة، فلا تبنيها من الصفر. من أشهرها «Supabase» — وهي فعلاً الأداة التي بُني بها رفيق الذي تستعمله الآن! توفّر جداول آمنة، ومصادقة للمستخدمين، وواجهة سهلة.',
+              fr: "Il existe des services qui offrent des bases de données cloud prêtes, pour ne pas les construire de zéro. Parmi les plus connus, « Supabase » — c'est en fait l'outil avec lequel Rafiq que vous utilisez maintenant a été construit ! Il fournit des tableaux sécurisés, une authentification des utilisateurs, et une interface facile.",
+              en: "There are services offering ready cloud databases, so you don't build them from scratch. Among the most known is \"Supabase\" — it's actually the tool Rafiq you use now was built with! It provides secure tables, user authentication, and an easy interface.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'رفيق نفسه يحفظ مشاريعك ومصطلحاتك في Supabase. ما تتعلّمه هنا هو نفس ما يعمل خلف الكواليس في التطبيق الذي تستعمله — لكنك الآن تفهم كيف.',
+              fr: "Rafiq lui-même sauvegarde vos projets et termes dans Supabase. Ce que vous apprenez ici est exactement ce qui fonctionne en coulisses dans l'application que vous utilisez — mais maintenant vous comprenez comment.",
+              en: 'Rafiq itself saves your projects and terms in Supabase. What you learn here is exactly what works behind the scenes in the app you use — but now you understand how.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'كيف يبدو الاتصال؟',
+          fr: 'À quoi ressemble la connexion ?',
+          en: 'What Does Connecting Look Like?',
+        },
+        subtitle: {
+          ar: 'رؤية الكود الحقيقي، وفهم async',
+          fr: 'Voir le vrai code, et comprendre async',
+          en: 'Seeing the real code, and understanding async',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'لن نُعدّ قاعdة كاملة الآن (ذلك يحتاج حساباً وإعداداً، نتركه لحين تكون جاهزاً). لكن لنرَ كيف يبدو كود جلب البيانات من السحابة، لتفهم الفكرة حين تراها. هذا مثال حقيقي مبسّط:',
+              fr: "Nous n'allons pas configurer une base complète maintenant (cela nécessite un compte et une configuration, laissons cela pour quand vous serez prêt). Mais voyons à quoi ressemble le code pour récupérer des données du cloud, afin de comprendre l'idée quand vous la verrez. Voici un exemple réel simplifié :",
+              en: "We won't set up a full database now (that needs an account and setup, we leave it for when you're ready). But let's see what the code to fetch data from the cloud looks like, so you understand the idea when you see it. Here's a simplified real example:",
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'مثال جلب من السحابة', fr: 'Exemple de récupération depuis le cloud', en: 'Example of fetching from the cloud' },
+            code: `async function loadProjects() {
+  const { data } = await supabase
+    .from('projects')
+    .select('*');
+
+  setProjects(data);
+}`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'لاحظ كلمتي «async» و«await». لماذا هما هنا؟ لأن جلب البيانات من الإنترنت يأخذ وقتاً (أجزاء من الثانية) — الرسالة تسافر للخادم وتعود. كلمة «await» تعني: «انتظر حتى تصل البيانات، ثم أكمل». و«async» تُعلِم أن هذه الدالة تنتظر أشياء.',
+              fr: "Remarquez les mots « async » et « await ». Pourquoi sont-ils là ? Parce que récupérer des données d'Internet prend du temps (des fractions de seconde) — le message voyage vers le serveur et revient. Le mot « await » signifie : « attends que les données arrivent, puis continue ». Et « async » indique que cette fonction attend des choses.",
+              en: "Notice the words \"async\" and \"await\". Why are they here? Because fetching data from the Internet takes time (fractions of a second) — the message travels to the server and back. The word \"await\" means: \"wait until the data arrives, then continue.\" And \"async\" marks that this function waits for things.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'تشبيه: حين تطلب قهوة، لا تقف مشلولاً حتى تجهز — بل «تنتظرها» ثم تأخذها حين تصبح جاهزة. «await» هي هذا الانتظار الذكي: لا يُجمّد التطبيق، بل ينتظر البيانات بأدب ثم يكمل.',
+              fr: "Analogie : quand vous commandez un café, vous ne restez pas paralysé jusqu'à ce qu'il soit prêt — vous « l'attendez » puis le prenez quand il est prêt. « await » est cette attente intelligente : elle ne gèle pas l'application, mais attend poliment les données puis continue.",
+              en: 'Analogy: when you order a coffee, you don\'t stand frozen until it\'s ready — you "wait for it" then take it when ready. "await" is this smart waiting: it doesn\'t freeze the app, but politely waits for the data then continues.',
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'قارن هذا بالحفظ المحلي: هناك كانت البيانات على جهازك فوراً، بلا انتظار. هنا تأتي من الإنترنت، فنحتاج «الانتظار الذكي». هذا الفرق الجوهري في التعامل مع السحابة.',
+              fr: "Comparez cela à la sauvegarde locale : là, les données étaient sur votre appareil immédiatement, sans attente. Ici, elles viennent d'Internet, donc nous avons besoin de « l'attente intelligente ». C'est la différence essentielle dans le traitement du cloud.",
+              en: "Compare this to local saving: there, the data was on your device immediately, no waiting. Here, it comes from the Internet, so we need \"smart waiting.\" This is the essential difference in dealing with the cloud.",
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'متى تنتقل للسحابة؟',
+          fr: 'Quand passer au cloud ?',
+          en: 'When to Move to the Cloud?',
+        },
+        subtitle: {
+          ar: 'قرار واعٍ حسب حاجة مشروعك',
+          fr: 'Une décision consciente selon le besoin de votre projet',
+          en: 'A conscious decision based on your project\'s need',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'الآن تفهم الخيارين. متى تختار السحابة؟ حين يحتاج مستخدموك الوصول لبياناتهم من أجهزة متعدّدة، أو حين يتشارك عدّة مستخدمين البيانات، أو حين تريد أن تبقى البيانات آمنة حتى لو فقد المستخدم جهازه. حينها تستحقّ السحابة جهدها الإضافي.',
+              fr: "Maintenant vous comprenez les deux options. Quand choisir le cloud ? Quand vos utilisateurs ont besoin d'accéder à leurs données depuis plusieurs appareils, ou quand plusieurs utilisateurs partagent des données, ou quand vous voulez que les données restent en sécurité même si l'utilisateur perd son appareil. Alors le cloud mérite son effort supplémentaire.",
+              en: "Now you understand both options. When to choose the cloud? When your users need to access their data from multiple devices, or when several users share data, or when you want data to stay safe even if the user loses their device. Then the cloud is worth its extra effort.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'وحين تقرّر ذلك، الخطوات العملية تكون: إنشاء حساب على خدمة مثل Supabase، إعداد جدول لبياناتك، الحصول على مفاتيح الاتصال، ثم استبدال كود الحفظ المحلي بكود سحابي (مثل الذي رأيته). كل خطوة بسيطة وحدها — والمهمّ أنك الآن تفهم الصورة الكاملة.',
+              fr: "Et quand vous décidez cela, les étapes pratiques sont : créer un compte sur un service comme Supabase, configurer un tableau pour vos données, obtenir les clés de connexion, puis remplacer le code de sauvegarde locale par du code cloud (comme celui que vous avez vu). Chaque étape est simple en soi — et l'important est que vous comprenez maintenant l'image complète.",
+              en: "And when you decide that, the practical steps are: create an account on a service like Supabase, set up a table for your data, get the connection keys, then replace local saving code with cloud code (like what you saw). Each step is simple on its own — and what matters is you now understand the full picture.",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'تستطيع أن تشرح لصديق الفرق بين الحفظ المحلي والسحابي، ولماذا يحتاج السحابي «await»',
+              fr: "Vous pouvez expliquer à un ami la différence entre la sauvegarde locale et cloud, et pourquoi le cloud a besoin de « await »",
+              en: 'You can explain to a friend the difference between local and cloud saving, and why cloud needs "await"',
+            },
+            note: {
+              ar: 'إن استطعت شرح ذلك بكلماتك، فقد فهمت مفهوماً يخلط على كثيرين. الفهم العميق أهمّ من حفظ خطوات — والتطبيق الكامل سيأتي سهلاً حين تحتاجه.',
+              fr: "Si vous pouvez expliquer cela avec vos mots, vous avez compris un concept qui embrouille beaucoup de gens. La compréhension profonde est plus importante que mémoriser des étapes — et l'application complète viendra facilement quand vous en aurez besoin.",
+              en: 'If you can explain that in your words, you\'ve understood a concept that confuses many. Deep understanding matters more than memorizing steps — and full application will come easily when you need it.',
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'أنت الآن تفهم كيف تعمل التطبيقات الحقيقية خلف الكواليس — بما فيها رفيق نفسه. في المحطة القادمة سنأخذ مشروعك خطوة كبرى: النشر على الإنترنت، ليراه العالم. اقتربت من الهدف كثيراً. أحسنت!',
+              fr: "Vous comprenez maintenant comment fonctionnent les vraies applications en coulisses — y compris Rafiq lui-même. Dans la prochaine étape, nous emmènerons votre projet vers un grand pas : la publication sur Internet, pour que le monde le voie. Vous êtes très proche du but. Bien joué !",
+              en: "You now understand how real apps work behind the scenes — including Rafiq itself. In the next station we'll take your project a big step: publishing online, for the world to see. You're very close to the goal. Well done!",
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
