@@ -1013,4 +1013,296 @@ const visibleProjects =
       },
     ],
   },
+  4: {
+    title: {
+      ar: 'الحفظ الدائم',
+      fr: 'La sauvegarde permanente',
+      en: 'Permanent Saving',
+    },
+    description: {
+      ar: 'اجعل المستخدم يضيف ويحذف مشاريع، وتبقى محفوظة بعد إغلاق الصفحة',
+      fr: "Permettez à l'utilisateur d'ajouter et supprimer des projets, et de les garder sauvegardés après la fermeture de la page",
+      en: 'Let the user add and delete projects, and keep them saved after closing the page',
+    },
+    intro: {
+      ar: 'في المحطة السابقة عرضت بياناتك، لكنها كانت ثابتة في الكود. الآن سنجعلها حيّة: المستخدم يضيف مشاريعه ويحذفها، وتبقى محفوظة حتى لو أغلق الصفحة وعاد. هذا هو «الحفظ الدائم» — وهو ما يحوّل صفحة عرض إلى تطبيق حقيقي. تذكّر: أنت تبني تطبيق مشروعك أنت.',
+      fr: "Dans l'étape précédente, vous avez affiché vos données, mais elles étaient figées dans le code. Maintenant, nous allons les rendre vivantes : l'utilisateur ajoute et supprime ses projets, et ils restent sauvegardés même s'il ferme la page et revient. C'est la « sauvegarde permanente » — ce qui transforme une page d'affichage en une vraie application. Souvenez-vous : c'est l'application de votre projet que vous construisez.",
+      en: "In the previous station you displayed your data, but it was fixed in the code. Now we'll make it live: the user adds and deletes their projects, and they stay saved even after closing the page and returning. This is \"permanent saving\" — what turns a display page into a real application. Remember: it's your own project's app you're building.",
+    },
+    sections: [
+      {
+        title: {
+          ar: 'لماذا تختفي البيانات؟',
+          fr: 'Pourquoi les données disparaissent-elles ?',
+          en: 'Why Does Data Disappear?',
+        },
+        subtitle: {
+          ar: 'المفهوم: الذاكرة المؤقّتة مقابل الدائمة',
+          fr: 'Le concept : mémoire temporaire contre mémoire permanente',
+          en: 'The concept: temporary versus permanent memory',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'في المحطة السابقة، لو أضفت مشروعاً ثم أغلقت الصفحة، لاختفى. لماذا؟ لأن الحالة التي في «الذاكرة» مؤقّتة — تعيش ما دامت الصفحة مفتوحة، وتُمحى عند إغلاقها. مثل كتابة على سبّورة تُمسح كل مساء.',
+              fr: "Dans l'étape précédente, si vous ajoutiez un projet puis fermiez la page, il disparaîtrait. Pourquoi ? Parce que l'état en « mémoire » est temporaire — il vit tant que la page est ouverte, et s'efface à sa fermeture. Comme écrire sur un tableau effacé chaque soir.",
+              en: "In the previous station, if you added a project then closed the page, it would vanish. Why? Because the state in \"memory\" is temporary — it lives while the page is open, and is erased when it closes. Like writing on a board wiped every evening.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'لنجعل البيانات تبقى، نحتاج «ذاكرة دائمة». المتصفّح يوفّر واحدة بسيطة اسمها «localStorage» — صندوق تخزين صغير في المتصفّح يحفظ البيانات حتى بعد إغلاق الصفحة. مثل دفتر تكتب فيه ويبقى.',
+              fr: "Pour que les données restent, nous avons besoin d'une « mémoire permanente ». Le navigateur en fournit une simple appelée « localStorage » — une petite boîte de stockage dans le navigateur qui garde les données même après la fermeture de la page. Comme un carnet où vous écrivez et qui reste.",
+              en: "To make data stay, we need \"permanent memory.\" The browser provides a simple one called \"localStorage\" — a small storage box in the browser that keeps data even after the page closes. Like a notebook you write in that stays.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'مهمّ: «localStorage» يحفظ على جهاز المستخدم فقط، لا في السحابة. أي أن بياناته لن تتبعه لجهاز آخر. الحفظ السحابي الحقيقي سنتعلّمه في محطة قادمة مخصّصة له — خطوة بخطوة.',
+              fr: "Important : « localStorage » sauvegarde uniquement sur l'appareil de l'utilisateur, pas dans le cloud. Ses données ne le suivront donc pas sur un autre appareil. La vraie sauvegarde cloud, nous l'apprendrons dans une étape ultérieure qui lui est dédiée — pas à pas.",
+              en: 'Important: "localStorage" saves only on the user\'s device, not in the cloud. So their data won\'t follow them to another device. Real cloud saving we\'ll learn in a later dedicated station — step by step.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'إضافة مشروع جديد',
+          fr: 'Ajouter un nouveau projet',
+          en: 'Adding a New Project',
+        },
+        subtitle: {
+          ar: 'نموذج بسيط يُدخل به المستخدم بياناته',
+          fr: "Un formulaire simple pour que l'utilisateur saisisse ses données",
+          en: 'A simple form for the user to enter their data',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'لنبدأ بجعل المستخدم يضيف مشروعاً. نحتاج شيئين: حقل إدخال يكتب فيه الاسم، وزرّ يضيفه للقائمة. سنستعمل الحالة (State) لحفظ ما يكتبه، وقائمة المشاريع في الحالة أيضاً.',
+              fr: "Commençons par permettre à l'utilisateur d'ajouter un projet. Nous avons besoin de deux choses : un champ de saisie où il écrit le nom, et un bouton qui l'ajoute à la liste. Nous utiliserons l'état (State) pour garder ce qu'il écrit, et la liste des projets aussi dans l'état.",
+              en: "Let's start by letting the user add a project. We need two things: an input field where they type the name, and a button that adds it to the list. We'll use state to hold what they type, and the projects list in state too.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '✍️',
+            text: {
+              ar: 'حوّل قائمة المشاريع إلى حالة، وأضف حالة لحقل الإدخال، في أعلى «App»:',
+              fr: "Transformez la liste des projets en état, et ajoutez un état pour le champ de saisie, en haut de « App » :",
+              en: 'Turn the projects list into state, and add a state for the input field, at the top of "App":',
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'App.jsx', fr: 'App.jsx', en: 'App.jsx' },
+            code: `import { useState } from 'react';
+
+function App() {
+  const [projects, setProjects] = useState([
+    { id: 1, name: 'مشروعي الأول' },
+    { id: 2, name: 'فكرة تطبيق' },
+  ]);
+  const [newName, setNewName] = useState('');
+
+  function addProject() {
+    if (newName.trim() === '') return;
+    const newProject = { id: Date.now(), name: newName };
+    setProjects([...projects, newProject]);
+    setNewName('');
+  }
+
+  return (
+    <div>
+      <h1>مشاريعي</h1>
+
+      <input
+        value={newName}
+        onChange={(e) => setNewName(e.target.value)}
+        placeholder="اسم المشروع"
+      />
+      <button onClick={addProject}>إضافة</button>
+
+      {projects.map((project) => (
+        <div key={project.id}>{project.name}</div>
+      ))}
+    </div>
+  );
+}
+
+export default App;`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'اقرأ دالة «addProject» بتأنٍّ: تتجاهل الإدخال الفارغ، تصنع مشروعاً بمعرّف فريد (نستعمل «Date.now» لتوليد رقم فريد)، تضيفه للقائمة، ثم تفرّغ الحقل. لاحظ الأقواس الثلاث [...projects] — تعني «كل المشاريع القديمة، ثم الجديد».',
+              fr: "Lisez attentivement la fonction « addProject » : elle ignore une saisie vide, crée un projet avec un identifiant unique (nous utilisons « Date.now » pour générer un nombre unique), l'ajoute à la liste, puis vide le champ. Remarquez les trois points [...projects] — ils signifient « tous les anciens projets, puis le nouveau ».",
+              en: "Read the \"addProject\" function carefully: it ignores empty input, creates a project with a unique id (we use \"Date.now\" to generate a unique number), adds it to the list, then clears the field. Notice the three dots [...projects] — they mean \"all old projects, then the new one.\"",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'تكتب اسماً وتضغط «إضافة» فيظهر في القائمة',
+              fr: 'Vous tapez un nom et cliquez sur « Ajouter » et il apparaît dans la liste',
+              en: 'You type a name and click "Add" and it appears in the list',
+            },
+            note: {
+              ar: 'إن ظهر مشروعك الجديد فوراً، فقد جعلت المستخدم يتحكّم ببياناته — خطوة كبيرة نحو تطبيق حقيقي.',
+              fr: "Si votre nouveau projet apparaît immédiatement, vous avez donné à l'utilisateur le contrôle de ses données — un grand pas vers une vraie application.",
+              en: 'If your new project appears immediately, you\'ve given the user control over their data — a big step toward a real app.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'الحفظ الحقيقي',
+          fr: 'La vraie sauvegarde',
+          en: 'Real Saving',
+        },
+        subtitle: {
+          ar: 'اربط بياناتك بذاكرة المتصفّح لتبقى',
+          fr: 'Reliez vos données à la mémoire du navigateur pour qu\'elles restent',
+          en: 'Connect your data to the browser\'s memory so it stays',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'الآن مشاريعك تظهر، لكن لو أغلقت الصفحة اختفت. لنربطها بـ «localStorage» لتبقى. نحتاج شيئين: حفظ القائمة كلّما تغيّرت، وقراءتها عند فتح الصفحة. سنستعمل أداة اسمها «useEffect» — تُنفّذ كوداً عند حدوث تغيير.',
+              fr: "Maintenant vos projets s'affichent, mais si vous fermiez la page ils disparaîtraient. Relions-les à « localStorage » pour qu'ils restent. Nous avons besoin de deux choses : sauvegarder la liste à chaque changement, et la lire à l'ouverture de la page. Nous utiliserons un outil appelé « useEffect » — il exécute du code lorsqu'un changement se produit.",
+              en: "Now your projects show, but if you closed the page they'd disappear. Let's connect them to \"localStorage\" so they stay. We need two things: save the list whenever it changes, and read it when the page opens. We'll use a tool called \"useEffect\" — it runs code when a change happens.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '💾',
+            text: {
+              ar: 'استورد «useEffect»، واجعل القيمة الأولى للمشاريع تُقرأ من الذاكرة، وأضف حفظاً تلقائياً:',
+              fr: "Importez « useEffect », faites en sorte que la valeur initiale des projets soit lue depuis la mémoire, et ajoutez une sauvegarde automatique :",
+              en: 'Import "useEffect", make the projects\' initial value read from memory, and add automatic saving:',
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'أعلى App.jsx', fr: 'En haut de App.jsx', en: 'Top of App.jsx' },
+            code: `import { useState, useEffect } from 'react';
+
+function App() {
+  const [projects, setProjects] = useState(() => {
+    const saved = localStorage.getItem('myProjects');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('myProjects', JSON.stringify(projects));
+  }, [projects]);
+
+  // ... بقية الكود كما هو`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'شرح مبسّط: عند بدء التطبيق، نقرأ ما حُفظ سابقاً (إن وُجد). و«useEffect» يحفظ القائمة في كل مرّة تتغيّر. كلمة «JSON» مجرّد صيغة لتحويل بياناتك إلى نصّ يُحفظ، ثم إرجاعها. لا تقلق من تفاصيلها الآن.',
+              fr: "Explication simplifiée : au démarrage de l'application, nous lisons ce qui a été sauvegardé auparavant (s'il existe). Et « useEffect » sauvegarde la liste chaque fois qu'elle change. Le mot « JSON » n'est qu'un format pour convertir vos données en texte à sauvegarder, puis les récupérer. Ne vous souciez pas de ses détails pour l'instant.",
+              en: "Simplified explanation: when the app starts, we read what was saved before (if any). And \"useEffect\" saves the list every time it changes. The word \"JSON\" is just a format to convert your data into text to save, then bring it back. Don't worry about its details now.",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'أضف مشروعاً، أغلق الصفحة، افتحها من جديد — يبقى موجوداً',
+              fr: 'Ajoutez un projet, fermez la page, rouvrez-la — il reste présent',
+              en: 'Add a project, close the page, reopen it — it stays there',
+            },
+            note: {
+              ar: 'إن بقي مشروعك بعد إعادة فتح الصفحة، فقد حقّقت الحفظ الدائم! هذا جوهر كل تطبيق يتذكّر بيانات مستخدميه.',
+              fr: "Si votre projet reste après la réouverture de la page, vous avez réalisé la sauvegarde permanente ! C'est l'essence de toute application qui se souvient des données de ses utilisateurs.",
+              en: 'If your project stays after reopening the page, you\'ve achieved permanent saving! This is the essence of every app that remembers its users\' data.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'حذف مشروع',
+          fr: 'Supprimer un projet',
+          en: 'Deleting a Project',
+        },
+        subtitle: {
+          ar: 'أكمل التحكّم — والحذف يُحفظ تلقائياً',
+          fr: 'Complétez le contrôle — et la suppression est sauvegardée automatiquement',
+          en: 'Complete the control — and deletion is saved automatically',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'التطبيق الكامل يتيح الحذف أيضاً. الجميل أننا لن نضيف أي كود حفظ جديد — لأن «useEffect» الذي كتبناه يحفظ تلقائياً عند أي تغيير، بما فيه الحذف. هذه قوّة البناء الصحيح.',
+              fr: "Une application complète permet aussi la suppression. Le beau, c'est que nous n'ajouterons aucun nouveau code de sauvegarde — car le « useEffect » que nous avons écrit sauvegarde automatiquement à tout changement, y compris la suppression. C'est la puissance d'une construction correcte.",
+              en: "A complete app allows deletion too. The beauty is we won't add any new saving code — because the \"useEffect\" we wrote saves automatically on any change, including deletion. This is the power of building correctly.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '🗑️',
+            text: {
+              ar: 'أضف دالة حذف، وزرّ حذف بجانب كل مشروع:',
+              fr: 'Ajoutez une fonction de suppression, et un bouton supprimer à côté de chaque projet :',
+              en: 'Add a delete function, and a delete button next to each project:',
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'دالة الحذف والعرض', fr: 'Fonction de suppression et affichage', en: 'Delete function and display' },
+            code: `function deleteProject(id) {
+  setProjects(projects.filter((p) => p.id !== id));
+}
+
+// داخل map:
+{projects.map((project) => (
+  <div key={project.id}>
+    {project.name}
+    <button onClick={() => deleteProject(project.id)}>حذف</button>
+  </div>
+))}`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'دالة «deleteProject» تستعمل «filter» لتُبقي كل المشاريع ما عدا الذي نريد حذفه (الذي يطابق معرّفه). بهذه البساطة. وبما أن القائمة تغيّرت، يحفظها «useEffect» تلقائياً.',
+              fr: "La fonction « deleteProject » utilise « filter » pour garder tous les projets sauf celui à supprimer (celui dont l'identifiant correspond). Aussi simple que cela. Et comme la liste a changé, « useEffect » la sauvegarde automatiquement.",
+              en: "The \"deleteProject\" function uses \"filter\" to keep all projects except the one to delete (whose id matches). That simple. And since the list changed, \"useEffect\" saves it automatically.",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'احذف مشروعاً، أعد فتح الصفحة — يبقى محذوفاً',
+              fr: 'Supprimez un projet, rouvrez la page — il reste supprimé',
+              en: 'Delete a project, reopen the page — it stays deleted',
+            },
+            note: {
+              ar: 'الآن مستخدمك يضيف ويحذف، وكلّه يُحفظ. بنيت تطبيقاً كاملاً بالحفظ الدائم — إنجاز حقيقي!',
+              fr: "Maintenant votre utilisateur ajoute et supprime, et tout est sauvegardé. Vous avez construit une application complète avec sauvegarde permanente — un vrai accomplissement !",
+              en: 'Now your user adds and deletes, and everything is saved. You\'ve built a complete app with permanent saving — a real achievement!',
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'ما بنيته هو نمط «CRUD» المصغّر: إضافة وقراءة وحذف — أساس معظم التطبيقات. في المحطات القادمة سنرتقي بهذا للسحابة، فتتبع بيانات المستخدم عبر كل أجهزته. أحسنت صنعاً!',
+              fr: "Ce que vous avez construit est un modèle « CRUD » miniature : ajouter, lire et supprimer — la base de la plupart des applications. Dans les prochaines étapes, nous élèverons cela vers le cloud, pour que les données de l'utilisateur le suivent sur tous ses appareils. Bien joué !",
+              en: 'What you built is a mini "CRUD" pattern: create, read, and delete — the basis of most apps. In coming stations we\'ll raise this to the cloud, so the user\'s data follows them across all devices. Well done!',
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
