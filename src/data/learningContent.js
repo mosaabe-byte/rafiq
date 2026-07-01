@@ -1305,4 +1305,302 @@ function App() {
       },
     ],
   },
+  5: {
+    title: {
+      ar: 'المعجم التقني',
+      fr: 'Le glossaire technique',
+      en: 'The Technical Glossary',
+    },
+    description: {
+      ar: 'ابنِ أداة تحفظ فيها المصطلحات وتعريفاتها، مع بحث حيّ',
+      fr: 'Construisez un outil pour sauvegarder les termes et leurs définitions, avec une recherche en direct',
+      en: 'Build a tool to save terms and their definitions, with live search',
+    },
+    intro: {
+      ar: 'كل متعلّم يواجه مصطلحات جديدة تلتبس عليه. لماذا لا يبني مرجعه الخاص؟ في هذه المحطة سنبني معجماً شخصياً: يضيف المستخدم مصطلحاً وتعريفه، ويبحث فيه بسهولة، ويبقى محفوظاً. سنرتقي بما تعلّمته: بيانات أغنى، وبحث حيّ أثناء الكتابة. تذكّر: أنت تبني أداة تخدمك أنت أولاً.',
+      fr: "Chaque apprenant rencontre de nouveaux termes qui le troublent. Pourquoi ne pas construire sa propre référence ? Dans cette étape, nous construirons un glossaire personnel : l'utilisateur ajoute un terme et sa définition, y cherche facilement, et il reste sauvegardé. Nous élèverons ce que vous avez appris : des données plus riches, et une recherche en direct pendant la saisie. Souvenez-vous : vous construisez un outil qui vous sert d'abord vous-même.",
+      en: "Every learner meets new terms that confuse them. Why not build their own reference? In this station we'll build a personal glossary: the user adds a term and its definition, searches it easily, and it stays saved. We'll raise what you've learned: richer data, and live search while typing. Remember: you're building a tool that serves you first.",
+    },
+    sections: [
+      {
+        title: {
+          ar: 'لماذا معجم شخصي؟',
+          fr: 'Pourquoi un glossaire personnel ?',
+          en: 'Why a Personal Glossary?',
+        },
+        subtitle: {
+          ar: 'المفهوم: أداة تبنيها لتخدم تعلّمك أنت',
+          fr: 'Le concept : un outil que vous construisez pour servir votre apprentissage',
+          en: 'The concept: a tool you build to serve your own learning',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'حين تتعلّم البرمجة، تمرّ بمصطلحات كثيرة: مكوّن، حالة، خاصيّة… ومن السهل نسيانها. المعجم الشخصي حلّ جميل: كلّما التبس عليك مصطلح، تضيفه بتعريفك أنت، فيصير مرجعاً ينمو معك.',
+              fr: "Quand vous apprenez la programmation, vous rencontrez beaucoup de termes : composant, état, propriété… et il est facile de les oublier. Le glossaire personnel est une belle solution : chaque fois qu'un terme vous trouble, vous l'ajoutez avec votre propre définition, et il devient une référence qui grandit avec vous.",
+              en: "When you learn programming, you meet many terms: component, state, property… and they're easy to forget. A personal glossary is a beautiful solution: whenever a term confuses you, you add it with your own definition, and it becomes a reference that grows with you.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'الأدوات التي تبنيها لنفسك هي أفضل ما تتعلّم منه — لأنك تفهم كل قطعة فيها، وتصمّمها كما يناسبك تماماً.',
+              fr: "Les outils que vous construisez pour vous-même sont les meilleurs pour apprendre — car vous comprenez chaque pièce, et les concevez exactement comme il vous convient.",
+              en: 'The tools you build for yourself are the best to learn from — because you understand every piece, and design them exactly to suit you.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'بيانات أغنى: مصطلح وتعريف',
+          fr: 'Des données plus riches : terme et définition',
+          en: 'Richer Data: Term and Definition',
+        },
+        subtitle: {
+          ar: 'كائن بحقلين بدل نصّ واحد',
+          fr: 'Un objet à deux champs au lieu d\'un seul texte',
+          en: 'An object with two fields instead of one text',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'في المحطة السابقة كان كل عنصر اسماً واحداً. المعجم يحتاج حقلين: المصطلح وتعريفه. لذا سيصير كل عنصر كائناً بحقلين. وهذا يعني حقلَي إدخال بدل واحد.',
+              fr: "Dans l'étape précédente, chaque élément était un seul nom. Le glossaire a besoin de deux champs : le terme et sa définition. Donc chaque élément deviendra un objet à deux champs. Et cela signifie deux champs de saisie au lieu d'un.",
+              en: "In the previous station, each item was a single name. The glossary needs two fields: the term and its definition. So each item becomes an object with two fields. And that means two input fields instead of one.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '✍️',
+            text: {
+              ar: 'ابنِ الأساس بحقلين وقائمة مصطلحات، في «App»:',
+              fr: 'Construisez la base avec deux champs et une liste de termes, dans « App » :',
+              en: 'Build the base with two fields and a terms list, in "App":',
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'App.jsx', fr: 'App.jsx', en: 'App.jsx' },
+            code: `import { useState } from 'react';
+
+function App() {
+  const [terms, setTerms] = useState([]);
+  const [word, setWord] = useState('');
+  const [meaning, setMeaning] = useState('');
+
+  function addTerm() {
+    if (word.trim() === '' || meaning.trim() === '') return;
+    const newTerm = { id: Date.now(), word: word, meaning: meaning };
+    setTerms([...terms, newTerm]);
+    setWord('');
+    setMeaning('');
+  }
+
+  return (
+    <div>
+      <h1>معجمي التقني</h1>
+
+      <input
+        value={word}
+        onChange={(e) => setWord(e.target.value)}
+        placeholder="المصطلح"
+      />
+      <input
+        value={meaning}
+        onChange={(e) => setMeaning(e.target.value)}
+        placeholder="التعريف"
+      />
+      <button onClick={addTerm}>إضافة</button>
+
+      {terms.map((term) => (
+        <div key={term.id}>
+          <strong>{term.word}</strong>: {term.meaning}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default App;`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'لاحظ: لدينا الآن ثلاث حالات — قائمة المصطلحات، وحقل المصطلح، وحقل التعريف. ودالة «addTerm» تتأكّد أن كليهما مكتوب قبل الإضافة. المبدأ نفسه من المحطة السابقة، لكن ببيانات أغنى.',
+              fr: "Remarquez : nous avons maintenant trois états — la liste des termes, le champ du terme, et le champ de la définition. Et la fonction « addTerm » s'assure que les deux sont remplis avant l'ajout. Le même principe que l'étape précédente, mais avec des données plus riches.",
+              en: "Notice: we now have three states — the terms list, the term field, and the definition field. And the \"addTerm\" function makes sure both are filled before adding. The same principle as the previous station, but with richer data.",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'تضيف مصطلحاً بتعريفه فيظهر في القائمة',
+              fr: 'Vous ajoutez un terme avec sa définition et il apparaît dans la liste',
+              en: 'You add a term with its definition and it appears in the list',
+            },
+            note: {
+              ar: 'إن ظهر المصطلح وتعريفه معاً، فقد أتقنت التعامل مع بيانات أغنى — خطوة مهمّة نحو تطبيقات حقيقية.',
+              fr: "Si le terme et sa définition apparaissent ensemble, vous avez maîtrisé la gestion de données plus riches — une étape importante vers de vraies applications.",
+              en: 'If the term and its definition appear together, you\'ve mastered handling richer data — an important step toward real apps.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'البحث الحيّ',
+          fr: 'La recherche en direct',
+          en: 'Live Search',
+        },
+        subtitle: {
+          ar: 'التصفية أثناء الكتابة — مهارة جديدة',
+          fr: 'Filtrer pendant la saisie — une nouvelle compétence',
+          en: 'Filtering while typing — a new skill',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'حين يكبر معجمك، تحتاج بحثاً. الجميل أن البحث الحيّ يبني على «filter» الذي تعرفه: حقل بحث يحفظ ما يكتبه المستخدم، وقائمة تُصفّى لتُظهر المطابق فقط — لحظة بلحظة أثناء الكتابة.',
+              fr: "Quand votre glossaire grandit, vous avez besoin d'une recherche. Le beau, c'est que la recherche en direct s'appuie sur « filter » que vous connaissez : un champ de recherche qui garde ce que l'utilisateur tape, et une liste filtrée pour n'afficher que ce qui correspond — instant après instant pendant la saisie.",
+              en: "When your glossary grows, you need search. The beauty is live search builds on \"filter\" you know: a search field that holds what the user types, and a list filtered to show only matches — moment by moment while typing.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '🔍',
+            text: {
+              ar: 'أضف حالة للبحث، وقائمة مصفّاة تُحسب منها:',
+              fr: 'Ajoutez un état pour la recherche, et une liste filtrée calculée à partir de lui :',
+              en: 'Add a search state, and a filtered list computed from it:',
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'البحث في App.jsx', fr: 'La recherche dans App.jsx', en: 'Search in App.jsx' },
+            code: `const [search, setSearch] = useState('');
+
+const visibleTerms = terms.filter((term) =>
+  term.word.includes(search)
+);`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'المتغيّر «search» يحفظ نصّ البحث. وقائمة «visibleTerms» تُبقي المصطلحات التي يحتوي اسمها على نصّ البحث (عبر «includes»). الآن أضف حقل البحث، واعرض القائمة المصفّاة بدل الأصلية:',
+              fr: "La variable « search » garde le texte de recherche. Et la liste « visibleTerms » garde les termes dont le nom contient le texte de recherche (via « includes »). Maintenant, ajoutez le champ de recherche, et affichez la liste filtrée au lieu de l'originale :",
+              en: "The \"search\" variable holds the search text. And the \"visibleTerms\" list keeps terms whose name contains the search text (via \"includes\"). Now add the search field, and display the filtered list instead of the original:",
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'حقل البحث والعرض', fr: 'Champ de recherche et affichage', en: 'Search field and display' },
+            code: `<input
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  placeholder="ابحث عن مصطلح..."
+/>
+
+{visibleTerms.map((term) => (
+  <div key={term.id}>
+    <strong>{term.word}</strong>: {term.meaning}
+  </div>
+))}`,
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'تكتب في حقل البحث فتظهر المصطلحات المطابقة فقط، لحظياً',
+              fr: 'Vous tapez dans le champ de recherche et seuls les termes correspondants apparaissent, instantanément',
+              en: 'You type in the search field and only matching terms appear, instantly',
+            },
+            note: {
+              ar: 'إن تصفّت القائمة أثناء كتابتك، فقد بنيت بحثاً حيّاً — ميزة تراها في كل تطبيق احترافي. أنت تتقدّم بثبات!',
+              fr: "Si la liste se filtre pendant que vous tapez, vous avez construit une recherche en direct — une fonctionnalité que vous voyez dans toute application professionnelle. Vous progressez avec constance !",
+              en: 'If the list filters as you type, you\'ve built a live search — a feature you see in every professional app. You\'re advancing steadily!',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'اجعل معجمك دائماً',
+          fr: 'Rendez votre glossaire permanent',
+          en: 'Make Your Glossary Permanent',
+        },
+        subtitle: {
+          ar: 'اربطه بالحفظ الدائم الذي تعلّمته',
+          fr: 'Reliez-le à la sauvegarde permanente que vous avez apprise',
+          en: 'Connect it to the permanent saving you learned',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'معجم يختفي عند إغلاق الصفحة لا فائدة منه. لنطبّق ما تعلّمته في محطة الحفظ الدائم: نقرأ المعجم عند البدء، ونحفظه عند كل تغيير. نفس النمط تماماً — لأنك تعلّمته جيداً.',
+              fr: "Un glossaire qui disparaît à la fermeture de la page est inutile. Appliquons ce que vous avez appris dans l'étape de la sauvegarde permanente : nous lisons le glossaire au démarrage, et le sauvegardons à chaque changement. Exactement le même modèle — car vous l'avez bien appris.",
+              en: "A glossary that vanishes when the page closes is useless. Let's apply what you learned in the permanent saving station: we read the glossary at startup, and save it on every change. Exactly the same pattern — because you learned it well.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '💾',
+            text: {
+              ar: 'استورد «useEffect»، واقرأ من الذاكرة عند البدء، واحفظ عند كل تغيير:',
+              fr: 'Importez « useEffect », lisez depuis la mémoire au démarrage, et sauvegardez à chaque changement :',
+              en: 'Import "useEffect", read from memory at startup, and save on every change:',
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'الحفظ في App.jsx', fr: 'La sauvegarde dans App.jsx', en: 'Saving in App.jsx' },
+            code: `import { useState, useEffect } from 'react';
+
+// القيمة الأولى تُقرأ من الذاكرة:
+const [terms, setTerms] = useState(() => {
+  const saved = localStorage.getItem('myGlossary');
+  return saved ? JSON.parse(saved) : [];
+});
+
+// الحفظ التلقائي عند كل تغيير:
+useEffect(() => {
+  localStorage.setItem('myGlossary', JSON.stringify(terms));
+}, [terms]);`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'لاحظ أنه نفس نمط المحطة الرابعة تماماً، لكن بمفتاح «myGlossary» بدل المشاريع. هذا جمال البناء الصحيح: تتعلّم نمطاً مرّة، وتعيد استخدامه في كل مكان.',
+              fr: "Remarquez que c'est exactement le même modèle que l'étape 4, mais avec la clé « myGlossary » au lieu des projets. C'est la beauté d'une construction correcte : vous apprenez un modèle une fois, et le réutilisez partout.",
+              en: "Notice it's exactly the same pattern as station 4, but with the key \"myGlossary\" instead of projects. This is the beauty of building correctly: you learn a pattern once, and reuse it everywhere.",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'أضف مصطلحات، أغلق الصفحة، أعد فتحها — يبقى معجمك كاملاً',
+              fr: 'Ajoutez des termes, fermez la page, rouvrez-la — votre glossaire reste complet',
+              en: 'Add terms, close the page, reopen it — your glossary stays complete',
+            },
+            note: {
+              ar: 'مبروك! بنيت معجماً شخصياً كاملاً: إضافة، بحث حيّ، وحفظ دائم. أداة حقيقية تخدمك، بنيتها بيدك من الصفر.',
+              fr: "Félicitations ! Vous avez construit un glossaire personnel complet : ajout, recherche en direct, et sauvegarde permanente. Un vrai outil qui vous sert, construit de vos mains à partir de zéro.",
+              en: 'Congratulations! You built a complete personal glossary: adding, live search, and permanent saving. A real tool that serves you, built with your own hands from scratch.',
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'كل ما بنيته حتى الآن — بطاقات، حفظ، بحث — هذه أدوات ستستعملها في كل مشروع مستقبلي. أنت لا تتعلّم دروساً منفصلة، بل تبني مهارات تتراكم. المحطات القادمة سترتقي بها إلى السحابة والنشر. أحسنت!',
+              fr: "Tout ce que vous avez construit jusqu'ici — cartes, sauvegarde, recherche — ce sont des outils que vous utiliserez dans chaque projet futur. Vous n'apprenez pas des leçons séparées, vous bâtissez des compétences qui s'accumulent. Les prochaines étapes les élèveront vers le cloud et la publication. Bien joué !",
+              en: "Everything you've built so far — cards, saving, search — these are tools you'll use in every future project. You're not learning separate lessons, you're building skills that accumulate. The coming stations will raise them to the cloud and publishing. Well done!",
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
