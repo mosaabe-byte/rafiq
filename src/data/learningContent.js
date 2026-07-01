@@ -2096,4 +2096,219 @@ const termCount = glossary.length;`,
       },
     ],
   },
+  8: {
+    title: {
+      ar: 'النشر الأول',
+      fr: 'Le premier déploiement',
+      en: 'The First Deployment',
+    },
+    description: {
+      ar: 'افهم كيف ينتقل مشروعك من جهازك إلى الإنترنت ليراه العالم',
+      fr: "Comprenez comment votre projet passe de votre appareil à Internet pour que le monde le voie",
+      en: 'Understand how your project moves from your device to the Internet for the world to see',
+    },
+    intro: {
+      ar: 'وصلت إلى لحظة فارقة: حتى الآن كان مشروعك يعمل على جهازك وحدك. الآن سنفهم كيف يخرج للعالم — يصبح موقعاً حقيقياً برابط يفتحه أي إنسان في أي مكان. سنفهم الفكرة والخطوات الأساسية، لا لقطات شاشة تتقادم. تذكّر: هذه لحظتك — مشروعك يولد للعالم.',
+      fr: "Vous êtes arrivé à un moment charnière : jusqu'ici, votre projet fonctionnait sur votre seul appareil. Maintenant, nous comprendrons comment il sort au monde — devient un vrai site avec un lien que n'importe qui ouvre, n'importe où. Nous comprendrons l'idée et les étapes essentielles, pas des captures d'écran qui se périment. Souvenez-vous : c'est votre moment — votre projet naît au monde.",
+      en: "You've reached a pivotal moment: until now, your project ran on your device alone. Now we'll understand how it goes out to the world — becomes a real website with a link anyone opens, anywhere. We'll understand the idea and essential steps, not screenshots that go stale. Remember: this is your moment — your project is born to the world.",
+    },
+    sections: [
+      {
+        title: {
+          ar: 'ما النشر؟',
+          fr: 'Qu\'est-ce que le déploiement ?',
+          en: 'What Is Deployment?',
+        },
+        subtitle: {
+          ar: 'المفهوم: من جهازك إلى العالم',
+          fr: 'Le concept : de votre appareil au monde',
+          en: 'The concept: from your device to the world',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'حتى الآن، حين تشغّل مشروعك بـ «npm run dev»، يعمل على جهازك فقط — على عنوان مثل localhost لا يفتحه سواك. النشر هو نقل مشروعك إلى خادم على الإنترنت، فيصبح له رابط عامّ يفتحه أي شخص من أي جهاز في العالم.',
+              fr: "Jusqu'ici, quand vous lancez votre projet avec « npm run dev », il fonctionne uniquement sur votre appareil — sur une adresse comme localhost que vous seul ouvrez. Le déploiement, c'est transférer votre projet vers un serveur sur Internet, pour qu'il ait un lien public que n'importe qui ouvre depuis n'importe quel appareil dans le monde.",
+              en: "Until now, when you run your project with \"npm run dev\", it works only on your device — on an address like localhost that only you open. Deployment is moving your project to a server on the Internet, so it gets a public link anyone opens from any device in the world.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'هناك فرق مهمّ بين حالتين: «التطوير» (Development) هو ما تفعله على جهازك أثناء البناء والتجربة. و«الإنتاج» (Production) هو النسخة النهائية المنشورة التي يستعملها الناس. النشر ينقلك من الأولى إلى الثانية.',
+              fr: "Il y a une différence importante entre deux états : le « développement » (Development) est ce que vous faites sur votre appareil pendant la construction et les tests. Et la « production » (Production) est la version finale publiée que les gens utilisent. Le déploiement vous fait passer du premier au second.",
+              en: "There's an important difference between two states: \"development\" is what you do on your device while building and testing. And \"production\" is the final published version people use. Deployment takes you from the first to the second.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'تشبيه: التطوير مثل المطبخ حيث تجرّب الوصفة وتذوقها. والإنتاج مثل الطبق المقدّم للضيوف. النشر هو تقديم الطبق للعالم.',
+              fr: "Analogie : le développement est comme la cuisine où vous testez la recette et la goûtez. Et la production est comme le plat servi aux invités. Le déploiement, c'est présenter le plat au monde.",
+              en: 'Analogy: development is like the kitchen where you test the recipe and taste it. And production is like the dish served to guests. Deployment is serving the dish to the world.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'البناء للإنتاج',
+          fr: 'La construction pour la production',
+          en: 'Building for Production',
+        },
+        subtitle: {
+          ar: 'ما «npm run build» ولماذا نحتاجه',
+          fr: 'Qu\'est-ce que « npm run build » et pourquoi en avons-nous besoin',
+          en: 'What "npm run build" is and why we need it',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'قبل النشر، نحتاج تحويل مشروعك إلى نسخة «إنتاج» مُحسّنة. الكود الذي تكتبه مريح لك كإنسان، لكن المتصفّح يفضّله مضغوطاً وسريعاً. أمر واحد يقوم بهذا التحويل.',
+              fr: "Avant le déploiement, nous devons transformer votre projet en une version « production » optimisée. Le code que vous écrivez est confortable pour vous en tant qu'humain, mais le navigateur le préfère compressé et rapide. Une seule commande fait cette transformation.",
+              en: "Before deployment, we need to turn your project into an optimized \"production\" version. The code you write is comfortable for you as a human, but the browser prefers it compressed and fast. One command does this transformation.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '💻',
+            text: {
+              ar: 'جرّب أمر البناء في مشروعك:',
+              fr: 'Essayez la commande de construction dans votre projet :',
+              en: 'Try the build command in your project:',
+            },
+          },
+          { type: 'code', text: 'npm run build' },
+          {
+            type: 'text',
+            text: {
+              ar: 'هذا الأمر يُنشئ مجلّداً جديداً اسمه «dist» — يحتوي نسخة مشروعك النهائية المُحسّنة، جاهزة للنشر. لن تعدّل هذا المجلّد يدوياً؛ يُولَّد آلياً في كل مرّة تبني.',
+              fr: "Cette commande crée un nouveau dossier appelé « dist » — il contient la version finale optimisée de votre projet, prête au déploiement. Vous ne modifierez pas ce dossier manuellement ; il est généré automatiquement à chaque construction.",
+              en: "This command creates a new folder called \"dist\" — it contains your project's final optimized version, ready for deployment. You won't edit this folder manually; it's generated automatically each time you build.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'عادة جيّدة: شغّل «npm run build» على جهازك قبل النشر للتأكّد أن مشروعك يُبنى بلا أخطاء. إن نجح البناء محلياً، فالنشر غالباً سينجح.',
+              fr: "Bonne habitude : lancez « npm run build » sur votre appareil avant le déploiement pour vous assurer que votre projet se construit sans erreurs. Si la construction réussit localement, le déploiement réussira généralement.",
+              en: 'Good habit: run "npm run build" on your device before deploying to make sure your project builds without errors. If the build succeeds locally, deployment will usually succeed.',
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'يظهر مجلّد dist في مشروعك، وتنتهي العملية برسالة نجاح',
+              fr: 'Le dossier dist apparaît dans votre projet, et l\'opération se termine par un message de succès',
+              en: 'A dist folder appears in your project, and the process ends with a success message',
+            },
+            note: {
+              ar: 'إن ظهر مجلّد dist بلا أخطاء، فمشروعك جاهز للنشر. هذه أوّل خطوة حقيقية نحو العالم.',
+              fr: "Si le dossier dist apparaît sans erreurs, votre projet est prêt au déploiement. C'est le premier vrai pas vers le monde.",
+              en: 'If the dist folder appears without errors, your project is ready to deploy. This is the first real step toward the world.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'كيف يصل مشروعك للإنترنت؟',
+          fr: 'Comment votre projet arrive-t-il sur Internet ?',
+          en: 'How Does Your Project Reach the Internet?',
+        },
+        subtitle: {
+          ar: 'مبدأ الربط عبر GitHub ومنصّة استضافة',
+          fr: 'Le principe de liaison via GitHub et une plateforme d\'hébergement',
+          en: 'The principle of connecting via GitHub and a hosting platform',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'لنشر مشروع، نحتاج مكانين يتعاونان: مكاناً يحفظ الكود (مثل GitHub — خزانة كود على الإنترنت)، ومنصّة استضافة تأخذ الكود وتحوّله لموقع حيّ (مثل Vercel — التي نُشر بها رفيق نفسه).',
+              fr: "Pour déployer un projet, nous avons besoin de deux endroits qui coopèrent : un endroit qui stocke le code (comme GitHub — une armoire de code sur Internet), et une plateforme d'hébergement qui prend le code et le transforme en site vivant (comme Vercel — avec laquelle Rafiq lui-même a été déployé).",
+              en: "To deploy a project, we need two places that cooperate: a place that stores the code (like GitHub — a code cabinet on the Internet), and a hosting platform that takes the code and turns it into a live site (like Vercel — with which Rafiq itself was deployed).",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'الفكرة ببساطة: ترفع كودك إلى GitHub، ثم تربط منصّة الاستضافة بمستودعك هناك. المنصّة تقرأ كودك، تبنيه (تفعل «npm run build» تلقائياً)، وتنشره على رابط عامّ. والأجمل: كلّما حدّثت كودك على GitHub، تُحدّث المنصّة موقعك تلقائياً.',
+              fr: "L'idée simplement : vous téléversez votre code sur GitHub, puis vous liez la plateforme d'hébergement à votre dépôt là-bas. La plateforme lit votre code, le construit (fait « npm run build » automatiquement), et le publie sur un lien public. Et le plus beau : chaque fois que vous mettez à jour votre code sur GitHub, la plateforme met à jour votre site automatiquement.",
+              en: "The idea simply: you upload your code to GitHub, then link the hosting platform to your repository there. The platform reads your code, builds it (does \"npm run build\" automatically), and publishes it on a public link. And the best part: whenever you update your code on GitHub, the platform updates your site automatically.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'لماذا هذا الترتيب؟ لأنه يفصل «مكان الكود» عن «مكان الموقع الحيّ»، فيمنحك مرونة وأماناً. ولأن التحديث التلقائي يعني أنك تنشر تعديلاتك بمجرّد رفعها — بلا خطوات يدوية متكرّرة.',
+              fr: "Pourquoi cet ordre ? Parce qu'il sépare « l'endroit du code » de « l'endroit du site vivant », vous offrant flexibilité et sécurité. Et parce que la mise à jour automatique signifie que vous publiez vos modifications dès que vous les téléversez — sans étapes manuelles répétées.",
+              en: "Why this order? Because it separates \"the code's place\" from \"the live site's place,\" giving you flexibility and safety. And because automatic updating means you publish your changes as soon as you upload them — without repeated manual steps.",
+            },
+          },
+          {
+            type: 'warn',
+            text: {
+              ar: 'واجهات هذه المنصّات (أزرارها وقوائمها) تتغيّر بين الحين والآخر. لا تحفظ النقرات عن ظهر قلب — افهم المبدأ (كود ← GitHub ← منصّة ← رابط)، واتبع الأزرار الظاهرة وقتها. المبدأ ثابت، والتفاصيل تتغيّر.',
+              fr: "Les interfaces de ces plateformes (leurs boutons et menus) changent de temps en temps. Ne mémorisez pas les clics par cœur — comprenez le principe (code ← GitHub ← plateforme ← lien), et suivez les boutons visibles à ce moment-là. Le principe est constant, les détails changent.",
+              en: "These platforms' interfaces (their buttons and menus) change from time to time. Don't memorize the clicks by heart — understand the principle (code ← GitHub ← platform ← link), and follow the buttons visible at that time. The principle is constant, the details change.",
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'بعد النشر',
+          fr: 'Après le déploiement',
+          en: 'After Deployment',
+        },
+        subtitle: {
+          ar: 'رابطك الحقيقي، والتحديث المستمرّ',
+          fr: 'Votre vrai lien, et la mise à jour continue',
+          en: 'Your real link, and continuous updating',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'بعد نجاح النشر، تمنحك المنصّة رابطاً حقيقياً (مثل my-project.vercel.app). هذا رابط عامّ — أرسله لأي شخص، يفتحه من هاتفه أو حاسوبه، ويرى مشروعك يعمل. لحظة يستحقّ أن تفخر بها: فكرتك صارت واقعاً على الإنترنت.',
+              fr: "Après un déploiement réussi, la plateforme vous donne un vrai lien (comme mon-projet.vercel.app). C'est un lien public — envoyez-le à n'importe qui, il l'ouvre depuis son téléphone ou son ordinateur, et voit votre projet fonctionner. Un moment dont vous méritez d'être fier : votre idée est devenue réalité sur Internet.",
+              en: "After a successful deployment, the platform gives you a real link (like my-project.vercel.app). It's a public link — send it to anyone, they open it from their phone or computer, and see your project working. A moment you deserve to be proud of: your idea became reality on the Internet.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'ولأنك ربطت المنصّة بـ GitHub، فالتحديث سهل: عدّل كودك، ارفعه إلى GitHub، وستُحدّث المنصّة موقعك تلقائياً خلال لحظات. لا تعيد النشر يدوياً في كل مرّة — النظام يعمل من أجلك.',
+              fr: "Et parce que vous avez lié la plateforme à GitHub, la mise à jour est facile : modifiez votre code, téléversez-le sur GitHub, et la plateforme mettra à jour votre site automatiquement en quelques instants. Vous ne redéployez pas manuellement à chaque fois — le système travaille pour vous.",
+              en: "And because you linked the platform to GitHub, updating is easy: edit your code, upload it to GitHub, and the platform will update your site automatically within moments. You don't redeploy manually each time — the system works for you.",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'تفهم رحلة مشروعك الكاملة: من كودك، إلى البناء، إلى GitHub، إلى منصّة، إلى رابط عامّ',
+              fr: 'Vous comprenez le parcours complet de votre projet : de votre code, à la construction, à GitHub, à une plateforme, à un lien public',
+              en: 'You understand your project\'s full journey: from your code, to build, to GitHub, to a platform, to a public link',
+            },
+            note: {
+              ar: 'إن فهمت هذه الرحلة، فأنت تفهم كيف يصل كل موقع تزوره إلى الإنترنت — بما فيه رفيق نفسه. لم يعد النشر لغزاً.',
+              fr: "Si vous comprenez ce parcours, vous comprenez comment chaque site que vous visitez arrive sur Internet — y compris Rafiq lui-même. Le déploiement n'est plus un mystère.",
+              en: 'If you understand this journey, you understand how every site you visit reaches the Internet — including Rafiq itself. Deployment is no longer a mystery.',
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'أنجزت الرحلة الكبرى: من إعداد بيئتك، إلى بناء مشروعك، إلى نشره للعالم. المحطات القادمة ستصقل مهاراتك أكثر. لكن قف لحظة وافخر: أنت الآن تفهم كيف تُبنى التطبيقات وتُنشر من الألف إلى الياء. أحسنت صنعاً!',
+              fr: "Vous avez accompli le grand parcours : de la configuration de votre environnement, à la construction de votre projet, à sa publication au monde. Les prochaines étapes affineront davantage vos compétences. Mais arrêtez-vous un instant et soyez fier : vous comprenez maintenant comment les applications sont construites et déployées de A à Z. Bien joué !",
+              en: "You've completed the great journey: from setting up your environment, to building your project, to publishing it to the world. The coming stations will refine your skills further. But pause a moment and be proud: you now understand how apps are built and deployed from A to Z. Well done!",
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
