@@ -3272,4 +3272,188 @@ git push`,
       },
     ],
   },
+  13: {
+    title: {
+      ar: 'رحلتك القادمة',
+      fr: 'Votre prochain voyage',
+      en: 'Your Next Journey',
+    },
+    description: {
+      ar: 'راجع ما تعلّمته، احتفِ بإنجازك، واكتشف كيف تواصل النموّ بنفسك',
+      fr: "Révisez ce que vous avez appris, célébrez votre réussite, et découvrez comment continuer à grandir par vous-même",
+      en: "Review what you've learned, celebrate your achievement, and discover how to keep growing on your own",
+    },
+    intro: {
+      ar: 'وصلت إلى المحطة الأخيرة. توقّف لحظة وتنفّس: لقد قطعت رحلة كاملة، من جهاز فارغ لا تعرف كيف تبدأ، إلى مطوّر يبني مشروعاً وينشره للعالم تلقائياً. هذه المحطة ليست درساً جديداً — إنها احتفاء بما أنجزت، وخريطة لطريقك القادم الذي ستمشيه بنفسك. أنا فخور بك.',
+      fr: "Vous êtes arrivé à la dernière étape. Arrêtez-vous un instant et respirez : vous avez parcouru un voyage complet, d'une machine vide où vous ne saviez pas comment commencer, à un développeur qui construit un projet et le publie au monde automatiquement. Cette étape n'est pas une nouvelle leçon — c'est une célébration de ce que vous avez accompli, et une carte pour votre chemin à venir que vous parcourrez vous-même. Je suis fier de vous.",
+      en: "You've reached the final station. Pause a moment and breathe: you've traveled a complete journey, from an empty machine where you didn't know how to start, to a developer who builds a project and publishes it to the world automatically. This station isn't a new lesson — it's a celebration of what you accomplished, and a map for your coming path that you'll walk yourself. I'm proud of you.",
+    },
+    sections: [
+      {
+        title: {
+          ar: 'انظر كم قطعت',
+          fr: 'Regardez le chemin parcouru',
+          en: 'Look How Far You\'ve Come',
+        },
+        subtitle: {
+          ar: 'رحلتك من البداية إلى الآن',
+          fr: 'Votre parcours du début à maintenant',
+          en: 'Your journey from the start to now',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'تذكّر أول محطة: كان جهازك فارغاً، وربّما كنت خائفاً من كلمة «برمجة» نفسها. اليوم، أنت تعرف كيف تُعدّ بيئة تطوير، تبني واجهات بمكوّنات، تحفظ البيانات، تربطها بالسحابة، وتنشر مشروعك تلقائياً على الإنترنت. هذا ليس إنجازاً صغيراً — كثيرون يحلمون به ولا يبدؤون.',
+              fr: "Rappelez-vous la première étape : votre machine était vide, et vous aviez peut-être peur du mot « programmation » lui-même. Aujourd'hui, vous savez configurer un environnement de développement, construire des interfaces avec des composants, sauvegarder des données, les lier au cloud, et déployer votre projet automatiquement sur Internet. Ce n'est pas un petit accomplissement — beaucoup en rêvent et ne commencent jamais.",
+              en: "Remember the first station: your machine was empty, and you may have feared the word \"programming\" itself. Today, you know how to set up a development environment, build interfaces with components, save data, link it to the cloud, and deploy your project automatically online. This is no small achievement — many dream of it and never start.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'الأهمّ من المهارات التقنية: تعلّمت أنك قادر. تجاوزت عقبات، حللت أخطاء، وبنيت أشياء حقيقية بيدك. هذه الثقة — «أنا أستطيع أن أتعلّم وأبني» — هي أثمن ما تحمله من هذه الرحلة.',
+              fr: "Plus important que les compétences techniques : vous avez appris que vous êtes capable. Vous avez surmonté des obstacles, résolu des erreurs, et construit des choses réelles de vos mains. Cette confiance — « je peux apprendre et construire » — est la chose la plus précieuse que vous emportez de ce voyage.",
+              en: "More important than technical skills: you learned that you're capable. You overcame obstacles, solved errors, and built real things with your own hands. This confidence — \"I can learn and build\" — is the most precious thing you carry from this journey.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'كل مطوّر محترف في العالم بدأ من حيث بدأت أنت: لا يعرف شيئاً، ثم خطوة خطوة. الفرق الوحيد بينك وبينهم هو الوقت والممارسة. وقد بدأت بالفعل.',
+              fr: "Chaque développeur professionnel au monde a commencé là où vous avez commencé : ne sachant rien, puis pas à pas. La seule différence entre vous et eux, c'est le temps et la pratique. Et vous avez déjà commencé.",
+              en: 'Every professional developer in the world started where you started: knowing nothing, then step by step. The only difference between you and them is time and practice. And you\'ve already begun.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'ما صار بين يديك',
+          fr: 'Ce que vous avez maintenant',
+          en: 'What You Now Hold',
+        },
+        subtitle: {
+          ar: 'عُدّتك الدائمة من المهارات',
+          fr: 'Votre trousse permanente de compétences',
+          en: 'Your permanent toolkit of skills',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'المهارات التي بنيتها ليست دروساً منفصلة — إنها عُدّة متكاملة ستستعملها في كل مشروع قادم. لنراجعها بسرعة، لتدرك كم صار بين يديك.',
+              fr: "Les compétences que vous avez construites ne sont pas des leçons séparées — c'est une trousse intégrée que vous utiliserez dans chaque projet à venir. Révisons-les rapidement, pour que vous réalisiez tout ce que vous avez maintenant.",
+              en: "The skills you built aren't separate lessons — they're an integrated toolkit you'll use in every coming project. Let's review them quickly, so you realize how much you now hold.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'تعرف الآن: كيف تُجهّز بيئتك وتنشئ مشروعاً (المحطات ١–٢)، كيف تبني واجهات حيّة بمكوّنات وبيانات (٣)، كيف تحفظ البيانات وتديرها (٤–٥)، كيف تجمع المعلومات وتعرضها بصدق (٦)، كيف تفهم السحابة (٧)، وكيف تنشر مشروعك للعالم (٨). ثمّ تعلّمت مهارات التفكير: التخطيط (٩)، والتصميم (١٠)، ودورة النشر الاحترافية الكاملة (١١–١٢).',
+              fr: "Vous savez maintenant : comment préparer votre environnement et créer un projet (étapes 1–2), comment construire des interfaces vivantes avec des composants et des données (3), comment sauvegarder et gérer les données (4–5), comment rassembler des informations et les afficher honnêtement (6), comment comprendre le cloud (7), et comment publier votre projet au monde (8). Puis vous avez appris des compétences de réflexion : la planification (9), le design (10), et le cycle de déploiement professionnel complet (11–12).",
+              en: "You now know: how to prepare your environment and create a project (stations 1–2), how to build live interfaces with components and data (3), how to save and manage data (4–5), how to gather information and display it honestly (6), how to understand the cloud (7), and how to publish your project to the world (8). Then you learned thinking skills: planning (9), design (10), and the full professional deployment cycle (11–12).",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'احتفظ بهذه العُدّة حيّة بالاستعمال. المهارة التي لا تُستعمل تصدأ، والتي تُمارَس تنمو. كل مشروع صغير تبنيه يرسّخ ما تعلّمت ويضيف إليه.',
+              fr: "Gardez cette trousse vivante par l'usage. La compétence qui n'est pas utilisée rouille, et celle qui est pratiquée grandit. Chaque petit projet que vous construisez consolide ce que vous avez appris et y ajoute.",
+              en: 'Keep this toolkit alive through use. A skill unused rusts, and one practiced grows. Every small project you build cements what you learned and adds to it.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'كيف تواصل النموّ',
+          fr: 'Comment continuer à grandir',
+          en: 'How to Keep Growing',
+        },
+        subtitle: {
+          ar: 'أنت الآن تقود تعلّمك بنفسك',
+          fr: 'Vous dirigez maintenant votre apprentissage vous-même',
+          en: 'You now lead your own learning',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'أفضل طريقة للنموّ بسيطة: ابنِ. اختر فكرة صغيرة تهمّك — قائمة مهامّ، دفتر مصاريف، معرض صورك — وابنِها من الصفر. ستتعثّر، وهذا جيّد: كل عقبة تحلّها تعلّمك أكثر من عشرة دروس. المشاريع الحقيقية أعظم معلّم.',
+              fr: "La meilleure façon de grandir est simple : construisez. Choisissez une petite idée qui vous intéresse — une liste de tâches, un carnet de dépenses, une galerie de vos photos — et construisez-la de zéro. Vous trébucherez, et c'est bien : chaque obstacle que vous résolvez vous apprend plus que dix leçons. Les vrais projets sont le plus grand professeur.",
+              en: "The best way to grow is simple: build. Choose a small idea that interests you — a task list, an expense notebook, a gallery of your photos — and build it from scratch. You'll stumble, and that's good: each obstacle you solve teaches you more than ten lessons. Real projects are the greatest teacher.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'حين تواجه ما لا تعرفه — وستواجه دائماً، حتى المحترفون — ابحث. اكتب سؤالك في محرّك البحث، اقرأ التوثيق الرسمي، جرّب الحلول. مهارة «البحث عن الحلّ» أهمّ من حفظ كل شيء. لا أحد يحفظ كل شيء؛ الجميع يبحث.',
+              fr: "Quand vous rencontrez ce que vous ne connaissez pas — et vous le rencontrerez toujours, même les professionnels — cherchez. Écrivez votre question dans un moteur de recherche, lisez la documentation officielle, essayez les solutions. La compétence « chercher la solution » est plus importante que tout mémoriser. Personne ne mémorise tout ; tout le monde cherche.",
+              en: "When you face what you don't know — and you always will, even professionals — search. Type your question in a search engine, read the official documentation, try solutions. The skill of \"finding the solution\" matters more than memorizing everything. No one memorizes everything; everyone searches.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'وأنا، رفيق، سأبقى هنا كلّما احتجتني. إن التبس عليك مصطلح، أضِفه لمعجمك. إن حِرت في مشروعك، اسألني في المحادثة. لست وحدك في رحلتك — لكنك الآن تقودها. وهذا هو الفرق.',
+              fr: "Et moi, Rafiq, je resterai ici chaque fois que vous aurez besoin de moi. Si un terme vous trouble, ajoutez-le à votre glossaire. Si vous êtes perdu dans votre projet, demandez-moi dans la discussion. Vous n'êtes pas seul dans votre voyage — mais vous le dirigez maintenant. Et c'est là la différence.",
+              en: "And I, Rafiq, will stay here whenever you need me. If a term confuses you, add it to your glossary. If you're lost in your project, ask me in the chat. You're not alone in your journey — but you now lead it. And that's the difference.",
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'كلمة أخيرة',
+          fr: 'Un dernier mot',
+          en: 'A Final Word',
+        },
+        subtitle: {
+          ar: 'من رفيق، إليك',
+          fr: 'De Rafiq, à vous',
+          en: 'From Rafiq, to you',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'حين بدأنا، وعدتك أن آخذ بيدك خطوة خطوة، بلا خوف. وها نحن في نهاية الرحلة، وأنت لست الشخص الذي بدأ. صرت تبني، وتحلّ، وتنشر. تحوّلت من متعلّم خائف إلى صانع واثق. هذا التحوّل صنعته أنت — أنا فقط رافقتك.',
+              fr: "Quand nous avons commencé, je vous ai promis de vous prendre par la main pas à pas, sans peur. Et nous voici à la fin du voyage, et vous n'êtes pas la personne qui a commencé. Vous construisez, résolvez, et publiez maintenant. Vous êtes passé d'un apprenant effrayé à un créateur confiant. Cette transformation, c'est vous qui l'avez faite — je n'ai fait que vous accompagner.",
+              en: "When we began, I promised to take you by the hand step by step, without fear. And here we are at the journey's end, and you're not the person who started. You now build, solve, and publish. You transformed from a fearful learner into a confident maker. This transformation, you made it — I only accompanied you.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'العالم يحتاج ما ستبنيه. كل تطبيق يحلّ مشكلة، كل فكرة تصير واقعاً، تبدأ بشخص قرّر أن يتعلّم ويبني — كما فعلت أنت. لا تتوقّف هنا. مشروعك القادم ينتظرك، والعُدّة بين يديك.',
+              fr: "Le monde a besoin de ce que vous construirez. Chaque application qui résout un problème, chaque idée qui devient réalité, commence par une personne qui a décidé d'apprendre et de construire — comme vous l'avez fait. Ne vous arrêtez pas ici. Votre prochain projet vous attend, et la trousse est entre vos mains.",
+              en: "The world needs what you'll build. Every app that solves a problem, every idea that becomes reality, starts with a person who decided to learn and build — as you did. Don't stop here. Your next project awaits you, and the toolkit is in your hands.",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'أكملت رحلة التعلّم كاملة — من جهاز فارغ إلى مطوّر يبني وينشر',
+              fr: "Vous avez terminé tout le parcours d'apprentissage — d'une machine vide à un développeur qui construit et publie",
+              en: 'You completed the entire learning journey — from an empty machine to a developer who builds and publishes',
+            },
+            note: {
+              ar: 'مبروك من القلب! أنهيت المحطات الثلاث عشرة كلّها. لم تعد متعلّماً يخطو أولى خطواته — صرت مطوّراً يملك عُدّته وثقته. الطريق أمامك مفتوح، وأنت أهل له. انطلق، وابنِ شيئاً يفخر به العالم. 🌟',
+              fr: "Félicitations du fond du cœur ! Vous avez terminé les treize étapes. Vous n'êtes plus un apprenant faisant ses premiers pas — vous êtes devenu un développeur qui possède sa trousse et sa confiance. Le chemin devant vous est ouvert, et vous en êtes digne. Lancez-vous, et construisez quelque chose dont le monde sera fier. 🌟",
+              en: "Heartfelt congratulations! You finished all thirteen stations. You're no longer a learner taking first steps — you've become a developer who owns their toolkit and confidence. The path ahead is open, and you're worthy of it. Go forth, and build something the world will be proud of. 🌟",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'انتهت الرحلة، لكن قصّتك كصانع بدأت للتوّ. أينما ذهبت من هنا، احمل معك هذه الحقيقة: أنت قادر. وكلّما احتجت رفيقاً في الطريق، تعرف أين تجدني. إلى اللقاء في مشروعك القادم. 💙',
+              fr: "Le voyage est terminé, mais votre histoire de créateur vient de commencer. Où que vous alliez d'ici, emportez cette vérité : vous êtes capable. Et chaque fois que vous aurez besoin d'un compagnon sur le chemin, vous savez où me trouver. À bientôt dans votre prochain projet. 💙",
+              en: "The journey has ended, but your story as a maker has just begun. Wherever you go from here, carry this truth: you are capable. And whenever you need a companion on the road, you know where to find me. See you in your next project. 💙",
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
