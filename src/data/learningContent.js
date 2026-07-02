@@ -2781,4 +2781,269 @@ const termCount = glossary.length;`,
       },
     ],
   },
+  11: {
+    title: {
+      ar: 'رفع الكود إلى GitHub',
+      fr: 'Publier le code sur GitHub',
+      en: 'Pushing Code to GitHub',
+    },
+    description: {
+      ar: 'احفظ مشروعك في الغيمة بنسخة آمنة دائمة، وتعلّم أوامر git الأساسية',
+      fr: "Sauvegardez votre projet dans le cloud avec une copie sûre et permanente, et apprenez les commandes git de base",
+      en: 'Save your project to the cloud with a safe, permanent copy, and learn the basic git commands',
+    },
+    intro: {
+      ar: 'في محطة النشر فهمت المبدأ: كودك يذهب إلى GitHub، ومنه إلى الإنترنت. الآن سنطبّق ذلك عملياً. سنتعلّم أداتين يستعملهما كل مطوّر في العالم: git (لتتبّع تغييرات كودك) و GitHub (لحفظه في الغيمة). هذه المهارة ستخدمك في كل مشروع، مدى حياتك المهنية. تذكّر: أنت تحفظ عملك أنت في مكان آمن.',
+      fr: "Dans l'étape de déploiement, vous avez compris le principe : votre code va sur GitHub, et de là sur Internet. Maintenant, nous allons l'appliquer concrètement. Nous apprendrons deux outils que chaque développeur au monde utilise : git (pour suivre les changements de votre code) et GitHub (pour le sauvegarder dans le cloud). Cette compétence vous servira dans chaque projet, toute votre vie professionnelle. Souvenez-vous : vous sauvegardez votre propre travail dans un endroit sûr.",
+      en: "In the deployment station you understood the principle: your code goes to GitHub, and from there to the Internet. Now we'll apply it practically. We'll learn two tools every developer in the world uses: git (to track your code's changes) and GitHub (to save it in the cloud). This skill will serve you in every project, throughout your career. Remember: you're saving your own work in a safe place.",
+    },
+    sections: [
+      {
+        title: {
+          ar: 'ما git وما GitHub؟',
+          fr: 'Qu\'est-ce que git et GitHub ?',
+          en: 'What Are git and GitHub?',
+        },
+        subtitle: {
+          ar: 'المفهوم: أداتان مختلفتان يُخلَط بينهما',
+          fr: 'Le concept : deux outils différents souvent confondus',
+          en: 'The concept: two different tools often confused',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'كثيرون يخلطون بينهما، لكنهما شيئان مختلفان. git برنامج على جهازك يتتبّع كل تغيير في كودك — مثل «آلة زمن» تحفظ نسخة عند كل خطوة، فتستطيع العودة لأيّها. GitHub موقع على الإنترنت يستضيف كودك المحفوظ بـ git — مثل «خزنة سحابية» لمشاريعك.',
+              fr: "Beaucoup les confondent, mais ce sont deux choses différentes. git est un programme sur votre appareil qui suit chaque changement de votre code — comme une « machine à remonter le temps » qui sauvegarde une version à chaque étape, pour que vous puissiez revenir à n'importe laquelle. GitHub est un site sur Internet qui héberge votre code sauvegardé avec git — comme un « coffre cloud » pour vos projets.",
+              en: "Many confuse them, but they're two different things. git is a program on your device that tracks every change in your code — like a \"time machine\" that saves a version at each step, so you can return to any of them. GitHub is a website that hosts your git-saved code — like a \"cloud vault\" for your projects.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'العلاقة بينهما: تستعمل git على جهازك لحفظ تغييراتك، ثم «ترفعها» إلى GitHub لتصبح في الغيمة. باختصار: git الأداة، و GitHub المكان.',
+              fr: "La relation entre eux : vous utilisez git sur votre appareil pour sauvegarder vos changements, puis vous les « téléversez » sur GitHub pour qu'ils soient dans le cloud. En bref : git est l'outil, et GitHub est l'endroit.",
+              en: "The relationship: you use git on your device to save your changes, then \"push\" them to GitHub to be in the cloud. In short: git is the tool, and GitHub is the place.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'لماذا كل هذا؟ لثلاثة أسباب: نسخة آمنة من عملك (لو تعطّل جهازك)، تتبّع تاريخ تغييراتك (تعرف ما فعلت ومتى)، وأساس النشر التلقائي (المحطة القادمة). git و GitHub أساس العمل الاحترافي.',
+              fr: "Pourquoi tout cela ? Pour trois raisons : une copie sûre de votre travail (si votre appareil tombe en panne), le suivi de l'historique de vos changements (vous savez ce que vous avez fait et quand), et la base du déploiement automatique (la prochaine étape). git et GitHub sont la base du travail professionnel.",
+              en: 'Why all this? For three reasons: a safe copy of your work (if your device breaks), tracking your change history (you know what you did and when), and the foundation of automatic deployment (the next station). git and GitHub are the foundation of professional work.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'جهّز مشروعك',
+          fr: 'Préparez votre projet',
+          en: 'Prepare Your Project',
+        },
+        subtitle: {
+          ar: 'تفعيل git داخل مشروعك',
+          fr: 'Activer git dans votre projet',
+          en: 'Activating git in your project',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'أولاً، نتأكّد أن git مثبّت على جهازك. مشاريع Vite التي أنشأتها غالباً تُفعّل git تلقائياً، لكن لنتحقّق ونتعلّم. افتح cmd في مجلّد مشروعك.',
+              fr: "D'abord, vérifions que git est installé sur votre appareil. Les projets Vite que vous avez créés activent souvent git automatiquement, mais vérifions et apprenons. Ouvrez cmd dans le dossier de votre projet.",
+              en: "First, let's make sure git is installed on your device. The Vite projects you created often activate git automatically, but let's verify and learn. Open cmd in your project folder.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '💻',
+            text: {
+              ar: 'تحقّق أن git مثبّت:',
+              fr: 'Vérifiez que git est installé :',
+              en: 'Check that git is installed:',
+            },
+          },
+          { type: 'code', text: 'git --version' },
+          {
+            type: 'warn',
+            text: {
+              ar: 'إن ظهر خطأ «not recognized»، فـ git غير مثبّت. اذهب إلى git-scm.com، حمّله وثبّته (Next في كل خطوة)، ثم أعد فتح cmd. بعدها أعد الأمر.',
+              fr: "Si une erreur « not recognized » apparaît, git n'est pas installé. Allez sur git-scm.com, téléchargez-le et installez-le (Next à chaque étape), puis rouvrez cmd. Ensuite, refaites la commande.",
+              en: 'If a "not recognized" error appears, git isn\'t installed. Go to git-scm.com, download and install it (Next at every step), then reopen cmd. Then redo the command.',
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '⚙️',
+            text: {
+              ar: 'إن كان مشروعك جديداً بلا git، فعّله بهذا الأمر (إن كان مفعّلاً، سيخبرك بذلك بلا ضرر):',
+              fr: "Si votre projet est nouveau sans git, activez-le avec cette commande (s'il est déjà activé, il vous le dira sans dommage) :",
+              en: "If your project is new without git, activate it with this command (if already active, it'll tell you harmlessly):",
+            },
+          },
+          { type: 'code', text: 'git init' },
+          {
+            type: 'verify',
+            text: {
+              ar: 'git مثبّت ومفعّل في مشروعك',
+              fr: 'git est installé et activé dans votre projet',
+              en: 'git is installed and activated in your project',
+            },
+            note: {
+              ar: 'مشروعك الآن يتتبّع تغييراته. كل خطوة قادمة ستُحفظ في تاريخ مشروعك.',
+              fr: "Votre projet suit maintenant ses changements. Chaque étape à venir sera sauvegardée dans l'historique de votre projet.",
+              en: 'Your project now tracks its changes. Every coming step will be saved in your project\'s history.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'أنشئ مستودعاً على GitHub',
+          fr: 'Créez un dépôt sur GitHub',
+          en: 'Create a Repository on GitHub',
+        },
+        subtitle: {
+          ar: 'المكان الذي سيسكنه كودك في الغيمة',
+          fr: 'L\'endroit où votre code habitera dans le cloud',
+          en: 'The place your code will live in the cloud',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'المستودع (Repository أو repo) هو مجلّد مشروعك على GitHub. لإنشائه، تحتاج حساباً على GitHub أولاً (مجاني). اذهب إلى github.com وأنشئ حساباً إن لم يكن لديك.',
+              fr: "Le dépôt (Repository ou repo) est le dossier de votre projet sur GitHub. Pour le créer, vous avez d'abord besoin d'un compte GitHub (gratuit). Allez sur github.com et créez un compte si vous n'en avez pas.",
+              en: "The repository (or repo) is your project's folder on GitHub. To create it, you first need a GitHub account (free). Go to github.com and create an account if you don't have one.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '🌐',
+            text: {
+              ar: 'على GitHub، ابحث عن زرّ إنشاء مستودع جديد (عادةً «New» أو علامة +)، وأنشئ مستودعاً باسم مشروعك.',
+              fr: "Sur GitHub, cherchez le bouton de création d'un nouveau dépôt (généralement « New » ou le signe +), et créez un dépôt au nom de votre projet.",
+              en: 'On GitHub, look for the create-new-repository button (usually "New" or a + sign), and create a repository named after your project.',
+            },
+          },
+          {
+            type: 'warn',
+            text: {
+              ar: 'واجهة GitHub تتغيّر أحياناً (مواضع الأزرار). لا تحفظ النقرات — افهم الهدف: تريد مستودعاً فارغاً جديداً باسم مشروعك. اتبع الأزرار الظاهرة وقتها للوصول إليه.',
+              fr: "L'interface de GitHub change parfois (l'emplacement des boutons). Ne mémorisez pas les clics — comprenez l'objectif : vous voulez un nouveau dépôt vide au nom de votre projet. Suivez les boutons visibles à ce moment-là pour y arriver.",
+              en: "GitHub's interface changes sometimes (button positions). Don't memorize clicks — understand the goal: you want a new empty repository named after your project. Follow the buttons visible at that time to reach it.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'بعد إنشاء المستودع، يعرض GitHub رابطه (ينتهي بـ .git). ستحتاجه في الخطوة التالية لربط مشروعك المحلّي به. انسخه أو أبقِ الصفحة مفتوحة.',
+              fr: "Après avoir créé le dépôt, GitHub affiche son lien (se terminant par .git). Vous en aurez besoin à l'étape suivante pour y lier votre projet local. Copiez-le ou gardez la page ouverte.",
+              en: 'After creating the repository, GitHub shows its link (ending in .git). You\'ll need it in the next step to link your local project to it. Copy it or keep the page open.',
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'لديك مستودع فارغ على GitHub برابط خاصّ به',
+              fr: 'Vous avez un dépôt vide sur GitHub avec son propre lien',
+              en: 'You have an empty repository on GitHub with its own link',
+            },
+            note: {
+              ar: 'أنشأت بيتاً لكودك في الغيمة. الآن نملؤه بمشروعك.',
+              fr: "Vous avez créé une maison pour votre code dans le cloud. Maintenant, remplissons-la de votre projet.",
+              en: 'You created a home for your code in the cloud. Now let\'s fill it with your project.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'ارفع كودك',
+          fr: 'Téléversez votre code',
+          en: 'Push Your Code',
+        },
+        subtitle: {
+          ar: 'أوامر git الثلاثة: add، commit، push',
+          fr: 'Les trois commandes git : add, commit, push',
+          en: 'The three git commands: add, commit, push',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'الآن الجزء الأهمّ: رفع كودك فعلياً. ثلاثة أوامر تفعل ذلك، ولكلٍّ معنى واضح. سنفهمها قبل أن نكتبها، لأنك ستستعملها في كل مشروع بقيّة حياتك.',
+              fr: "Maintenant la partie la plus importante : téléverser votre code concrètement. Trois commandes le font, et chacune a un sens clair. Nous les comprendrons avant de les écrire, car vous les utiliserez dans chaque projet le reste de votre vie.",
+              en: "Now the most important part: actually pushing your code. Three commands do it, and each has a clear meaning. We'll understand them before writing them, because you'll use them in every project the rest of your life.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'الأمر الأول «git add .» يجمع كل تغييراتك ويجهّزها للحفظ (النقطة تعني «كل الملفّات»). الثاني «git commit» يحفظها كنقطة في تاريخ مشروعك، مع رسالة تصف ما فعلت. الثالث «git push» يرفع هذه النقطة إلى GitHub.',
+              fr: "La première commande « git add . » rassemble tous vos changements et les prépare à la sauvegarde (le point signifie « tous les fichiers »). La deuxième « git commit » les sauvegarde comme un point dans l'historique de votre projet, avec un message décrivant ce que vous avez fait. La troisième « git push » téléverse ce point sur GitHub.",
+              en: "The first command \"git add .\" gathers all your changes and prepares them for saving (the dot means \"all files\"). The second \"git commit\" saves them as a point in your project's history, with a message describing what you did. The third \"git push\" uploads this point to GitHub.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '🔗',
+            text: {
+              ar: 'أولاً، اربط مشروعك بمستودع GitHub (استبدل الرابط برابط مستودعك):',
+              fr: 'D\'abord, liez votre projet au dépôt GitHub (remplacez le lien par celui de votre dépôt) :',
+              en: 'First, link your project to the GitHub repository (replace the link with your repository\'s):',
+            },
+          },
+          { type: 'code', text: 'git remote add origin https://github.com/YOUR-NAME/YOUR-REPO.git' },
+          {
+            type: 'instruction',
+            icon: '📤',
+            text: {
+              ar: 'ثم ارفع كودك بالأوامر الثلاثة، واحداً تلو الآخر:',
+              fr: 'Puis téléversez votre code avec les trois commandes, l\'une après l\'autre :',
+              en: 'Then push your code with the three commands, one after another:',
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'رفع الكود', fr: 'Téléverser le code', en: 'Push the code' },
+            code: `git add .
+git commit -m "أول رفع لمشروعي"
+git push -u origin main`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'الرسالة بعد commit -m تصف ما فعلت — اكتبها واضحة لتفهمها لاحقاً. وفي المرّات القادمة، يكفي «git add .» ثم «git commit -m» ثم «git push» (بلا الجزء الأخير الطويل). صارت عادة سريعة.',
+              fr: "Le message après commit -m décrit ce que vous avez fait — écrivez-le clairement pour le comprendre plus tard. Et les prochaines fois, il suffit de « git add . » puis « git commit -m » puis « git push » (sans la dernière partie longue). C'est devenu une habitude rapide.",
+              en: "The message after commit -m describes what you did — write it clearly to understand it later. And next times, just \"git add .\" then \"git commit -m\" then \"git push\" (without the long last part). It became a quick habit.",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'كودك يظهر الآن في مستودعك على GitHub',
+              fr: 'Votre code apparaît maintenant dans votre dépôt sur GitHub',
+              en: 'Your code now appears in your repository on GitHub',
+            },
+            note: {
+              ar: 'مبروك! رفعت مشروعك إلى الغيمة. لديك الآن نسخة آمنة دائمة، وتاريخ لكل تغييراتك. هذه مهارة يستعملها كل مطوّر محترف يومياً — وأنت الآن منهم.',
+              fr: "Félicitations ! Vous avez téléversé votre projet dans le cloud. Vous avez maintenant une copie sûre et permanente, et un historique de tous vos changements. C'est une compétence que chaque développeur professionnel utilise quotidiennement — et vous en êtes maintenant.",
+              en: 'Congratulations! You pushed your project to the cloud. You now have a safe, permanent copy, and a history of all your changes. This is a skill every professional developer uses daily — and you\'re now one of them.',
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'ما تعلّمته هنا هو نفسه ما نستعمله لنشر رفيق! في المحطة القادمة سنربط مستودعك هذا بمنصّة نشر، فيصبح كل «git push» نشراً تلقائياً لموقعك. اقتربت من إتقان الدورة الكاملة. أحسنت!',
+              fr: "Ce que vous avez appris ici est exactement ce que nous utilisons pour déployer Rafiq ! Dans la prochaine étape, nous lierons ce dépôt à une plateforme de déploiement, pour que chaque « git push » devienne une publication automatique de votre site. Vous approchez de la maîtrise du cycle complet. Bien joué !",
+              en: "What you learned here is exactly what we use to deploy Rafiq! In the next station we'll link this repository to a deployment platform, so every \"git push\" becomes an automatic publish of your site. You're close to mastering the full cycle. Well done!",
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
