@@ -2532,4 +2532,253 @@ const termCount = glossary.length;`,
       },
     ],
   },
+  10: {
+    title: {
+      ar: 'تحسين التصميم والتجربة',
+      fr: "Améliorer le design et l'expérience",
+      en: 'Improving Design and Experience',
+    },
+    description: {
+      ar: 'اجعل واجهتك أجمل وأوضح: المساحة، الألوان، والرسائل الواضحة',
+      fr: 'Rendez votre interface plus belle et plus claire : espacement, couleurs, et messages clairs',
+      en: 'Make your interface prettier and clearer: spacing, colors, and clear messages',
+    },
+    intro: {
+      ar: 'مشروعك يعمل الآن — رائع. لكن هل هو جميل وواضح؟ الفرق بين تطبيق «يعمل» وتطبيق «يحبّه الناس» هو التصميم وتجربة المستخدم. لا تحتاج أن تكون فنّاناً؛ تحتاج بضعة مبادئ بسيطة تصنع فرقاً كبيراً. في هذه المحطة سنتعلّم كيف نجعل ما بنيته أجمل وأسهل — بخطوات صغيرة، تطبّقها على مشروعك أنت.',
+      fr: "Votre projet fonctionne maintenant — génial. Mais est-il beau et clair ? La différence entre une application qui « fonctionne » et une application que « les gens aiment » est le design et l'expérience utilisateur. Vous n'avez pas besoin d'être un artiste ; vous avez besoin de quelques principes simples qui font une grande différence. Dans cette étape, nous apprendrons à rendre ce que vous avez construit plus beau et plus facile — par petites étapes, appliquées à votre propre projet.",
+      en: "Your project works now — great. But is it beautiful and clear? The difference between an app that \"works\" and an app that \"people love\" is design and user experience. You don't need to be an artist; you need a few simple principles that make a big difference. In this station we'll learn to make what you built prettier and easier — in small steps, applied to your own project.",
+    },
+    sections: [
+      {
+        title: {
+          ar: 'لماذا التصميم مهمّ؟',
+          fr: 'Pourquoi le design est-il important ?',
+          en: 'Why Does Design Matter?',
+        },
+        subtitle: {
+          ar: 'المفهوم: التصميم وضوح وثقة، لا زينة',
+          fr: 'Le concept : le design est clarté et confiance, pas décoration',
+          en: 'The concept: design is clarity and trust, not decoration',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'كثيرون يظنّون التصميم مجرّد «تجميل». الحقيقة أعمق: التصميم الجيّد يجعل التطبيق أسهل فهماً، وأسرع استعمالاً، وأكثر جدارة بالثقة. حين تفتح تطبيقاً مرتّباً، تشعر بالراحة والأمان. وحين تفتح تطبيقاً فوضوياً، تشعر بالارتباك وتغادر.',
+              fr: "Beaucoup pensent que le design n'est que « embellissement ». La vérité est plus profonde : un bon design rend l'application plus facile à comprendre, plus rapide à utiliser, et plus digne de confiance. Quand vous ouvrez une application ordonnée, vous ressentez confort et sécurité. Et quand vous ouvrez une application chaotique, vous ressentez de la confusion et partez.",
+              en: "Many think design is just \"beautification.\" The truth is deeper: good design makes an app easier to understand, faster to use, and more trustworthy. When you open a tidy app, you feel comfort and safety. And when you open a chaotic app, you feel confusion and leave.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'قاعدة ذهبية: التصميم الجيّد لا يُلاحَظ — يُشعَر به. حين يستعمل أحدهم تطبيقك دون أن يتساءل «كيف أفعل هذا؟»، فقد نجح تصميمك. الوضوح أهمّ من الإبهار.',
+              fr: "Règle d'or : un bon design ne se remarque pas — il se ressent. Quand quelqu'un utilise votre application sans se demander « comment fais-je cela ? », votre design a réussi. La clarté est plus importante que l'éblouissement.",
+              en: 'Golden rule: good design isn\'t noticed — it\'s felt. When someone uses your app without wondering "how do I do this?", your design has succeeded. Clarity matters more than dazzle.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'المساحة والتنفّس',
+          fr: "L'espace et la respiration",
+          en: 'Space and Breathing Room',
+        },
+        subtitle: {
+          ar: 'أبسط تحسين وأقواه: التباعد الجيّد',
+          fr: 'L\'amélioration la plus simple et la plus puissante : un bon espacement',
+          en: 'The simplest, most powerful improvement: good spacing',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'أكبر فرق بين واجهة هاوٍ وواجهة محترف ليس الألوان — بل المساحة. العناصر المتلاصقة تُتعب العين وتربك. المساحة حولها تمنحها «تنفّساً» يجعلها واضحة ومريحة. هذا أبسط تحسين، وأكثره أثراً.',
+              fr: "La plus grande différence entre une interface d'amateur et une interface professionnelle n'est pas les couleurs — mais l'espace. Les éléments collés fatiguent l'œil et embrouillent. L'espace autour d'eux leur donne une « respiration » qui les rend clairs et confortables. C'est l'amélioration la plus simple, et la plus impactante.",
+              en: "The biggest difference between an amateur interface and a professional one isn't colors — it's space. Cramped elements tire the eye and confuse. Space around them gives them \"breathing room\" that makes them clear and comfortable. This is the simplest improvement, and the most impactful.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'في CSS، نتحكّم بالمساحة عبر خاصيّتين: «padding» (مساحة داخل العنصر) و«margin» (مساحة خارجه). زيادة بسيطة فيهما تُحدث فرقاً كبيراً. جرّب على أي عنصر في مشروعك:',
+              fr: "En CSS, nous contrôlons l'espace via deux propriétés : « padding » (l'espace à l'intérieur de l'élément) et « margin » (l'espace à l'extérieur). Une légère augmentation fait une grande différence. Essayez sur n'importe quel élément de votre projet :",
+              en: "In CSS, we control space via two properties: \"padding\" (space inside the element) and \"margin\" (space outside it). A slight increase makes a big difference. Try on any element in your project:",
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'تباعد مريح', fr: 'Espacement confortable', en: 'Comfortable spacing' },
+            code: `.card {
+  padding: 16px;
+  margin-bottom: 12px;
+}`,
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'نصيحة عملية: حين تشعر أن واجهتك «مزدحمة» أو «متعبة»، الحلّ غالباً زيادة المساحة، لا إضافة عناصر. أحياناً الأقلّ أجمل.',
+              fr: "Conseil pratique : quand vous sentez que votre interface est « encombrée » ou « fatigante », la solution est souvent d'augmenter l'espace, pas d'ajouter des éléments. Parfois, moins c'est plus beau.",
+              en: 'Practical tip: when your interface feels "crowded" or "tiring," the solution is usually more space, not more elements. Sometimes less is prettier.',
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'عناصر مشروعك صارت أكثر تباعداً ووضوحاً',
+              fr: 'Les éléments de votre projet sont devenus plus espacés et plus clairs',
+              en: 'Your project\'s elements became more spaced and clearer',
+            },
+            note: {
+              ar: 'إن شعرت أن واجهتك أصبحت أهدأ وأوضح بمجرّد زيادة المساحة، فقد اكتشفت سرّ المصمّمين الأول.',
+              fr: "Si vous sentez que votre interface est devenue plus calme et plus claire juste en augmentant l'espace, vous avez découvert le premier secret des designers.",
+              en: 'If your interface feels calmer and clearer just from adding space, you\'ve discovered designers\' first secret.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'الألوان والتناسق',
+          fr: "Les couleurs et l'harmonie",
+          en: 'Colors and Consistency',
+        },
+        subtitle: {
+          ar: 'استعمل اللون بحكمة، لا فوضى ألوان',
+          fr: 'Utilisez la couleur avec sagesse, pas un chaos de couleurs',
+          en: 'Use color wisely, not a chaos of colors',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'خطأ المبتدئ الشائع: استعمال ألوان كثيرة ظنّاً أنها تُجمّل. الحقيقة عكسها: الألوان الكثيرة تربك. المحترفون يستعملون لوناً أساسياً واحداً (لأزرار الفعل والعناصر المهمّة)، ودرجات رمادية للباقي. البساطة أناقة.',
+              fr: "L'erreur commune du débutant : utiliser beaucoup de couleurs en pensant qu'elles embellissent. La vérité est le contraire : trop de couleurs embrouillent. Les professionnels utilisent une seule couleur principale (pour les boutons d'action et les éléments importants), et des nuances de gris pour le reste. La simplicité est élégance.",
+              en: "The common beginner mistake: using many colors thinking they beautify. The truth is the opposite: too many colors confuse. Professionals use one main color (for action buttons and important elements), and gray shades for the rest. Simplicity is elegance.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'اختر لوناً واحداً يعبّر عن مشروعك، واستعمله للعناصر المهمّة فقط. مثال: زرّ الإضافة بلونك الأساسي، وزرّ الحذف بالأحمر (لأنه تحذير)، والباقي رمادي هادئ.',
+              fr: "Choisissez une seule couleur qui représente votre projet, et utilisez-la uniquement pour les éléments importants. Exemple : le bouton d'ajout avec votre couleur principale, le bouton de suppression en rouge (car c'est un avertissement), et le reste en gris calme.",
+              en: "Choose one color that represents your project, and use it only for important elements. Example: the add button in your main color, the delete button in red (because it's a warning), and the rest in calm gray.",
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'لون أساسي بحكمة', fr: 'Une couleur principale avec sagesse', en: 'A main color used wisely' },
+            code: `.btn-primary {
+  background: #534AB7;
+  color: white;
+}
+
+.btn-danger {
+  background: #C0392B;
+  color: white;
+}`,
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'دلالات الألوان مهمّة: الأحمر للحذف والخطر، الأخضر للنجاح، لونك الأساسي للأفعال الرئيسية. استعمل اللون ليدلّ، لا ليزيّن فقط. هكذا يفهم المستخدم واجهتك بلا كلمات.',
+              fr: "Les significations des couleurs sont importantes : le rouge pour la suppression et le danger, le vert pour le succès, votre couleur principale pour les actions principales. Utilisez la couleur pour signifier, pas seulement pour décorer. Ainsi l'utilisateur comprend votre interface sans mots.",
+              en: 'Color meanings matter: red for delete and danger, green for success, your main color for primary actions. Use color to signify, not just decorate. This way the user understands your interface without words.',
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'واجهتك تستعمل لوناً أساسياً واحداً بوضوح، لا فوضى ألوان',
+              fr: 'Votre interface utilise clairement une seule couleur principale, pas un chaos de couleurs',
+              en: 'Your interface clearly uses one main color, not a chaos of colors',
+            },
+            note: {
+              ar: 'إن صارت واجهتك أكثر تناسقاً بلون أساسي واضح، فقد تعلّمت ضبط النفس في التصميم — علامة النضج.',
+              fr: "Si votre interface est devenue plus harmonieuse avec une couleur principale claire, vous avez appris la retenue dans le design — un signe de maturité.",
+              en: 'If your interface became more harmonious with one clear main color, you\'ve learned restraint in design — a sign of maturity.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'الرسائل الواضحة',
+          fr: 'Les messages clairs',
+          en: 'Clear Messages',
+        },
+        subtitle: {
+          ar: 'تحدّث إلى مستخدمك: الفراغ، التأكيد، الطمأنة',
+          fr: 'Parlez à votre utilisateur : le vide, la confirmation, la réassurance',
+          en: 'Speak to your user: emptiness, confirmation, reassurance',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'تجربة المستخدم الجيّدة تعني أن تطبيقك «يتحدّث» إلى مستخدمه في اللحظات المهمّة. ثلاث لحظات كثيراً ما تُهمَل: حين تكون القائمة فارغة، حين ينجح فعل، وحين يوشك المستخدم على فعل خطير.',
+              fr: "Une bonne expérience utilisateur signifie que votre application « parle » à son utilisateur aux moments importants. Trois moments souvent négligés : quand la liste est vide, quand une action réussit, et quand l'utilisateur est sur le point de faire quelque chose de dangereux.",
+              en: "Good user experience means your app \"talks\" to its user at important moments. Three often-neglected moments: when the list is empty, when an action succeeds, and when the user is about to do something dangerous.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'الحالة الفارغة: بدل شاشة فارغة محيّرة، اعرض رسالة ودّية ترشد. مثال: بدل فراغ، اكتب «لا مشاريع بعد — أضف أوّل مشروع لتبدأ!». هذا يطمئن المستخدم ويوجّهه.',
+              fr: "L'état vide : au lieu d'un écran vide déroutant, affichez un message amical qui guide. Exemple : au lieu du vide, écrivez « Aucun projet encore — ajoutez votre premier projet pour commencer ! ». Cela rassure l'utilisateur et le guide.",
+              en: "The empty state: instead of a confusing blank screen, show a friendly message that guides. Example: instead of emptiness, write \"No projects yet — add your first project to start!\" This reassures and guides the user.",
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'رسالة الحالة الفارغة', fr: 'Message d\'état vide', en: 'Empty state message' },
+            code: `{projects.length === 0 && (
+  <p className="empty">
+    لا مشاريع بعد — أضف أوّل مشروع لتبدأ!
+  </p>
+)}`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'والأفعال الخطيرة (كالحذف): اطلب تأكيداً قبلها، لئلّا يحذف المستخدم شيئاً بالخطأ. سؤال بسيط «هل أنت متأكّد؟» يحمي مستخدمك من ندم كبير.',
+              fr: "Et les actions dangereuses (comme la suppression) : demandez une confirmation avant, pour que l'utilisateur ne supprime pas quelque chose par erreur. Une simple question « Êtes-vous sûr ? » protège votre utilisateur d'un grand regret.",
+              en: "And dangerous actions (like deletion): ask for confirmation first, so the user doesn't delete something by mistake. A simple \"Are you sure?\" question protects your user from big regret.",
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'تأكيد قبل الحذف', fr: 'Confirmation avant suppression', en: 'Confirm before deleting' },
+            code: `function deleteProject(id) {
+  if (confirm('هل أنت متأكّد من الحذف؟')) {
+    setProjects(projects.filter((p) => p.id !== id));
+  }
+}`,
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'تطبيقك يرشد عند الفراغ، ويؤكّد قبل الحذف',
+              fr: 'Votre application guide quand c\'est vide, et confirme avant de supprimer',
+              en: 'Your app guides when empty, and confirms before deleting',
+            },
+            note: {
+              ar: 'مبروك! تعلّمت أن التطبيق الجيّد لا يعمل فقط، بل يرافق مستخدمه ويطمئنه. هذا الفرق بين أداة باردة ورفيق دافئ — تماماً كما يرافقك رفيق الآن.',
+              fr: "Félicitations ! Vous avez appris qu'une bonne application ne fait pas que fonctionner, elle accompagne son utilisateur et le rassure. C'est la différence entre un outil froid et un compagnon chaleureux — exactement comme Rafiq vous accompagne maintenant.",
+              en: 'Congratulations! You learned that a good app doesn\'t just work, it accompanies its user and reassures them. This is the difference between a cold tool and a warm companion — exactly as Rafiq accompanies you now.',
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'التصميم وتجربة المستخدم رحلة تتعلّمها مدى الحياة، لكنك الآن تملك أساسها: المساحة، اللون بحكمة، والرسائل الواضحة. طبّقها على مشروعك تدريجياً. في المحطة القادمة سنحفظ كودك بأمان على GitHub. أحسنت!',
+              fr: "Le design et l'expérience utilisateur sont un voyage que vous apprenez toute la vie, mais vous en possédez maintenant les bases : l'espace, la couleur avec sagesse, et les messages clairs. Appliquez-les à votre projet progressivement. Dans la prochaine étape, nous sauvegarderons votre code en sécurité sur GitHub. Bien joué !",
+              en: "Design and user experience are a lifelong journey to learn, but you now own its foundation: space, color used wisely, and clear messages. Apply them to your project gradually. In the next station we'll save your code safely on GitHub. Well done!",
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
