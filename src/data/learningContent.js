@@ -3046,4 +3046,230 @@ git push -u origin main`,
       },
     ],
   },
+  12: {
+    title: {
+      ar: 'النشر التلقائي',
+      fr: 'Le déploiement automatique',
+      en: 'Automatic Deployment',
+    },
+    description: {
+      ar: 'اربط مستودعك بمنصّة استضافة، فيصبح كل رفع للكود نشراً تلقائياً',
+      fr: "Liez votre dépôt à une plateforme d'hébergement, pour que chaque envoi de code devienne une publication automatique",
+      en: 'Link your repository to a hosting platform, so every code push becomes an automatic publish',
+    },
+    intro: {
+      ar: 'في المحطة السابقة رفعت كودك إلى GitHub. الآن نُكمل الدورة: نربط GitHub بمنصّة استضافة، فيصبح كل «git push» نشراً تلقائياً لموقعك على الإنترنت. لن تنشر يدوياً بعد اليوم — تعدّل، ترفع، ويتحدّث موقعك وحده. هذه هي الطريقة التي نُحدّث بها رفيق نفسه في كل مرّة. تذكّر: أنت تبني نظام النشر لمشروعك أنت.',
+      fr: "Dans l'étape précédente, vous avez téléversé votre code sur GitHub. Maintenant, nous complétons le cycle : nous lions GitHub à une plateforme d'hébergement, pour que chaque « git push » devienne une publication automatique de votre site sur Internet. Vous ne publierez plus manuellement — vous modifiez, vous téléversez, et votre site se met à jour tout seul. C'est ainsi que nous mettons à jour Rafiq lui-même à chaque fois. Souvenez-vous : vous construisez le système de déploiement de votre propre projet.",
+      en: "In the previous station you pushed your code to GitHub. Now we complete the cycle: we link GitHub to a hosting platform, so every \"git push\" becomes an automatic publish of your site on the Internet. You won't publish manually anymore — you edit, you push, and your site updates itself. This is how we update Rafiq itself every time. Remember: you're building the deployment system for your own project.",
+    },
+    sections: [
+      {
+        title: {
+          ar: 'ما النشر التلقائي؟',
+          fr: 'Qu\'est-ce que le déploiement automatique ?',
+          en: 'What Is Automatic Deployment?',
+        },
+        subtitle: {
+          ar: 'المفهوم: من النشر اليدوي المتعب إلى التلقائي السلس',
+          fr: 'Le concept : du déploiement manuel fatigant à l\'automatique fluide',
+          en: 'The concept: from tiring manual deployment to smooth automatic',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'تخيّل أنك في كل مرّة تعدّل موقعك، تضطرّ لرفع الملفّات يدوياً، خطوة خطوة، إلى الخادم. متعب وعرضة للأخطاء. النشر التلقائي يحلّ هذا: تربط مستودعك على GitHub بمنصّة استضافة مرّة واحدة، وبعدها كل تعديل ترفعه إلى GitHub يُنشر تلقائياً.',
+              fr: "Imaginez qu'à chaque fois que vous modifiez votre site, vous devez téléverser les fichiers manuellement, étape par étape, vers le serveur. Fatigant et sujet aux erreurs. Le déploiement automatique résout cela : vous liez votre dépôt GitHub à une plateforme d'hébergement une seule fois, et ensuite chaque modification que vous téléversez sur GitHub est publiée automatiquement.",
+              en: "Imagine that every time you edit your site, you must upload the files manually, step by step, to the server. Tiring and error-prone. Automatic deployment solves this: you link your GitHub repository to a hosting platform once, and afterward every change you push to GitHub is published automatically.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'الفكرة الجميلة: المنصّة «تراقب» مستودعك على GitHub. كلّما وصلها تغيير جديد، تأخذه، تبنيه (تفعل «npm run build» تلقائياً)، وتنشره على رابطك العامّ. كلّ هذا دون تدخّل منك.',
+              fr: "L'idée belle : la plateforme « surveille » votre dépôt sur GitHub. Chaque fois qu'un nouveau changement lui parvient, elle le prend, le construit (fait « npm run build » automatiquement), et le publie sur votre lien public. Tout cela sans intervention de votre part.",
+              en: "The beautiful idea: the platform \"watches\" your GitHub repository. Whenever a new change reaches it, it takes it, builds it (does \"npm run build\" automatically), and publishes it to your public link. All this without your intervention.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'من أشهر منصّات الاستضافة المجانية: Vercel (التي نُشر بها رفيق) و Netlify. كلتاهما تدعم النشر التلقائي من GitHub بسهولة. سنتحدّث بمبدأ عامّ يصلح لأيّهما.',
+              fr: "Parmi les plateformes d'hébergement gratuites les plus connues : Vercel (avec laquelle Rafiq a été déployé) et Netlify. Toutes deux prennent en charge le déploiement automatique depuis GitHub facilement. Nous parlerons d'un principe général valable pour l'une ou l'autre.",
+              en: 'Among the most known free hosting platforms: Vercel (with which Rafiq was deployed) and Netlify. Both support automatic deployment from GitHub easily. We\'ll speak with a general principle valid for either.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'اربط المنصّة بـ GitHub',
+          fr: 'Liez la plateforme à GitHub',
+          en: 'Link the Platform to GitHub',
+        },
+        subtitle: {
+          ar: 'الخطوة التي تُفعّل السحر — مرّة واحدة',
+          fr: "L'étape qui active la magie — une seule fois",
+          en: 'The step that activates the magic — once',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'الربط يتمّ مرّة واحدة. تنشئ حساباً على منصّة الاستضافة (مثل Vercel)، ويُفضّل أن تسجّل الدخول عبر حساب GitHub نفسه — فهذا يربطهما مباشرة. ثم تختار مستودع مشروعك من قائمة مستودعاتك.',
+              fr: "La liaison se fait une seule fois. Vous créez un compte sur la plateforme d'hébergement (comme Vercel), et il est préférable de vous connecter via le compte GitHub lui-même — cela les lie directement. Puis vous choisissez le dépôt de votre projet dans la liste de vos dépôts.",
+              en: "Linking happens once. You create an account on the hosting platform (like Vercel), and preferably sign in via the GitHub account itself — this links them directly. Then you choose your project's repository from your list of repositories.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '🔗',
+            text: {
+              ar: 'على منصّة الاستضافة، ابحث عن خيار «مشروع جديد» أو «استيراد من GitHub»، واختر مستودع مشروعك.',
+              fr: "Sur la plateforme d'hébergement, cherchez l'option « Nouveau projet » ou « Importer depuis GitHub », et choisissez le dépôt de votre projet.",
+              en: 'On the hosting platform, look for the "New project" or "Import from GitHub" option, and choose your project\'s repository.',
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'المنصّة عادةً تكتشف أن مشروعك من نوع Vite/React تلقائياً، وتضبط إعدادات البناء وحدها. في أغلب الحالات، يكفي الضغط على «نشر» (Deploy) دون تغيير أي إعداد.',
+              fr: "La plateforme détecte généralement que votre projet est de type Vite/React automatiquement, et configure les paramètres de construction toute seule. Dans la plupart des cas, il suffit de cliquer sur « Déployer » (Deploy) sans changer aucun paramètre.",
+              en: "The platform usually detects your project is a Vite/React type automatically, and configures the build settings itself. In most cases, just click \"Deploy\" without changing any setting.",
+            },
+          },
+          {
+            type: 'warn',
+            text: {
+              ar: 'واجهات المنصّات تتغيّر (أسماء الأزرار ومواضعها). لا تحفظ النقرات — افهم الهدف: تريد ربط مستودع GitHub بالمنصّة لتنشره. اتبع الأزرار الظاهرة وقتها للوصول لهذا الهدف. المبدأ ثابت، التفاصيل تتغيّر.',
+              fr: "Les interfaces des plateformes changent (noms et emplacements des boutons). Ne mémorisez pas les clics — comprenez l'objectif : vous voulez lier le dépôt GitHub à la plateforme pour le publier. Suivez les boutons visibles à ce moment-là pour atteindre cet objectif. Le principe est constant, les détails changent.",
+              en: "Platform interfaces change (button names and positions). Don't memorize clicks — understand the goal: you want to link the GitHub repository to the platform to publish it. Follow the buttons visible at that time to reach this goal. The principle is constant, the details change.",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'مشروعك منشور على رابط حقيقي، ومربوط بمستودعك على GitHub',
+              fr: 'Votre projet est publié sur un vrai lien, et lié à votre dépôt sur GitHub',
+              en: 'Your project is published on a real link, and linked to your GitHub repository',
+            },
+            note: {
+              ar: 'إن ظهر مشروعك على رابط حيّ، فقد أتممت الربط. الآن يأتي الجزء السحري: التحديث التلقائي.',
+              fr: "Si votre projet apparaît sur un lien en direct, vous avez terminé la liaison. Maintenant vient la partie magique : la mise à jour automatique.",
+              en: 'If your project appears on a live link, you\'ve completed the linking. Now comes the magic part: automatic updating.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'النشر يحدث تلقائياً',
+          fr: 'Le déploiement se fait automatiquement',
+          en: 'Deployment Happens Automatically',
+        },
+        subtitle: {
+          ar: 'كيف يعمل السحر: كل رفع يُنشر',
+          fr: 'Comment la magie fonctionne : chaque envoi est publié',
+          en: 'How the magic works: every push is published',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'الآن جرّب السحر بنفسك. عدّل شيئاً بسيطاً في مشروعك (مثلاً غيّر عنواناً)، ثم ارفعه إلى GitHub بالأوامر التي تعلّمتها في المحطة السابقة:',
+              fr: "Maintenant, essayez la magie vous-même. Modifiez quelque chose de simple dans votre projet (par exemple changez un titre), puis téléversez-le sur GitHub avec les commandes que vous avez apprises à l'étape précédente :",
+              en: "Now try the magic yourself. Change something simple in your project (e.g., change a title), then push it to GitHub with the commands you learned in the previous station:",
+            },
+          },
+          {
+            type: 'codeblock',
+            label: { ar: 'ارفع تعديلك', fr: 'Téléversez votre modification', en: 'Push your change' },
+            code: `git add .
+git commit -m "تعديل بسيط للتجربة"
+git push`,
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'الآن اذهب إلى منصّة الاستضافة، وستجدها بدأت بناءً جديداً تلقائياً بمجرّد وصول تعديلك! انتظر لحظات، ثم افتح رابطك — سترى تعديلك ظاهراً على الإنترنت. لم تفعل شيئاً سوى «git push».',
+              fr: "Maintenant, allez sur la plateforme d'hébergement, et vous la trouverez ayant commencé une nouvelle construction automatiquement dès l'arrivée de votre modification ! Attendez quelques instants, puis ouvrez votre lien — vous verrez votre modification apparaître sur Internet. Vous n'avez rien fait d'autre que « git push ».",
+              en: "Now go to the hosting platform, and you'll find it started a new build automatically as soon as your change arrived! Wait a few moments, then open your link — you'll see your change appear on the Internet. You did nothing but \"git push\".",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'هذا بالضبط ما نفعله لتحديث رفيق! في كل مرّة نطوّر ميزة، نرفعها بـ «git push»، وينشرها Vercel تلقائياً. أنت الآن تملك نفس النظام الاحترافي الذي تعمل به التطبيقات الحقيقية.',
+              fr: "C'est exactement ce que nous faisons pour mettre à jour Rafiq ! Chaque fois que nous développons une fonctionnalité, nous la téléversons avec « git push », et Vercel la publie automatiquement. Vous possédez maintenant le même système professionnel avec lequel fonctionnent les vraies applications.",
+              en: "This is exactly what we do to update Rafiq! Every time we develop a feature, we push it with \"git push\", and Vercel publishes it automatically. You now own the same professional system real apps run on.",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'تعديلك ظهر على رابطك الحيّ تلقائياً بعد git push',
+              fr: 'Votre modification est apparue sur votre lien en direct automatiquement après git push',
+              en: 'Your change appeared on your live link automatically after git push',
+            },
+            note: {
+              ar: 'إن رأيت تعديلك على الإنترنت دون نشر يدوي، فقد أتقنت النشر التلقائي — قمّة دورة التطوير الاحترافية.',
+              fr: "Si vous avez vu votre modification sur Internet sans publication manuelle, vous avez maîtrisé le déploiement automatique — le sommet du cycle de développement professionnel.",
+              en: 'If you saw your change on the Internet without manual publishing, you\'ve mastered automatic deployment — the peak of the professional development cycle.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'دورة العمل اليومية',
+          fr: 'Le cycle de travail quotidien',
+          en: 'The Daily Work Cycle',
+        },
+        subtitle: {
+          ar: 'الروتين الذي ستعيشه كمطوّر',
+          fr: 'La routine que vous vivrez en tant que développeur',
+          en: 'The routine you\'ll live as a developer',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'الآن أصبحت دورة عملك كاملة واحترافية. كلّما أردت تطوير مشروعك، تتبع نفس الإيقاع البسيط: تعدّل الكود على جهازك، تجرّبه محلياً، ثم ترفعه — ويُنشر تلقائياً. ثلاث خطوات تكرّرها كل يوم.',
+              fr: "Maintenant votre cycle de travail est complet et professionnel. Chaque fois que vous voulez développer votre projet, vous suivez le même rythme simple : vous modifiez le code sur votre appareil, vous le testez localement, puis vous le téléversez — et il est publié automatiquement. Trois étapes que vous répétez chaque jour.",
+              en: "Now your work cycle is complete and professional. Whenever you want to develop your project, you follow the same simple rhythm: you edit the code on your device, test it locally, then push it — and it's published automatically. Three steps you repeat every day.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'الإيقاع الذهبي: (١) عدّل وجرّب محلياً بـ «npm run dev». (٢) حين ترضى، تأكّد أنه يُبنى بـ «npm run build». (٣) ارفعه: «git add .» ثم «git commit -m» ثم «git push». والباقي يحدث وحده. هذا بالضبط ما فعلناه معاً طوال رحلتنا!',
+              fr: "Le rythme d'or : (1) modifiez et testez localement avec « npm run dev ». (2) quand vous êtes satisfait, assurez-vous qu'il se construit avec « npm run build ». (3) téléversez-le : « git add . » puis « git commit -m » puis « git push ». Et le reste se fait tout seul. C'est exactement ce que nous avons fait ensemble tout au long de notre parcours !",
+              en: "The golden rhythm: (1) edit and test locally with \"npm run dev\". (2) when satisfied, make sure it builds with \"npm run build\". (3) push it: \"git add .\" then \"git commit -m\" then \"git push\". And the rest happens on its own. This is exactly what we did together throughout our journey!",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'تفهم دورة العمل الكاملة: عدّل ← جرّب ← ابنِ ← ارفع ← يُنشر تلقائياً',
+              fr: 'Vous comprenez le cycle de travail complet : modifier ← tester ← construire ← téléverser ← publié automatiquement',
+              en: 'You understand the full work cycle: edit ← test ← build ← push ← auto-published',
+            },
+            note: {
+              ar: 'مبروك! أتممت الدورة الاحترافية الكاملة. من كتابة الكود إلى ظهوره للعالم تلقائياً. هذه هي طريقة عمل المطوّرين المحترفين في كل مكان — وأنت الآن واحد منهم حقاً.',
+              fr: "Félicitations ! Vous avez terminé le cycle professionnel complet. De l'écriture du code à son apparition au monde automatiquement. C'est ainsi que travaillent les développeurs professionnels partout — et vous êtes maintenant vraiment l'un d'eux.",
+              en: 'Congratulations! You completed the full professional cycle. From writing code to it appearing to the world automatically. This is how professional developers work everywhere — and you\'re now truly one of them.',
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'أنجزت الدورة التقنية الكاملة: بناء، حفظ في السحابة، ونشر تلقائي. لم يبقَ إلا محطة واحدة — خاتمة رحلتك، حيث نراجع ما تعلّمته ونرسم طريقك القادم. أنت على بُعد خطوة من إكمال الرحلة كلّها. أحسنت صنعاً!',
+              fr: "Vous avez accompli le cycle technique complet : construction, sauvegarde dans le cloud, et déploiement automatique. Il ne reste qu'une seule étape — la conclusion de votre parcours, où nous réviserons ce que vous avez appris et tracerons votre chemin à venir. Vous êtes à un pas de compléter tout le parcours. Bien joué !",
+              en: "You've accomplished the full technical cycle: building, saving to the cloud, and automatic deployment. Only one station remains — the conclusion of your journey, where we review what you learned and chart your path ahead. You're one step from completing the whole journey. Well done!",
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
