@@ -2311,4 +2311,225 @@ const termCount = glossary.length;`,
       },
     ],
   },
+  9: {
+    title: {
+      ar: 'من الفكرة إلى الخطّة',
+      fr: "De l'idée au plan",
+      en: 'From Idea to Plan',
+    },
+    description: {
+      ar: 'حوّل فكرة غامضة في رأسك إلى خطّة واضحة بميزات قابلة للتنفيذ',
+      fr: "Transformez une idée vague dans votre tête en un plan clair avec des fonctionnalités réalisables",
+      en: 'Turn a vague idea in your head into a clear plan with actionable features',
+    },
+    intro: {
+      ar: 'تعلّمت حتى الآن كيف تبني وتنشر. لكن قبل أي مشروع، هناك مهارة أهمّ من الكود: كيف تحوّل فكرة غامضة إلى خطّة واضحة. كثير من المبتدئين يملكون أفكاراً رائعة، لكنهم يغرقون لأنهم يبدؤون بلا خطّة. في هذه المحطة لن نكتب كوداً — سنتعلّم التفكير الذي يسبق الكود. أحضر فكرة مشروع تحلم بها، وسنحوّلها معاً إلى خطّة.',
+      fr: "Vous avez appris jusqu'ici à construire et à publier. Mais avant tout projet, il y a une compétence plus importante que le code : comment transformer une idée vague en un plan clair. Beaucoup de débutants ont d'excellentes idées, mais se noient parce qu'ils commencent sans plan. Dans cette étape, nous n'écrirons pas de code — nous apprendrons la réflexion qui précède le code. Apportez une idée de projet dont vous rêvez, et nous la transformerons ensemble en un plan.",
+      en: "You've learned so far how to build and publish. But before any project, there's a skill more important than code: how to turn a vague idea into a clear plan. Many beginners have great ideas, but drown because they start without a plan. In this station we won't write code — we'll learn the thinking that precedes code. Bring a project idea you dream of, and we'll turn it together into a plan.",
+    },
+    sections: [
+      {
+        title: {
+          ar: 'لماذا نخطّط؟',
+          fr: 'Pourquoi planifier ?',
+          en: 'Why Plan?',
+        },
+        subtitle: {
+          ar: 'المفهوم: خطر البدء بلا خريطة',
+          fr: 'Le concept : le danger de commencer sans carte',
+          en: 'The concept: the danger of starting without a map',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'تخيّل أنك تبني بيتاً بلا مخطّط: تضع الجدران عشوائياً، ثم تكتشف أن الباب في غير مكانه، فتهدم وتعيد. مكلف ومحبط. البرمجة بلا خطّة مثله تماماً: تكتب كوداً، ثم تكتشف أنك بنيت الشيء الخطأ، فتهدر وقتك.',
+              fr: "Imaginez que vous construisez une maison sans plan : vous placez les murs au hasard, puis découvrez que la porte est au mauvais endroit, alors vous démolissez et recommencez. Coûteux et frustrant. Programmer sans plan, c'est exactement pareil : vous écrivez du code, puis découvrez que vous avez construit la mauvaise chose, alors vous gaspillez votre temps.",
+              en: "Imagine building a house without a blueprint: you place walls randomly, then discover the door is in the wrong place, so you demolish and redo. Costly and frustrating. Programming without a plan is exactly the same: you write code, then discover you built the wrong thing, so you waste your time.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'الخطّة لا تعني تعقيداً. تعني ببساطة أن تعرف — قبل أن تكتب سطراً واحداً — ما الذي تبنيه، ولمن، وما أهمّ أجزائه. عشر دقائق من التخطيط توفّر ساعات من الحيرة.',
+              fr: "Le plan ne signifie pas complexité. Il signifie simplement savoir — avant d'écrire une seule ligne — ce que vous construisez, pour qui, et quelles sont ses parties les plus importantes. Dix minutes de planification épargnent des heures de confusion.",
+              en: "A plan doesn't mean complexity. It simply means knowing — before writing a single line — what you're building, for whom, and what its most important parts are. Ten minutes of planning save hours of confusion.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'حتى أكبر التطبيقات بدأت بخطّة بسيطة على ورقة. رفيق نفسه بدأ بسؤال: «كيف أساعد مبتدئاً عربياً يبني أول تطبيق دون خوف؟». الخطّة الجيّدة تبدأ بسؤال واضح.',
+              fr: "Même les plus grandes applications ont commencé par un plan simple sur papier. Rafiq lui-même a commencé par une question : « Comment aider un débutant arabe à construire sa première application sans peur ? ». Un bon plan commence par une question claire.",
+              en: 'Even the biggest apps started with a simple plan on paper. Rafiq itself began with a question: "How do I help an Arab beginner build their first app without fear?" A good plan starts with a clear question.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'صف فكرتك بجملة واحدة',
+          fr: 'Décrivez votre idée en une phrase',
+          en: 'Describe Your Idea in One Sentence',
+        },
+        subtitle: {
+          ar: 'تكثيف الفكرة في جوهرها',
+          fr: "Condenser l'idée en son essence",
+          en: 'Condensing the idea to its essence',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'أول خطوة: لخّص فكرتك في جملة واحدة واضحة. إن لم تستطع، فالفكرة ما زالت غامضة في ذهنك. الصيغة المفيدة: «تطبيق يساعد [مَن] على [فعل ماذا]». مثال: «تطبيق يساعد الطلّاب على تنظيم واجباتهم».',
+              fr: "Première étape : résumez votre idée en une seule phrase claire. Si vous n'y arrivez pas, l'idée est encore vague dans votre esprit. La formule utile : « une application qui aide [qui] à [faire quoi] ». Exemple : « une application qui aide les étudiants à organiser leurs devoirs ».",
+              en: "First step: summarize your idea in one clear sentence. If you can't, the idea is still vague in your mind. The useful formula: \"an app that helps [who] to [do what].\" Example: \"an app that helps students organize their homework.\"",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '✍️',
+            text: {
+              ar: 'خذ ورقة الآن، واكتب فكرتك بهذه الصيغة: «تطبيق يساعد ... على ...». لا تكمل حتى تكتبها.',
+              fr: "Prenez une feuille maintenant, et écrivez votre idée sous cette forme : « une application qui aide ... à ... ». Ne continuez pas avant de l'avoir écrite.",
+              en: 'Take a paper now, and write your idea in this form: "an app that helps ... to ...". Don\'t continue until you write it.',
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'إن وجدت نفسك تكتب جملتين أو ثلاثاً، فقد تكون فكرتك تحتوي أكثر من مشروع. اختر واحداً وابدأ به. المشاريع الصغيرة المكتملة خير من الكبيرة غير المنتهية.',
+              fr: "Si vous vous retrouvez à écrire deux ou trois phrases, votre idée contient peut-être plus d'un projet. Choisissez-en un et commencez par lui. Les petits projets terminés valent mieux que les grands inachevés.",
+              en: 'If you find yourself writing two or three sentences, your idea may contain more than one project. Pick one and start with it. Small finished projects are better than big unfinished ones.',
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'لديك جملة واحدة واضحة تصف مشروعك',
+              fr: 'Vous avez une phrase claire qui décrit votre projet',
+              en: 'You have one clear sentence describing your project',
+            },
+            note: {
+              ar: 'إن استطعت وصف مشروعك بجملة، فقد امتلكت وضوحاً يفتقده كثير من المبتدئين. هذه بوصلتك في كل قرار قادم.',
+              fr: "Si vous pouvez décrire votre projet en une phrase, vous avez acquis une clarté qui manque à beaucoup de débutants. C'est votre boussole dans chaque décision à venir.",
+              en: 'If you can describe your project in one sentence, you\'ve gained a clarity many beginners lack. This is your compass in every coming decision.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'قسّمها إلى ميزات',
+          fr: 'Divisez-la en fonctionnalités',
+          en: 'Break It into Features',
+        },
+        subtitle: {
+          ar: 'تفتيت الفكرة الكبيرة إلى قطع صغيرة',
+          fr: "Fractionner la grande idée en petits morceaux",
+          en: 'Splitting the big idea into small pieces',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'الفكرة الكبيرة مخيفة. لكن إن قسّمتها إلى ميزات صغيرة، صارت قابلة للتنفيذ. الميزة شيء واحد يفعله التطبيق. مثال لتطبيق تنظيم الواجبات: (١) إضافة واجب، (٢) عرض قائمة الواجبات، (٣) تحديد واجب كمُنجَز، (٤) حذف واجب.',
+              fr: "La grande idée fait peur. Mais si vous la divisez en petites fonctionnalités, elle devient réalisable. Une fonctionnalité est une chose que l'application fait. Exemple pour une application d'organisation des devoirs : (1) ajouter un devoir, (2) afficher la liste des devoirs, (3) marquer un devoir comme terminé, (4) supprimer un devoir.",
+              en: "The big idea is scary. But if you split it into small features, it becomes doable. A feature is one thing the app does. Example for a homework-organizing app: (1) add homework, (2) show the homework list, (3) mark homework as done, (4) delete homework.",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'لاحظ: هذه الميزات تشبه ما تعلّمته في المحطات السابقة تماماً (إضافة، عرض قائمة، تعديل حالة، حذف)! هذا ليس صدفة — معظم التطبيقات مبنيّة من نفس اللبنات الأساسية التي أتقنتها. أنت أقدر ممّا تظنّ.',
+              fr: "Remarquez : ces fonctionnalités ressemblent exactement à ce que vous avez appris dans les étapes précédentes (ajouter, afficher une liste, modifier un état, supprimer) ! Ce n'est pas un hasard — la plupart des applications sont construites à partir des mêmes briques de base que vous avez maîtrisées. Vous êtes plus capable que vous ne le pensez.",
+              en: "Notice: these features look exactly like what you learned in previous stations (add, show a list, change state, delete)! This isn't coincidence — most apps are built from the same basic blocks you mastered. You're more capable than you think.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '📝',
+            text: {
+              ar: 'على ورقتك، اكتب قائمة بكل الميزات التي يحتاجها مشروعك. لا تحكم عليها الآن — فقط اكتب كل ما يخطر ببالك.',
+              fr: "Sur votre feuille, écrivez une liste de toutes les fonctionnalités dont votre projet a besoin. Ne les jugez pas maintenant — écrivez simplement tout ce qui vous vient à l'esprit.",
+              en: "On your paper, write a list of all the features your project needs. Don't judge them now — just write everything that comes to mind.",
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'لديك قائمة بميزات مشروعك، كلٌّ منها فعل واحد واضح',
+              fr: 'Vous avez une liste des fonctionnalités de votre projet, chacune une action claire',
+              en: 'You have a list of your project\'s features, each one a clear action',
+            },
+            note: {
+              ar: 'حوّلت فكرة كبيرة غامضة إلى قائمة ميزات ملموسة. لم تعد الفكرة مخيفة — صارت مهامّ صغيرة تعرف كيف تبني كلاً منها.',
+              fr: "Vous avez transformé une grande idée vague en une liste de fonctionnalités concrètes. L'idée n'est plus effrayante — elle est devenue de petites tâches dont vous savez construire chacune.",
+              en: 'You turned a big vague idea into a concrete feature list. The idea is no longer scary — it became small tasks you know how to build each of.',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          ar: 'رتّب واختر البداية',
+          fr: 'Priorisez et choisissez le début',
+          en: 'Prioritize and Choose the Start',
+        },
+        subtitle: {
+          ar: 'ما أصغر نسخة مفيدة يمكنك بناؤها أولاً؟',
+          fr: 'Quelle est la plus petite version utile que vous pouvez construire en premier ?',
+          en: 'What\'s the smallest useful version you can build first?',
+        },
+        steps: [
+          {
+            type: 'text',
+            text: {
+              ar: 'الآن عندك قائمة ميزات. الخطأ الشائع: محاولة بناءها كلّها دفعة واحدة. الأصحّ: اختر أقلّ عدد من الميزات يجعل التطبيق **مفيداً**، وابنِ هذه أولاً. تُسمّى «النسخة الأولى القابلة للاستخدام».',
+              fr: "Maintenant vous avez une liste de fonctionnalités. L'erreur commune : essayer de toutes les construire d'un coup. Le mieux : choisissez le plus petit nombre de fonctionnalités qui rend l'application **utile**, et construisez-les en premier. On l'appelle « la première version utilisable ».",
+              en: "Now you have a feature list. The common mistake: trying to build them all at once. The better way: choose the fewest features that make the app **useful**, and build those first. It's called \"the first usable version.\"",
+            },
+          },
+          {
+            type: 'text',
+            text: {
+              ar: 'مثال: لتطبيق الواجبات، النسخة الأولى المفيدة قد تكون فقط: إضافة واجب + عرض القائمة. بهذين وحدهما، التطبيق يفيد فعلاً. أمّا التذكيرات والألوان والإحصاءات، فتأتي لاحقاً. ابدأ صغيراً ومفيداً، ثم أضف.',
+              fr: "Exemple : pour l'application de devoirs, la première version utile pourrait être seulement : ajouter un devoir + afficher la liste. Avec ces deux-là seuls, l'application est vraiment utile. Quant aux rappels, couleurs et statistiques, ils viennent plus tard. Commencez petit et utile, puis ajoutez.",
+              en: "Example: for the homework app, the first useful version might be just: add homework + show the list. With those two alone, the app is genuinely useful. As for reminders, colors, and statistics, they come later. Start small and useful, then add.",
+            },
+          },
+          {
+            type: 'instruction',
+            icon: '⭐',
+            text: {
+              ar: 'من قائمتك، ضع نجمة بجانب الميزتين أو الثلاث التي تجعل تطبيقك مفيداً بأقلّ جهد. هذه نقطة بدايتك.',
+              fr: "Dans votre liste, mettez une étoile à côté des deux ou trois fonctionnalités qui rendent votre application utile avec le moins d'effort. C'est votre point de départ.",
+              en: 'In your list, star the two or three features that make your app useful with the least effort. This is your starting point.',
+            },
+          },
+          {
+            type: 'verify',
+            text: {
+              ar: 'حدّدت النسخة الأولى المفيدة من مشروعك — ميزات قليلة تبني بها أولاً',
+              fr: 'Vous avez défini la première version utile de votre projet — quelques fonctionnalités à construire en premier',
+              en: 'You defined the first useful version of your project — a few features to build first',
+            },
+            note: {
+              ar: 'مبروك! حوّلت فكرة غامضة إلى خطّة واضحة: جملة تصف المشروع، قائمة ميزات، ونقطة بداية محدّدة. هذه المهارة وحدها تفصل من ينجز مشروعه عمّن يبقى يحلم. أنت الآن جاهز للبناء بثقة.',
+              fr: "Félicitations ! Vous avez transformé une idée vague en un plan clair : une phrase décrivant le projet, une liste de fonctionnalités, et un point de départ défini. Cette compétence à elle seule sépare celui qui réalise son projet de celui qui reste à rêver. Vous êtes maintenant prêt à construire avec confiance.",
+              en: "Congratulations! You turned a vague idea into a clear plan: a sentence describing the project, a feature list, and a defined starting point. This skill alone separates those who finish their project from those who keep dreaming. You're now ready to build with confidence.",
+            },
+          },
+          {
+            type: 'tip',
+            text: {
+              ar: 'احتفظ بورقتك هذه. كلّما بنيت ميزة، اشطبها. وكلّما خطرت لك ميزة جديدة، أضفها للقائمة. خطّتك وثيقة حيّة تنمو مع مشروعك. في المحطة القادمة سنتعلّم كيف نجعل ما نبنيه أجمل وأوضح للمستخدم. أحسنت!',
+              fr: "Gardez cette feuille. Chaque fois que vous construisez une fonctionnalité, rayez-la. Et chaque fois qu'une nouvelle fonctionnalité vous vient, ajoutez-la à la liste. Votre plan est un document vivant qui grandit avec votre projet. Dans la prochaine étape, nous apprendrons à rendre ce que nous construisons plus beau et plus clair pour l'utilisateur. Bien joué !",
+              en: "Keep this paper. Each time you build a feature, cross it out. And each time a new feature comes to mind, add it to the list. Your plan is a living document that grows with your project. In the next station we'll learn to make what we build prettier and clearer for the user. Well done!",
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
