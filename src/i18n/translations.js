@@ -145,6 +145,10 @@ phase7title:"السحابة والنشر", phase7desc:"انشر المشروع �
       lessonPhasePrompt: "أين وصلت في مرحلة «{phase}»؟ وما الخطوة التالية التي أنصح بها؟",
     },
     profile: {
+      editName: "تعديل الاسم",
+      namePlaceholder: "اكتب اسمك",
+      save: "حفظ",
+      cancel: "إلغاء",
       memberSince: "عضو منذ",
       statsTitle: "إحصاءاتك",
       loadingStats: "جارٍ تحميل بياناتك…",
@@ -309,6 +313,10 @@ phase7title:"السحابة والنشر", phase7desc:"انشر المشروع �
       errSaveFailed: "Impossible d'enregistrer. Reessayez.",
     },
     profile: {
+      editName: "Modifier le nom",
+      namePlaceholder: "Écrivez votre nom",
+      save: "Enregistrer",
+      cancel: "Annuler",
       memberSince: "Membre depuis",
       statsTitle: "Vos statistiques",
       loadingStats: "Chargement de vos données…",
@@ -500,6 +508,10 @@ phase7title:"السحابة والنشر", phase7desc:"انشر المشروع �
       errSaveFailed: "Could not save. Try again.",
     },
     profile: {
+      editName: "Edit name",
+      namePlaceholder: "Enter your name",
+      save: "Save",
+      cancel: "Cancel",
       memberSince: "Member since",
       statsTitle: "Your statistics",
       loadingStats: "Loading your data…",

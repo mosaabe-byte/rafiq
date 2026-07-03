@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   IconChartBar, IconArrowLeft, IconLogout, IconLoader2, IconTrophy,
   IconRoute2, IconHistory, IconFolderPlus, IconVocabulary, IconMessage,
+  IconPencil, IconCheck, IconX,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
@@ -31,7 +32,6 @@ function computeBadges(data) {
   ];
 }
 
-// منطق الخطوة الذكية: يُرجع مفتاح الاقتراح حسب حالة المستخدم (الأهمّ أولاً)
 function computeNextStep(data) {
   if (data.projectCount === 0) return { key: 'addProject', to: '/' };
   if (data.conversationCount === 0) return { key: 'tryChat', to: '/chat' };
@@ -41,7 +41,7 @@ function computeNextStep(data) {
 }
 
 export default function Profile() {
-  const { user, displayName, signOut } = useAuth();
+  const { user, displayName, signOut, updateProfile } = useAuth();
   const { lang, t } = useLanguage();
 
   const [stats, setStats] = useState({ projects: 0, terms: 0, conversations: 0, avgProgress: 0 });
@@ -50,6 +50,11 @@ export default function Profile() {
   const [activity, setActivity] = useState([]);
   const [nextStep, setNextStep] = useState({ key: 'addProject', to: '/' });
   const [loading, setLoading] = useState(true);
+
+  // حالة تعديل الاسم
+  const [editingName, setEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState('');
+  const [savingName, setSavingName] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -93,7 +98,6 @@ export default function Profile() {
       let hasPublishedProject = false;
       let hasCompletedProject = false;
       projectRows.forEach((p) => {
-        // نفضّل phase_number الموثوق، ونرجع للاستخراج من النصّ للبيانات القديمة فقط
         const n = p.phase_number || extractPhaseNumber(p.phase);
         if (n) counts[n] = (counts[n] || 0) + 1;
         if (n === 7) hasPublishedProject = true;
@@ -104,7 +108,6 @@ export default function Profile() {
       const conversationCount = convRes.count ?? 0;
       const reportCount = reportsRes.count ?? 0;
 
-      // بناء سجلّ النشاط: آخر مشاريع + آخر مصطلحات، مرتّبة زمنياً
       const events = [];
       projectRows.forEach((p) => {
         if (p.created_at) events.push({ type: 'project', label: p.name, at: p.created_at });
@@ -140,7 +143,6 @@ export default function Profile() {
   const maxPhaseCount = Math.max(1, ...PHASE_NUMBERS.map((n) => phaseCounts[n] || 0));
   const earnedCount = badges.filter((b) => b.earned).length;
 
-  // تنسيق تاريخ الحدث (يوم وشهر) حسب اللغة
   function fmtDate(at) {
     try {
       return new Date(at).toLocaleDateString(LOCALES[lang] || 'ar', { day: 'numeric', month: 'short' });
@@ -159,13 +161,57 @@ export default function Profile() {
     await signOut();
   }
 
+  // فتح وضع تعديل الاسم بالقيمة الحالية
+  function openEditName() {
+    setNameInput(displayName === '—' ? '' : displayName);
+    setEditingName(true);
+  }
+
+  // حفظ الاسم الجديد
+  async function saveName() {
+    const trimmed = nameInput.trim();
+    if (!trimmed) return;
+    setSavingName(true);
+    await updateProfile({ full_name: trimmed });
+    setSavingName(false);
+    setEditingName(false);
+  }
+
   return (
     <div className="profile">
       <div className="profile-hero">
         <div className="big-avatar">{initial}</div>
         <div className="hero-info">
-          <div className="hero-name">{displayName}</div>
-          {memberSince && (
+          {editingName ? (
+            <div className="name-edit">
+              <input
+                className="name-edit-input"
+                value={nameInput}
+                onChange={(e) => setNameInput(e.target.value)}
+                placeholder={t('profile.namePlaceholder')}
+                maxLength={40}
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') saveName();
+                  if (e.key === 'Escape') setEditingName(false);
+                }}
+              />
+              <button className="name-edit-btn save" onClick={saveName} disabled={savingName} title={t('profile.save')}>
+                {savingName ? <IconLoader2 size={16} className="spin" /> : <IconCheck size={16} />}
+              </button>
+              <button className="name-edit-btn cancel" onClick={() => setEditingName(false)} title={t('profile.cancel')}>
+                <IconX size={16} />
+              </button>
+            </div>
+          ) : (
+            <div className="hero-name-row">
+              <span className="hero-name">{displayName}</span>
+              <button className="edit-name-btn" onClick={openEditName} title={t('profile.editName')}>
+                <IconPencil size={14} />
+              </button>
+            </div>
+          )}
+          {memberSince && !editingName && (
             <div className="hero-level">{t('profile.memberSince')} {memberSince}</div>
           )}
         </div>
@@ -182,7 +228,6 @@ export default function Profile() {
         </div>
       ) : (
         <>
-          {/* الإحصاءات الحيّة */}
           <div className="profile-section">
             <h2><IconChartBar size={16} /> {t('profile.statsTitle')}</h2>
             <div className="profile-stats">
@@ -205,7 +250,6 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* مشاريعك عبر المراحل */}
           <div className="profile-section">
             <h2><IconRoute2 size={16} /> {t('profile.phasesTitle')}</h2>
             {stats.projects === 0 ? (
@@ -229,7 +273,6 @@ export default function Profile() {
             )}
           </div>
 
-          {/* الإنجازات الحقيقية */}
           <div className="profile-section">
             <h2>
               <IconTrophy size={16} /> {t('profile.badgesTitle')}
@@ -246,7 +289,6 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* رحلتك الحقيقية */}
           <div className="profile-section">
             <h2><IconHistory size={16} /> {t('profile.activityTitle')}</h2>
             {activity.length === 0 ? (
@@ -270,7 +312,6 @@ export default function Profile() {
         </>
       )}
 
-      {/* الخطوة القادمة الذكية */}
       <Link to={nextStep.to} className="next-step-card">
         <div className="ns-icon"><IconArrowLeft size={16} /></div>
         <div className="ns-text">

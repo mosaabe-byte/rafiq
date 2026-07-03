@@ -226,3 +226,85 @@
   color: #C0392B;
   border-color: #FEEAEA;
 }
+/* ===== أضف هذا المقطع إلى نهاية Profile.css ===== */
+
+/* صفّ الاسم مع زرّ التعديل */
+.hero-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+.edit-name-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border: none;
+  background: var(--gray-50);
+  color: var(--gray-400);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.edit-name-btn:hover {
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+/* وضع تعديل الاسم */
+.name-edit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+.name-edit-input {
+  flex: 1;
+  min-width: 0;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--gray-900);
+  padding: 6px 10px;
+  border: 1.5px solid var(--purple-mid);
+  border-radius: 8px;
+  background: var(--white);
+  outline: none;
+}
+.name-edit-input:focus {
+  border-color: var(--purple);
+}
+.name-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+.name-edit-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.name-edit-btn.save {
+  background: var(--purple);
+  color: var(--white);
+}
+.name-edit-btn.save:hover:not(:disabled) {
+  opacity: 0.9;
+}
+.name-edit-btn.cancel {
+  background: var(--gray-50);
+  color: var(--gray-400);
+}
+.name-edit-btn.cancel:hover {
+  background: #FEEAEA;
+  color: #C0392B;
+}
