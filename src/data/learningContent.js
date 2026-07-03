@@ -2001,7 +2001,7 @@ const termCount = glossary.length;`,
           {
             type: 'text',
             text: {
-              ar: 'لن نُعدّ قاعdة كاملة الآن (ذلك يحتاج حساباً وإعداداً، نتركه لحين تكون جاهزاً). لكن لنرَ كيف يبدو كود جلب البيانات من السحابة، لتفهم الفكرة حين تراها. هذا مثال حقيقي مبسّط:',
+              ar: 'لن نُعدّ قاعدة كاملة الآن (ذلك يحتاج حساباً وإعداداً، نتركه لحين تكون جاهزاً). لكن لنرَ كيف يبدو كود جلب البيانات من السحابة، لتفهم الفكرة حين تراها. هذا مثال حقيقي مبسّط:',
               fr: "Nous n'allons pas configurer une base complète maintenant (cela nécessite un compte et une configuration, laissons cela pour quand vous serez prêt). Mais voyons à quoi ressemble le code pour récupérer des données du cloud, afin de comprendre l'idée quand vous la verrez. Voici un exemple réel simplifié :",
               en: "We won't set up a full database now (that needs an account and setup, we leave it for when you're ready). But let's see what the code to fetch data from the cloud looks like, so you understand the idea when you see it. Here's a simplified real example:",
             },
