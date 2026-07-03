@@ -28,7 +28,7 @@ export default function Layout() {
       <header className="app-topbar">
         <div className="app-logo">
           <div className="logo-mark">ر</div>
-          <span>رفيق</span>
+          <span>{t('appName')}</span>
         </div>
         <LanguageSwitcher />
         <div className="app-avatar">ع</div>

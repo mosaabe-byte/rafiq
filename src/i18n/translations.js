@@ -1,5 +1,6 @@
 export const translations = {
   ar: {
+    appName: "رفيق",
     dir: "rtl", label: "العربية",
     nav: { projects:"مشاريعي", roadmap:"الطريق", newProject:"جديد", glossary:"المعجم", chat:"المحادثة", profile:"ملفي" },
     home: {
@@ -190,6 +191,7 @@ phase7title:"السحابة والنشر", phase7desc:"انشر المشروع �
     },
   },
   fr: {
+    appName: "Rafiq",
     dir: "ltr", label: "Français",
     nav: { projects:"Projets", roadmap:"Parcours", newProject:"Nouveau", glossary:"Glossaire", chat:"Chat", profile:"Profil" },
     home: {
@@ -380,6 +382,7 @@ phase7title:"السحابة والنشر", phase7desc:"انشر المشروع �
     },
   },
   en: {
+    appName: "Rafiq",
     dir: "ltr", label: "English",
     nav: { projects:"Projects", roadmap:"Roadmap", newProject:"New", glossary:"Glossary", chat:"Chat", profile:"Profile" },
     home: {
