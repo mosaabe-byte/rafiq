@@ -350,3 +350,42 @@
   font-family: inherit;
   cursor: pointer;
 }
+/* رابط بوّابة الجودة */
+.quality-gate-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 16px 18px;
+  background: var(--purple-light);
+  border: 1.5px solid var(--purple-mid);
+  border-radius: 14px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.quality-gate-link:hover {
+  background: #E6E0FF;
+}
+.qgl-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  background: var(--purple);
+  color: var(--white);
+  flex-shrink: 0;
+}
+.qgl-text { flex: 1; }
+.qgl-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--purple-dark);
+  margin-bottom: 2px;
+}
+.qgl-sub {
+  font-size: 13px;
+  color: var(--gray-500);
+  line-height: 1.4;
+}

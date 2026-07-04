@@ -35,7 +35,9 @@ export const translations = {
       phase4title:"البناء", phase4desc:"اكتب الكود وابنِ الشاشات.",
       phase5title:"الربط", phase5desc:"اربط الأجزاء معاً.",
       phase6title:"البيانات", phase6desc:"احفظ بيانات المستخدم.",
-phase7title:"السحابة والنشر", phase7desc:"انشر المشروع على الإنترنت.",
+      phase7title:"السحابة والنشر", phase7desc:"انشر المشروع على الإنترنت.",
+      qualityGateTitle: "بوّابة الجودة",
+      qualityGateSub: "راجع مشروعك قبل نشره للعالم",
       askRafiq:"اسأل رفيق عن هذه المرحلة",
       guides: {
         1: { steps: [
@@ -231,6 +233,8 @@ phase7title:"السحابة والنشر", phase7desc:"انشر المشروع �
       phase5title:"Connexion", phase5desc:"Reliez les parties.",
       phase6title:"Donnees", phase6desc:"Sauvegardez les donnees.",
       phase7title:"Deploiement", phase7desc:"Publiez le projet.",
+      qualityGateTitle: "La porte de la qualité",
+      qualityGateSub: "Révisez votre projet avant de le publier",
       askRafiq:"Demander a Rafiq sur cette etape",
     guides: {
         1: { steps: [
@@ -426,6 +430,8 @@ phase7title:"السحابة والنشر", phase7desc:"انشر المشروع �
       phase5title:"Connect", phase5desc:"Link the parts together.",
       phase6title:"Data", phase6desc:"Save user data.",
       phase7title:"Deploy", phase7desc:"Publish the project.",
+      qualityGateTitle: "The Quality Gate",
+      qualityGateSub: "Review your project before publishing it",
       askRafiq:"Ask Rafiq about this phase",
     guides: {
 1: { steps: [

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   IconRoute, IconCheck, IconLoader2, IconCircleDot,
-IconLock, IconCloud, IconCloudOff, IconChevronDown,
+  IconLock, IconCloud, IconCloudOff, IconChevronDown, IconShieldCheck,
 } from '@tabler/icons-react';
 import { supabase } from '../lib/supabase';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -233,7 +233,7 @@ export default function Roadmap() {
             })}
           </div>
 
-          {selected && (
+         {selected && (
             <div className="progress-summary">
               <div className="ps-text">
                 <strong>{selected.name}</strong> {t('roadmap.summaryIn')} {currentPhase} {t('roadmap.summaryOf')} {phases.length}
@@ -244,8 +244,17 @@ export default function Roadmap() {
               <div className="ps-percent">{Math.round((currentPhase / phases.length) * 100)}% {t('roadmap.summaryPercent')}</div>
             </div>
           )}
+
+          <Link to="/quality" className="quality-gate-link">
+            <div className="qgl-icon"><IconShieldCheck size={22} /></div>
+            <div className="qgl-text">
+              <div className="qgl-title">{t('roadmap.qualityGateTitle')}</div>
+              <div className="qgl-sub">{t('roadmap.qualityGateSub')}</div>
+            </div>
+          </Link>
         </>
+        
       )}
     </div>
   );
-}
+} 
