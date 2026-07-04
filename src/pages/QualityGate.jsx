@@ -1,39 +1,85 @@
-import { useState } from 'react';
-import { IconShieldCheck, IconArrowLeft, IconRefresh, IconBulb } from '@tabler/icons-react';
+import { useState, useEffect } from 'react';
+import { IconShieldCheck, IconArrowLeft, IconRefresh, IconBulb, IconInfoCircle } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../auth/AuthContext';
 import { useLanguage } from '../i18n/LanguageContext';
 import {
-  tf, gateIntro, gateUI, categories, computeResult,
+  tf, gateIntro, gateUI, categories, computeResult, buildNotes, fillNote,
 } from '../data/qualityGate';
 import './QualityGate.css';
 
+function phaseNumber(phaseText) {
+  if (!phaseText) return 0;
+  const m = String(phaseText).match(/\d+/);
+  return m ? parseInt(m[0], 10) : 0;
+}
+
 export default function QualityGate() {
   const { lang } = useLanguage();
+  const { user } = useAuth();
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
+  const [notes, setNotes] = useState([]);
+
+  // بيانات رفيق الفعلية (للتحقّق من بعض الإجابات)
+  const [userData, setUserData] = useState({ projectCount: 0, maxPhase: 0, conversationCount: 0 });
+
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+
+    async function loadData() {
+      const projectsRes = await supabase
+        .from('projects')
+        .select('phase, phase_number')
+        .eq('user_id', user.id);
+
+      const convRes = await supabase
+        .from('conversations')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+
+      if (cancelled) return;
+
+      const rows = projectsRes.data || [];
+      let maxPhase = 0;
+      rows.forEach((p) => {
+        const n = p.phase_number || phaseNumber(p.phase);
+        if (n > maxPhase) maxPhase = n;
+      });
+
+      setUserData({
+        projectCount: rows.length,
+        maxPhase,
+        conversationCount: convRes.count ?? 0,
+      });
+    }
+
+    loadData();
+    return () => { cancelled = true; };
+  }, [user]);
 
   function setAnswer(qid, value) {
     setAnswers((prev) => ({ ...prev, [qid]: value }));
-    // إخفاء النتيجة القديمة عند تغيير أي إجابة
-    if (result) setResult(null);
+    if (result) { setResult(null); setNotes([]); }
   }
 
   function handleCompute() {
     setResult(computeResult(answers));
-    // التمرير لأعلى لرؤية النتيجة
+    setNotes(buildNotes(answers, userData));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function handleReset() {
     setAnswers({});
     setResult(null);
+    setNotes([]);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  const totalQuestions = categories.reduce((s, c) => s + c.questions.length, 0);
   const answeredCount = Object.keys(answers).length;
 
-  // لون النتيجة حسب النسبة (صادق: أخضر عالٍ، برتقالي متوسّط، أحمر منخفض)
   function resultTone(pct) {
     if (pct >= 80) return 'high';
     if (pct >= 50) return 'mid';
@@ -80,6 +126,21 @@ export default function QualityGate() {
               <div className="qg-encourage">{tf(gateUI.encourage, lang)}</div>
             </div>
           ) : null}
+        </div>
+      )}
+
+      {/* ملاحظات رفيق (تحقّق من البيانات الفعلية) */}
+      {result && notes.length > 0 && (
+        <div className="qg-notes">
+          <div className="qg-notes-title">
+            <IconInfoCircle size={17} /> {tf(gateUI.notesTitle, lang)}
+          </div>
+          <div className="qg-notes-intro">{tf(gateUI.notesIntro, lang)}</div>
+          <ul className="qg-notes-list">
+            {notes.map((n) => (
+              <li key={n.key}>{fillNote(n.text, lang, n.value)}</li>
+            ))}
+          </ul>
         </div>
       )}
 

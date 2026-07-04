@@ -254,3 +254,39 @@
   font-weight: 600;
 }
 .qg-back:hover { color: var(--purple); }
+
+/* ملاحظات رفيق (تحقّق من البيانات الفعلية) */
+.qg-notes {
+  background: #FEF6E7;
+  border: 1.5px solid #E39A1C;
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 24px;
+}
+.qg-notes-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #9A6B12;
+  margin-bottom: 8px;
+}
+.qg-notes-intro {
+  font-size: 13px;
+  color: var(--gray-600);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.qg-notes-list {
+  margin: 0;
+  padding-inline-start: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.qg-notes-list li {
+  font-size: 13.5px;
+  color: var(--gray-700);
+  line-height: 1.6;
+}

@@ -54,6 +54,37 @@ export const gateUI = {
     fr: "Chaque « Non » est une occasion d'améliorer votre projet. Traitez-les, puis revenez refaire la vérification.",
     en: 'Every "No" is a chance to improve your project. Address them, then come back and recheck.',
   },
+  // عنوان قسم ملاحظات رفيق (تظهر حين تتعارض إجابة المستخدم مع بيانات رفيق)
+  notesTitle: {
+    ar: 'ملاحظات رفيق',
+    fr: 'Remarques de Rafiq',
+    en: "Rafiq's notes",
+  },
+  notesIntro: {
+    ar: 'بناءً على ما سجّلته في رفيق، لاحظت ما يلي. هذه ملاحظات لطيفة لا أحكام — فأنت أدرى بمشروعك، وقد لا تكون كل خطواتك مسجّلة هنا:',
+    fr: "D'après ce que vous avez enregistré dans Rafiq, j'ai remarqué ce qui suit. Ce sont des remarques bienveillantes, pas des jugements — vous connaissez mieux votre projet, et toutes vos étapes ne sont peut-être pas enregistrées ici :",
+    en: "Based on what you recorded in Rafiq, I noticed the following. These are gentle notes, not judgments — you know your project best, and not all your steps may be recorded here:",
+  },
+};
+
+// ملاحظات التحقّق: نصوص تظهر حين تتعارض إجابة المستخدم مع بيانات رفيق الفعلية.
+// {value} يُستبدل بالقيمة الفعلية من قاعدة البيانات.
+export const verifyNotes = {
+  hasProject: {
+    ar: 'أجبت بأن لديك مشروعاً، لكن لا أرى مشاريع مسجّلة باسمك في رفيق بعد. إن كان مشروعك خارج رفيق فلا بأس — فقط تأكّد.',
+    fr: "Vous avez répondu que vous avez un projet, mais je ne vois pas encore de projets enregistrés à votre nom dans Rafiq. Si votre projet est hors de Rafiq, pas de souci — vérifiez simplement.",
+    en: "You answered that you have a project, but I don't see any projects registered under your name in Rafiq yet. If your project is outside Rafiq, that's fine — just make sure.",
+  },
+  reachedDeploy: {
+    ar: 'أجبت بأن مشروعك جاهز للنشر، لكن أعلى مرحلة في مشاريعك المسجّلة هي المرحلة {value} من 7. تأكّد أن مشروعك فعلاً وصل مرحلة النشر.',
+    fr: "Vous avez répondu que votre projet est prêt à être publié, mais la phase la plus avancée de vos projets enregistrés est la phase {value} sur 7. Assurez-vous que votre projet a vraiment atteint la phase de publication.",
+    en: 'You answered that your project is ready to publish, but the most advanced phase in your registered projects is phase {value} of 7. Make sure your project has truly reached the deployment phase.',
+  },
+  usedChat: {
+    ar: 'أجبت بأنك جرّبت كل الوظائف، وهذا رائع. تذكّر أن رفيق هنا لمساعدتك إن واجهت أي تعثّر — لم أرَ محادثات بيننا بعد.',
+    fr: "Vous avez répondu que vous avez testé toutes les fonctions, c'est excellent. Rappelez-vous que Rafiq est là pour vous aider en cas de blocage — je n'ai pas encore vu de conversations entre nous.",
+    en: "You answered that you tested all functions, that's great. Remember Rafiq is here to help if you get stuck — I haven't seen any conversations between us yet.",
+  },
 };
 
 // الفئات والأسئلة
@@ -325,4 +356,39 @@ export function computeResult(answers) {
     complete,
     toImprove,
   };
+}
+
+// توليد ملاحظات رفيق: تقارن إجابات المستخدم ببيانات رفيق الفعلية.
+// تظهر ملاحظة فقط حين يجيب المستخدم «نعم» بينما بيانات رفيق تشير لغير ذلك.
+// لا نغيّر إجابة المستخدم — نضيف ملاحظة لطيفة فقط.
+// data: { projectCount, maxPhase, conversationCount }
+// answers: { questionId: 'yes'|'no'|'na' }
+export function buildNotes(answers, data) {
+  const notes = [];
+
+  // السؤال p2 «هل جرّبت كل الوظائف الأساسية؟» — إن قال نعم ولا مشاريع مسجّلة
+  // (نربطه بوجود مشروع كإشارة أوّلية)
+  if (answers.p2 === 'yes' && data.projectCount === 0) {
+    notes.push({ key: 'hasProject', text: verifyNotes.hasProject });
+  }
+
+  // السؤال p1 «هل يُبنى مشروعك بلا أخطاء / جاهز؟» مقرونًا بمرحلة النشر
+  // إن قال نعم بينما أعلى مرحلة أقل من 6 (النشر يبدأ من المراحل المتقدّمة)
+  if (answers.p1 === 'yes' && data.projectCount > 0 && data.maxPhase > 0 && data.maxPhase < 6) {
+    notes.push({ key: 'reachedDeploy', text: verifyNotes.reachedDeploy, value: data.maxPhase });
+  }
+
+  // السؤال p2 «جرّبت كل الوظائف» — تذكير بالمحادثة إن لم يستعمل رفيق قطّ ولديه مشروع
+  if (answers.p2 === 'yes' && data.projectCount > 0 && data.conversationCount === 0) {
+    notes.push({ key: 'usedChat', text: verifyNotes.usedChat });
+  }
+
+  return notes;
+}
+
+// استبدال {value} في نصّ الملاحظة بالقيمة الفعلية
+export function fillNote(text, lang, value) {
+  const raw = text[lang] || text.ar || '';
+  if (value === undefined || value === null) return raw;
+  return raw.replace('{value}', String(value));
 }
