@@ -12,8 +12,6 @@ import Chat from "./pages/Chat";
 import LearningPath from './pages/LearningPath';
 import SessionDetail from './pages/SessionDetail';
 import QualityGate from './pages/QualityGate';
-// داخل <Routes>، بين المسارات الأخرى:
-<Route path="/quality" element={<QualityGate />} />
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -38,6 +36,7 @@ export default function App() {
           <Route index element={<Dashboard />} />
           <Route path="new" element={<NewProject />} />
           <Route path="roadmap" element={<Roadmap />} />
+          <Route path="quality" element={<QualityGate />} />
           <Route path="glossary" element={<Glossary />} />
           <Route path="profile" element={<Profile />} />
           <Route path="chat" element={<Chat />} />
