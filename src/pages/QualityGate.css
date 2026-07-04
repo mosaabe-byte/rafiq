@@ -1,0 +1,256 @@
+.quality-gate {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+/* الترويسة */
+.qg-header {
+  text-align: center;
+  margin-bottom: 22px;
+}
+.qg-header-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--purple-light);
+  color: var(--purple);
+  margin-bottom: 12px;
+}
+.qg-header h1 {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--gray-900);
+  margin: 0 0 6px;
+}
+.qg-subtitle {
+  font-size: 14px;
+  color: var(--gray-500);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* المقدّمة */
+.qg-intro {
+  background: var(--gray-50);
+  border-radius: 14px;
+  padding: 16px 18px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--gray-600);
+  margin-bottom: 24px;
+}
+
+/* الفئة */
+.qg-category {
+  margin-bottom: 26px;
+}
+.qg-cat-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--purple-dark);
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--purple-light);
+}
+.qg-cat-icon { font-size: 20px; }
+
+/* السؤال */
+.qg-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.qg-question {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+.qg-q-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gray-900);
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+.qg-q-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  font-size: 12.5px;
+  color: var(--gray-400);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.qg-q-hint svg { flex-shrink: 0; margin-top: 2px; }
+
+/* الخيارات */
+.qg-options {
+  display: flex;
+  gap: 8px;
+}
+.qg-opt {
+  flex: 1;
+  padding: 9px 8px;
+  border-radius: 10px;
+  border: 1.5px solid var(--gray-100);
+  background: var(--white);
+  color: var(--gray-500);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.qg-opt:hover { border-color: var(--gray-300); }
+.qg-opt.selected.yes {
+  background: #E8F5EE;
+  border-color: #1F9D57;
+  color: #157A42;
+}
+.qg-opt.selected.no {
+  background: #FDECEC;
+  border-color: #C0392B;
+  color: #A93226;
+}
+.qg-opt.selected.na {
+  background: var(--gray-100);
+  border-color: var(--gray-400);
+  color: var(--gray-600);
+}
+
+/* الأزرار */
+.qg-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 28px;
+}
+.qg-compute {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: var(--purple);
+  color: var(--white);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.qg-compute:hover:not(:disabled) { opacity: 0.9; }
+.qg-compute:disabled { opacity: 0.5; cursor: default; }
+.qg-reset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--gray-100);
+  background: var(--white);
+  color: var(--gray-500);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.qg-reset:hover { background: var(--gray-50); }
+
+/* النتيجة */
+.qg-result {
+  border-radius: 16px;
+  padding: 22px 20px;
+  margin-bottom: 24px;
+  text-align: center;
+  border: 2px solid;
+}
+.qg-result.high { background: #E8F5EE; border-color: #1F9D57; }
+.qg-result.mid  { background: #FEF6E7; border-color: #E39A1C; }
+.qg-result.low  { background: #FDECEC; border-color: #C0392B; }
+.qg-result-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-600);
+  margin-bottom: 6px;
+}
+.qg-result-percent {
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--gray-900);
+  margin-bottom: 6px;
+}
+.qg-result-meta {
+  font-size: 13px;
+  color: var(--gray-500);
+}
+.qg-result-hint {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--gray-600);
+  font-style: italic;
+}
+.qg-allgood {
+  margin-top: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #157A42;
+  line-height: 1.6;
+}
+
+/* التوصيات */
+.qg-improve {
+  margin-top: 16px;
+  text-align: start;
+  background: var(--white);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.qg-improve-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 10px;
+}
+.qg-improve-list {
+  margin: 0 0 12px;
+  padding-inline-start: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.qg-improve-list li {
+  font-size: 13.5px;
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+.qg-encourage {
+  font-size: 13px;
+  color: var(--purple-dark);
+  font-weight: 600;
+  line-height: 1.6;
+  padding-top: 10px;
+  border-top: 1px solid var(--gray-100);
+}
+
+/* العودة */
+.qg-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 24px;
+  font-size: 14px;
+  color: var(--gray-500);
+  text-decoration: none;
+  font-weight: 600;
+}
+.qg-back:hover { color: var(--purple); }
