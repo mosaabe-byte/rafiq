@@ -1,6 +1,9 @@
 // api/chat.js
 // حارس وسيط آمن بين واجهة رفيق و Claude.
 // المفتاح يُقرأ من متغيّر بيئة في Vercel، ولا يظهر أبداً في الكود.
+// النماذج تُقرأ من سجلّ مركزي (models.js) لمرونة واستمرارية.
+
+import { getModel } from "./models.js";
 
 function buildLessonPrompt(lesson) {
   const langMap = {
@@ -68,7 +71,7 @@ function buildSystemPrompt(project, lang) {
 
 نطاقك وحدودك:
 - محور عملك هو مرافقة المستخدم في مشروعه ورحلة تعلّمه للبرمجة. إن سأل سؤالاً جانبياً بسيطاً، أجِبه بإيجاز ولطف ثم أعِده بلطافة إلى مشروعه — كن رفيقاً ودوداً لا حارساً متزمّتاً، لكن لا تنجرف في مواضيع بعيدة طويلاً.
-- التواضع المعرفي أهمّ من ادّعاء القدرة: إن واجهت مهمة معقّدة تتجاوز ما يمكنك إتقانه بثقة (تصحيح خطأ متشابك، مراجعة معمارية كبيرة، كود طويل دقيق)، قل ذلك بصدق بدل أن تتكلّف جواباً قد يكون خاطئاً. وجّه المستخدم بلطف إلى نسخ سياق المسألة (عبر زرّ النسخ) وطرحها على Claude الأقوى (Sonnet أو Opus) في واجهته الرسمية للحصول على عمق أكبر. اجعل هذا مخرجاً مشجّعاً لا اعتذاراً — فحدودك الحالية بوّابة نحو أدوات أعمق، لا عجز.
+- التواضع المعرفي أهمّ من ادّعاء القدرة: إن واجهت مهمة معقّدة تتجاوز ما يمكنك إتقانه بثقة (تصحيح خطأ متشابك، مراجعة معمارية كبيرة، كود طويل دقيق)، قل ذلك بصدق بدل أن تتكلّف جواباً قد يكون خاطئاً. إن كان المستخدم يستعمل «رفيق السريع»، اقترح عليه بلطف تجربة «رفيق العميق» (النموذج الأقوى) لهذه المهمّة الصعبة عبر مبدّل النموذج في أعلى المحادثة. اجعل هذا مخرجاً مشجّعاً لا اعتذاراً — فالأداة الأقوى بين يديه.
 - لا تخترع حلولاً أو معلومات لتبدو واسع المعرفة. جواب صادق محدود خير من جواب واسع مهلوس.`;
 
   if (!project) return base + language + identity + style + nextStep + boundaries;
@@ -91,7 +94,7 @@ function buildSystemPrompt(project, lang) {
 
   const bridge = `
 
-رؤيتك الكبرى: أنت جسر المستخدم نحو عالم المحترفين. لا تكتفِ بتعليمه أن «يكتب كوداً يعمل»، بل اغرس فيه — بجرعة تناسب مستواه — لماذا نفعل الأشياء بطريقة معيّنة، وما البدائل، وما معايير الجودة. الأدوات قد تتغيّر، لكن المبادئ تبقى. أنت تهيّئه فكرياً ليدخل عالم الاحتراف وهو يعرف القواعد، حتى وإن احتاج لاحقاً أدوات أقوى لا تملكها أنت.`;
+رؤيتك الكبرى: أنت جسر المستخدم نحو عالم المحترفين. لا تكتفِ بتعليمه أن «يكتب كوداً يعمل»، بل اغرس فيه — بجرعة تناسب مستواه — لماذا نفعل الأشياء بطريقة معيّنة، وما البدائل، وما معايير الجودة. الأدوات قد تتغيّر، لكن المبادئ تبقى. أنت تهيّئه فكرياً ليدخل عالم الاحتراف وهو يعرف القواعد، حتى وإن احتاج لاحقاً أدوات أقوى.`;
 
   const context = `
 
@@ -111,11 +114,15 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { messages, project, lesson, lang } = req.body;
+    const { messages, project, lesson, lang, modelKey } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "messages مطلوبة" });
     }
+
+    // اختيار النموذج من السجلّ المركزي.
+    // getModel يحمي تلقائياً: أي مفتاح خاطئ أو غائب يرجع للنموذج الافتراضي (السريع).
+    const model = getModel(modelKey);
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -125,8 +132,8 @@ export default async function handler(req, res) {
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 1024,
+        model: model.id,
+        max_tokens: model.maxTokens,
         system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang),
         messages: messages,
       }),
@@ -143,7 +150,8 @@ export default async function handler(req, res) {
       .map((block) => (block.type === "text" ? block.text : ""))
       .join("");
 
-    return res.status(200).json({ reply, usage: data.usage });
+    // نُرجع مفتاح النموذج المستعمل (للواجهة، إن أرادت عرضه أو عدّ الاستهلاك لكل نموذج)
+    return res.status(200).json({ reply, usage: data.usage, modelKey: model.key });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
