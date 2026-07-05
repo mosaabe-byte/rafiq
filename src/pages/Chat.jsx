@@ -20,6 +20,7 @@ export default function Chat() {
 
   const [projects, setProjects] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState("");
+  const [modelKey, setModelKey] = useState("fast");
   const [conversationId, setConversationId] = useState(null);
 
   const [messages, setMessages] = useState([]);
@@ -210,6 +211,7 @@ export default function Chat() {
           messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
           project: selectedProject,
           lang,
+          modelKey,
         }),
       });
 
@@ -269,6 +271,22 @@ export default function Chat() {
         ))}
       </select>
 
+{selectedProjectId && (
+        <div className="model-switch">
+          <button
+            className={"model-opt" + (modelKey === "fast" ? " active" : "")}
+            onClick={() => setModelKey("fast")}
+          >
+            {t("chat.modelFast")}
+          </button>
+          <button
+            className={"model-opt" + (modelKey === "deep" ? " active" : "")}
+            onClick={() => setModelKey("deep")}
+          >
+            {t("chat.modelDeep")}
+          </button>
+        </div>
+      )}
       {/* منطقة الرسائل: تتمدّد وتتمرّر وحدها */}
       <div className="chat-messages">
         {!selectedProjectId && (
