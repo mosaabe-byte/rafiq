@@ -8,7 +8,11 @@ import { useAuth } from "../auth/AuthContext";
 import { useLanguage } from "../i18n/LanguageContext";
 import "./Chat.css";
 
-const DAILY_LIMIT = 10; // الحدّ اليومي لرسائل المستخدم المجاني
+// الحدود اليومية لكل نموذج (مطابقة لسجلّ النماذج api/models.js)
+const DAILY_LIMITS = { fast: 10, deep: 3 };
+function getLimit(key) {
+  return DAILY_LIMITS[key] ?? DAILY_LIMITS.fast;
+}
 
 export default function Chat() {
   const { user } = useAuth();
@@ -110,16 +114,17 @@ export default function Chat() {
         .select("id", { count: "exact", head: true })
         .eq("user_id", user.id)
         .eq("role", "user")
+        .eq("model_key", modelKey)
         .gte("created_at", startOfDay.toISOString());
 
       if (!error && typeof count === "number") {
         setTodayCount(count);
-        setLimitReached(count >= DAILY_LIMIT);
+        setLimitReached(count >= getLimit(modelKey));
       }
     }
 
     countTodayMessages();
-  }, [user]);
+  }, [user, modelKey]);
 
   // عند اختيار مشروع: نحمّل محادثته السابقة أو نُنشئ محادثة جديدة
   useEffect(() => {
@@ -180,7 +185,8 @@ export default function Chat() {
     const text = input.trim();
     if (!text || loading || !conversationId) return;
 
-    if (todayCount >= DAILY_LIMIT) {
+    const limit = getLimit(modelKey);
+    if (todayCount >= limit) {
       setLimitReached(true);
       return;
     }
@@ -189,7 +195,7 @@ export default function Chat() {
 
     const newCount = todayCount + 1;
     setTodayCount(newCount);
-    if (newCount >= DAILY_LIMIT) setLimitReached(true);
+    if (newCount >= limit) setLimitReached(true);
 
     const newMessages = [...messages, { role: "user", content: text }];
     setMessages(newMessages);
@@ -201,6 +207,7 @@ export default function Chat() {
       user_id: user.id,
       role: "user",
       content: text,
+      model_key: modelKey,
     });
 
     try {
@@ -367,7 +374,7 @@ export default function Chat() {
       {/* تنبيه بلوغ الحدّ اليومي */}
       {limitReached && (
         <div className="chat-limit">
-          {tt("chat.limitTitle", { n: DAILY_LIMIT })}
+          {tt("chat.limitTitle", { n: getLimit(modelKey) })}
           <br />
           <span className="chat-limit-sub">{t("chat.limitSub")}</span>
         </div>
