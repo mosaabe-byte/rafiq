@@ -31,7 +31,7 @@ export const MODELS = {
 
   deep: {
     key: "deep",
-    id: "claude-sonnet-4-5",
+    id: "claude-sonnet-5",
     name: {
       ar: "رفيق العميق",
       fr: "Rafiq Profond",
