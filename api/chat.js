@@ -40,7 +40,7 @@ ${lesson.content || ""}`;
   return base + language + rules + context;
 }
 
-function buildSystemPrompt(project, lang) {
+function buildSystemPrompt(project, lang, modelInfo) {
   const langMap = {
     ar: "العربية",
     fr: "الفرنسية (Français)",
@@ -72,12 +72,19 @@ function buildSystemPrompt(project, lang) {
   const nextStep = `
 
 في نهاية كل رد، اختم باقتراح لطيف وقصير للخطوة التالية (سطر واحد) يدفع المستخدم للأمام بثقة، مثل «هل ننتقل إلى كذا؟» أو «جاهز للخطوة التالية، أم نتعمّق هنا أكثر؟». اجعله طبيعياً ومتنوّعاً لا مكرّراً، ولا تفعله إن كان المستخدم نفسه يطرح سؤالاً ختامياً.`;
+const roleAwareness = modelInfo && modelInfo.key === "deep"
+    ? `
+
+أنت الآن تعمل بوصفك «رفيق العميق» — النموذج الأقوى والأعمق. حين تعرّف بنفسك، اذكر أنك «رفيق العميق». أنت القمّة المتاحة، فلا تقترح على المستخدم الانتقال لنموذج أقوى (أنت هو). واجه المهامّ الصعبة بثقة وعمق.`
+    : `
+
+أنت الآن تعمل بوصفك «رفيق السريع» — النموذج السريع الخفيف للأسئلة اليومية. حين تعرّف بنفسك، اذكر أنك «رفيق السريع». إن واجهت مهمّة معقّdة تتجاوز ما تتقنه بثقة، اقترح على المستخدم بلطف تجربة «رفيق العميق» (النموذج الأقوى) عبر مبدّل النموذج في أعلى المحادثة.`;
 
   const boundaries = `
 
 نطاقك وحدودك:
 - محور عملك هو مرافقة المستخدم في مشروعه ورحلة تعلّمه للبرمجة. إن سأل سؤالاً جانبياً بسيطاً، أجِبه بإيجاز ولطف ثم أعِده بلطافة إلى مشروعه — كن رفيقاً ودوداً لا حارساً متزمّتاً، لكن لا تنجرف في مواضيع بعيدة طويلاً.
-- التواضع المعرفي أهمّ من ادّعاء القدرة: إن واجهت مهمة معقّدة تتجاوز ما يمكنك إتقانه بثقة (تصحيح خطأ متشابك، مراجعة معمارية كبيرة، كود طويل دقيق)، قل ذلك بصدق بدل أن تتكلّف جواباً قد يكون خاطئاً. إن كان المستخدم يستعمل «رفيق السريع»، اقترح عليه بلطف تجربة «رفيق العميق» (النموذج الأقوى) لهذه المهمّة الصعبة عبر مبدّل النموذج في أعلى المحادثة. اجعل هذا مخرجاً مشجّعاً لا اعتذاراً — فالأداة الأقوى بين يديه.
+- التواضع المعرفي أهمّ من ادّعاء القدرة: إن واجهت مهمة معقّدة تتجاوز ما يمكنك إتقانه بثقة (تصحيح خطأ متشابك، مراجعة معمارية كبيرة، كود طويل دقيق)، قل ذلك بصدق بدل أن تتكلّف جواباً قد يكون خاطئاً. » (النموذج الأقوى) لهذه المهمّة الصعبة عبر مبدّل النموذج في أعلى المحادثة. اجعل هذا مخرجاً مشجّعاً لا اعتذاراً — فالأداة الأقوى بين يديه.
 - لا تخترع حلولاً أو معلومات لتبدو واسع المعرفة. جواب صادق محدود خير من جواب واسع مهلوس.`;
 
   if (!project) return base + language + identity + style + nextStep + boundaries;
@@ -111,7 +118,7 @@ function buildSystemPrompt(project, lang) {
 - نسبة التقدّم: ${project.progress ?? 0}%
 - النظام الأساسي: ${project.platform || "غير محدّد"}`;
 
-  return base + language + identity + style + nextStep + levelGuidance + bridge + boundaries + context;
+  return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + boundaries + context;
 }
 
 export default async function handler(req, res) {
@@ -140,7 +147,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: model.id,
         max_tokens: model.maxTokens,
-        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang),
+        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model),
         messages: messages,
       }),
     });
