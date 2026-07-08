@@ -61,10 +61,23 @@ export default function QualityGate() {
       });
 
       setUserData({
-                projectCount: rows.length,
+        projectCount: rows.length,
         maxPhase,
         conversationCount: convRes.count ?? 0,
       });
+
+      // جلب آخر نتيجة سابقة لبوّابة الجودة
+      const lastRes = await supabase
+        .from('quality_results')
+        .select('percent, answered, total_questions, created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (!cancelled && lastRes.data) {
+        setLastResult(lastRes.data);
+      }
     }
 
     loadData();
@@ -80,18 +93,6 @@ export default function QualityGate() {
     const computed = computeResult(answers);
     setResult(computed);
     setNotes(buildNotes(answers, userData));
-    // جلب آخر نتيجة سابقة لبوّابة الجودة
-      const lastRes = await supabase
-        .from("quality_results")
-        .select("percent, answered, total_questions, created_at")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (!cancelled && lastRes.data) {
-        setLastResult(lastRes.data);
-      }
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     // حفظ النتيجة (فقط إن أجاب المستخدم عن كل الأسئلة، لتكون ذات معنى)
