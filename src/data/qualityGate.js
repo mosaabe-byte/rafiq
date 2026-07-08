@@ -65,6 +65,11 @@ export const gateUI = {
     fr: "D'après ce que vous avez enregistré dans Rafiq, j'ai remarqué ce qui suit. Ce sont des remarques bienveillantes, pas des jugements — vous connaissez mieux votre projet, et toutes vos étapes ne sont peut-être pas enregistrées ici :",
     en: "Based on what you recorded in Rafiq, I noticed the following. These are gentle notes, not judgments — you know your project best, and not all your steps may be recorded here:",
   },
+  lastResultLabel: {
+    ar: "نتيجتك السابقة:",
+    fr: "Votre résultat précédent :",
+    en: "Your previous result:",
+  },
 };
 
 // ملاحظات التحقّق: نصوص تظهر حين تتعارض إجابة المستخدم مع بيانات رفيق الفعلية.

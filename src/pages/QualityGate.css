@@ -290,3 +290,27 @@
   color: var(--gray-700);
   line-height: 1.6;
 }
+.qg-last-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--purple-light);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+}
+.qg-last-label {
+  font-size: 13.5px;
+  color: var(--gray-600);
+  font-weight: 600;
+}
+.qg-last-value {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--purple-dark);
+}
+.qg-last-date {
+  font-size: 12px;
+  color: var(--gray-400);
+  margin-inline-start: auto;
+}

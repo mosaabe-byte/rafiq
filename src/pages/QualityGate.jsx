@@ -14,12 +14,23 @@ function phaseNumber(phaseText) {
   const m = String(phaseText).match(/\d+/);
   return m ? parseInt(m[0], 10) : 0;
 }
+function fmtQDate(iso, lang) {
+  try {
+    const locales = { ar: "ar", fr: "fr-FR", en: "en-US" };
+    return new Date(iso).toLocaleDateString(locales[lang] || "ar", {
+      day: "numeric", month: "short", year: "numeric",
+    });
+  } catch (e) {
+    return "";
+  }
+}
 
 export default function QualityGate() {
   const { lang } = useLanguage();
   const { user } = useAuth();
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
+  const [lastResult, setLastResult] = useState(null);
   const [notes, setNotes] = useState([]);
 
   // بيانات رفيق الفعلية (للتحقّق من بعض الإجابات)
@@ -50,7 +61,7 @@ export default function QualityGate() {
       });
 
       setUserData({
-        projectCount: rows.length,
+                projectCount: rows.length,
         maxPhase,
         conversationCount: convRes.count ?? 0,
       });
@@ -65,10 +76,41 @@ export default function QualityGate() {
     if (result) { setResult(null); setNotes([]); }
   }
 
-  function handleCompute() {
-    setResult(computeResult(answers));
+  async function handleCompute() {
+    const computed = computeResult(answers);
+    setResult(computed);
     setNotes(buildNotes(answers, userData));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // جلب آخر نتيجة سابقة لبوّابة الجودة
+      const lastRes = await supabase
+        .from("quality_results")
+        .select("percent, answered, total_questions, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (!cancelled && lastRes.data) {
+        setLastResult(lastRes.data);
+      }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // حفظ النتيجة (فقط إن أجاب المستخدم عن كل الأسئلة، لتكون ذات معنى)
+    if (user && computed.complete) {
+      const { error } = await supabase.from("quality_results").insert({
+        user_id: user.id,
+        percent: computed.percent,
+        answered: computed.answered,
+        total_questions: computed.totalQuestions,
+      });
+      if (!error) {
+        setLastResult({
+          percent: computed.percent,
+          answered: computed.answered,
+          total_questions: computed.totalQuestions,
+          created_at: new Date().toISOString(),
+        });
+      }
+    }
   }
 
   function handleReset() {
@@ -141,6 +183,15 @@ export default function QualityGate() {
               <li key={n.key}>{fillNote(n.text, lang, n.value)}</li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {/* النتيجة السابقة (تظهر قبل الحساب فقط) */}
+      {!result && lastResult && (
+        <div className="qg-last-result">
+          <span className="qg-last-label">{tf(gateUI.lastResultLabel, lang)}</span>
+          <span className="qg-last-value">{lastResult.percent}%</span>
+          <span className="qg-last-date">{fmtQDate(lastResult.created_at, lang)}</span>
         </div>
       )}
 
