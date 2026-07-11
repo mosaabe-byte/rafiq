@@ -8,10 +8,8 @@ import { supabase } from '../lib/supabase';
 import { useLanguage } from '../i18n/LanguageContext';
 import './Roadmap.css';
 
-function phaseNumber(phaseText) {
-  if (!phaseText) return 1;
-  const m = String(phaseText).match(/\d+/);
-  return m ? parseInt(m[0], 10) : 1;
+function phaseNumber(project) {
+  return project?.phase_number || 1;
 }
 
 export default function Roadmap() {
@@ -29,25 +27,22 @@ export default function Roadmap() {
     if (!selected || advancing) return;
     setAdvancing(true);
 
-    const current = phaseNumber(selected.phase);
+    const current = phaseNumber(selected);
     const isLastPhase = current >= phases.length;
     const nextPhase = isLastPhase ? current : current + 1;
 
-    // عنوان المرحلة الجديدة (مثل: "المرحلة 4: البناء")
-    const nextTitle = phases.find((p) => p.n === nextPhase)?.title || '';
-    const newPhaseText = `${t('roadmap.phaseLabel')} ${nextPhase}: ${nextTitle}`;
     const newProgress = Math.round((nextPhase / phases.length) * 100);
 
     const { error } = await supabase
       .from('projects')
-      .update({ phase: newPhaseText, progress: newProgress })
+      .update({ phase_number: nextPhase, progress: newProgress })
       .eq('id', selected.id);
 
     if (!error) {
       // تحديث محلي فوري
       setProjects((prev) =>
         prev.map((p) =>
-          p.id === selected.id ? { ...p, phase: newPhaseText, progress: newProgress } : p
+          p.id === selected.id ? { ...p, phase_number: nextPhase, progress: newProgress } : p
         )
       );
 
@@ -95,7 +90,7 @@ export default function Roadmap() {
   }, []);
 
   const selected = projects.find((p) => p.id === selectedId) || null;
-  const currentPhase = selected ? phaseNumber(selected.phase) : 0;
+  const currentPhase = selected ? phaseNumber(selected) : 0;
 
   return (
     <div className="roadmap">

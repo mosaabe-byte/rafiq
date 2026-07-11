@@ -13,13 +13,6 @@ import './Profile.css';
 const LOCALES = { ar: 'ar', fr: 'fr-FR', en: 'en-US' };
 const PHASE_NUMBERS = [1, 2, 3, 4, 5, 6, 7];
 
-function extractPhaseNumber(phaseText) {
-  if (!phaseText) return null;
-  const m = String(phaseText).match(/(\d+)/);
-  if (!m) return null;
-  const n = parseInt(m[1], 10);
-  return n >= 1 && n <= 7 ? n : null;
-}
 
 function computeBadges(data) {
   return [
@@ -65,7 +58,7 @@ export default function Profile() {
 
       const projectsRes = await supabase
         .from('projects')
-        .select('name, progress, phase, phase_number, created_at')
+        .select('name, progress, phase_number, created_at')
         .eq('user_id', user.id);
 
       const termsRes = await supabase
@@ -98,7 +91,7 @@ export default function Profile() {
       let hasPublishedProject = false;
       let hasCompletedProject = false;
       projectRows.forEach((p) => {
-        const n = p.phase_number || extractPhaseNumber(p.phase);
+        const n = p.phase_number;
         if (n) counts[n] = (counts[n] || 0) + 1;
         if (n === 7) hasPublishedProject = true;
         if ((p.progress || 0) >= 100) hasCompletedProject = true;

@@ -129,7 +129,7 @@ const roleAwareness = modelInfo && modelInfo.key === "deep"
 سياق المستخدم الحالي (استخدمه لتُخصّص ردودك، ورحّب به بوعي بمكانه دون أن تُكرر كل هذه المعلومات حرفياً في كل رد):
 - اسم المشروع: ${project.name || "غير محدّد"}
 - مستوى المستخدم: ${project.level || "غير محدّد"}
-- المرحلة الحالية: ${project.phase || "غير محدّدة"}
+- المرحلة الحالية: ${project.phase_number ? `${project.phase_number} من 7` : "غير محدّدة"}
 - نسبة التقدّم: ${project.progress ?? 0}%
 - النظام الأساسي: ${project.platform || "غير محدّد"}`;
 
