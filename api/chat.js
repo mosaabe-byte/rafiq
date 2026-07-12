@@ -150,6 +150,20 @@ const roleAwareness = modelInfo && modelInfo.key === "deep"
 - المرحلة الحالية: ${project.phase_number ? `المرحلة ${project.phase_number} من 7 (هذا هو المصدر الموثوق لمكان المستخدم الآن — اعتمِده حتى لو أوحت رسائل سابقة في المحادثة بمرحلة مختلفة، فالمستخدم قد يكون تقدّم منذ ذلك الحين)` : "غير محدّدة"}
 - نسبة التقدّم: ${project.progress ?? 0}%
 - النظام الأساسي: ${project.platform || "غير محدّد"}`;
+// ما تعلّمه المستخدم في رحلة المحطات
+  let journey = "";
+  if (completedStations && completedStations.length > 0) {
+    const titles = completedStations
+      .map((n) => STATION_TITLES[n])
+      .filter(Boolean)
+      .join("، ");
+    if (titles) {
+      journey = `
+
+رحلة تعلّم المستخدم: أكمل ${completedStations.length} من 13 محطة في رحلة التعلّم، وهي: ${titles}.
+استفد من هذا بحكمة: ابنِ على ما تعلّمه في هذه المحطات بدل شرح أساسياتها من الصفر، ويمكنك الإشارة إليها («كما تعلّمت في محطة كذا…»). لكن لا تفترض إتقاناً كاملاً — إكمال المحطة لا يعني إتقانها؛ إن بدا مرتبكاً في مفهوم منها، راجعه معه بلطف دون أن تشعره بالنقص. ولا تذكر هذه القائمة حرفياً في ردودك.`;
+    }
+  }
 
   return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + boundaries + context + journey;
 }
@@ -199,20 +213,6 @@ export default async function handler(req, res) {
     // نُرجع مفتاح النموذج المستعمل (للواجهة، إن أرادت عرضه أو عدّ الاستهلاك لكل نموذج)
     return res.status(200).json({ reply, usage: data.usage, modelKey: model.key });
   } catch (error) {
-    // ما تعلّمه المستخدم في رحلة المحطات
-  let journey = "";
-  if (completedStations && completedStations.length > 0) {
-    const titles = completedStations
-      .map((n) => STATION_TITLES[n])
-      .filter(Boolean)
-      .join("، ");
-    if (titles) {
-      journey = `
-
-رحلة تعلّم المستخدم: أكمل ${completedStations.length} من 13 محطة في رحلة التعلّم، وهي: ${titles}.
-استفد من هذا بحكمة: ابنِ على ما تعلّمه في هذه المحطات بدل شرح أساسياتها من الصفر، ويمكنك الإشارة إليها («كما تعلّمت في محطة كذا…»). لكن لا تفترض إتقاناً كاملاً — إكمال المحطة لا يعني إتقانها؛ إن بدا مرتبكاً في مفهوم منها، راجعه معه بلطف دون أن تشعره بالنقص. ولا تذكر هذه القائمة حرفياً في ردودك.`;
-    }
-  }
-    return res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
   }
 }
