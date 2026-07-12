@@ -1,6 +1,8 @@
-import { useParams, Link } from 'react-router-dom';
-import { IconArrowRight, IconCopy, IconCheck, IconCircleCheck, IconBulb, IconAlertTriangle, IconChevronDown, IconFileCode } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { IconArrowRight, IconCopy, IconCheck, IconCircleCheck, IconBulb, IconAlertTriangle, IconChevronDown, IconFileCode, IconLoader2 } from '@tabler/icons-react';
+import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../auth/AuthContext';
 import { learningContent, t } from '../data/learningContent';
 import { useLanguage } from '../i18n/LanguageContext';
 import './SessionDetail.css';
@@ -24,7 +26,9 @@ const UI = {
   copiedFull: { ar: 'تم النسخ', fr: 'Copié', en: 'Copied' },
   fullCode: { ar: 'الكود الكامل', fr: 'Code complet', en: 'Full code' },
   expected: { ar: 'النتيجة المتوقّعة', fr: 'Résultat attendu', en: 'Expected result' },
-  done: { ar: 'أنهيت هذه المحطة — رجوع للرحلة', fr: 'Étape terminée — retour au parcours', en: 'Station complete — back to path' },
+  done: { ar: 'أكملتُ هذه المحطة', fr: "J'ai terminé cette étape", en: "I've completed this station" },
+  doneSaving: { ar: 'جارٍ الحفظ…', fr: 'Enregistrement…', en: 'Saving…' },
+  alreadyDone: { ar: '✓ أكملت هذه المحطة — رجوع للرحلة', fr: '✓ Étape terminée — retour au parcours', en: '✓ Station completed — back to path' },
 };
 
 export default function SessionDetail() {
@@ -33,6 +37,47 @@ export default function SessionDetail() {
   const session = learningContent[id];
   const [copiedIdx, setCopiedIdx] = useState(null);
   const [openCode, setOpenCode] = useState({});
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  // هل أكمل المستخدم هذه المحطة من قبل؟
+  useEffect(() => {
+    if (!user || !id) return;
+    let cancelled = false;
+
+    async function checkCompletion() {
+      const { data } = await supabase
+        .from('station_completions')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('station_number', Number(id))
+        .maybeSingle();
+
+      if (!cancelled && data) setIsCompleted(true);
+    }
+
+    checkCompletion();
+    return () => { cancelled = true; };
+  }, [user, id]);
+
+  // تسجيل إكمال المحطة ثم العودة للرحلة
+  async function handleComplete() {
+    if (!user || saving) return;
+    setSaving(true);
+
+    const { error } = await supabase.from('station_completions').insert({
+      user_id: user.id,
+      station_number: Number(id),
+    });
+
+    setSaving(false);
+    if (!error) {
+      setIsCompleted(true);
+      navigate('/learn');
+    }
+  }
 
   if (!session) {
     return (
@@ -155,7 +200,14 @@ export default function SessionDetail() {
         </div>
       ))}
 
-      <Link to="/learn" className="sd-done">{t(UI.done, lang)}</Link>
+      {isCompleted ? (
+        <Link to="/learn" className="sd-done completed">{t(UI.alreadyDone, lang)}</Link>
+      ) : (
+        <button className="sd-done" onClick={handleComplete} disabled={saving}>
+          {saving ? <IconLoader2 size={16} className="spin" /> : <IconCircleCheck size={16} />}
+          {saving ? t(UI.doneSaving, lang) : t(UI.done, lang)}
+        </button>
+      )}
       <LessonChat
         lessonTitle={t(session.title, lang)}
         lessonIntro={t(session.intro, lang)}

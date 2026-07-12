@@ -258,3 +258,30 @@
   z-index: 1;
 }
 .sd-cb-copy:hover { background: rgba(255,255,255,0.25); }
+/* زرّ إكمال المحطة */
+button.sd-done {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+button.sd-done:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.sd-done.completed {
+  background: #E8F5EE;
+  color: #157A42;
+  border: 1.5px solid #1F9D57;
+}
+.spin {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
