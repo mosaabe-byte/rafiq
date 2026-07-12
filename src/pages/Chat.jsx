@@ -25,6 +25,7 @@ export default function Chat() {
   const [projects, setProjects] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState("");
   const [modelKey, setModelKey] = useState("fast");
+  const [completedStations, setCompletedStations] = useState([]);
   const [conversationId, setConversationId] = useState(null);
 
   const [messages, setMessages] = useState([]);
@@ -77,6 +78,26 @@ export default function Chat() {
 
   // تحميل قائمة المشاريع عند فتح الصفحة
   useEffect(() => {
+    // جلب المحطات التي أكملها المستخدم (لسياق رفيق)
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+
+    async function loadCompletedStations() {
+      const { data, error } = await supabase
+        .from("station_completions")
+        .select("station_number")
+        .eq("user_id", user.id)
+        .order("station_number", { ascending: true });
+
+      if (!cancelled && !error && data) {
+        setCompletedStations(data.map((r) => r.station_number));
+      }
+    }
+
+    loadCompletedStations();
+    return () => { cancelled = true; };
+  }, [user]);
     async function loadProjects() {
       const { data, error } = await supabase
         .from("projects")
@@ -219,6 +240,7 @@ export default function Chat() {
           project: selectedProject,
           lang,
           modelKey,
+          completedStations,
         }),
       });
 

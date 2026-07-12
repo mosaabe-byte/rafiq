@@ -4,6 +4,22 @@
 // النماذج تُقرأ من سجلّ مركزي (models.js) لمرونة واستمرارية.
 
 import { getModel } from "./models.js";
+// عناوين المحطات الـ13 (لسياق ما تعلّمه المستخدم)
+const STATION_TITLES = {
+  1: "إعداد البيئة",
+  2: "بناء الهيكل",
+  3: "لوحة المشاريع الحيّة",
+  4: "الحفظ الدائم",
+  5: "المعجم التقني",
+  6: "ملف المطوّر",
+  7: "القاعدة السحابية",
+  8: "النشر الأول",
+  9: "من الفكرة إلى الخطّة",
+  10: "تحسين التصميم والتجربة",
+  11: "رفع الكود إلى GitHub",
+  12: "النشر التلقائي",
+  13: "رحلتك القادمة",
+};
 
 function buildLessonPrompt(lesson) {
   const langMap = {
@@ -40,7 +56,7 @@ ${lesson.content || ""}`;
   return base + language + rules + context;
 }
 
-function buildSystemPrompt(project, lang, modelInfo) {
+function buildSystemPrompt(project, lang, modelInfo, completedStations) {
   const langMap = {
     ar: "العربية",
     fr: "الفرنسية (Français)",
@@ -135,7 +151,7 @@ const roleAwareness = modelInfo && modelInfo.key === "deep"
 - نسبة التقدّم: ${project.progress ?? 0}%
 - النظام الأساسي: ${project.platform || "غير محدّد"}`;
 
-  return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + boundaries + context;
+  return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + boundaries + context + journey;
 }
 
 export default async function handler(req, res) {
@@ -144,7 +160,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { messages, project, lesson, lang, modelKey } = req.body;
+    const { messages, project, lesson, lang, modelKey, completedStations } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "messages مطلوبة" });
@@ -164,7 +180,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: model.id,
         max_tokens: model.maxTokens,
-        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model),
+        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations),
         messages: messages,
       }),
     });
@@ -183,6 +199,20 @@ export default async function handler(req, res) {
     // نُرجع مفتاح النموذج المستعمل (للواجهة، إن أرادت عرضه أو عدّ الاستهلاك لكل نموذج)
     return res.status(200).json({ reply, usage: data.usage, modelKey: model.key });
   } catch (error) {
+    // ما تعلّمه المستخدم في رحلة المحطات
+  let journey = "";
+  if (completedStations && completedStations.length > 0) {
+    const titles = completedStations
+      .map((n) => STATION_TITLES[n])
+      .filter(Boolean)
+      .join("، ");
+    if (titles) {
+      journey = `
+
+رحلة تعلّم المستخدم: أكمل ${completedStations.length} من 13 محطة في رحلة التعلّم، وهي: ${titles}.
+استفد من هذا بحكمة: ابنِ على ما تعلّمه في هذه المحطات بدل شرح أساسياتها من الصفر، ويمكنك الإشارة إليها («كما تعلّمت في محطة كذا…»). لكن لا تفترض إتقاناً كاملاً — إكمال المحطة لا يعني إتقانها؛ إن بدا مرتبكاً في مفهوم منها، راجعه معه بلطف دون أن تشعره بالنقص. ولا تذكر هذه القائمة حرفياً في ردودك.`;
+    }
+  }
     return res.status(500).json({ error: error.message });
   }
 }
