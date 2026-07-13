@@ -76,9 +76,7 @@ export default function Chat() {
     }
   }
 
-  // تحميل قائمة المشاريع عند فتح الصفحة
-  useEffect(() => {
-    // جلب المحطات التي أكملها المستخدم (لسياق رفيق)
+  // جلب المحطات التي أكملها المستخدم (لسياق رفيق)
   useEffect(() => {
     if (!user) return;
     let cancelled = false;
@@ -98,6 +96,9 @@ export default function Chat() {
     loadCompletedStations();
     return () => { cancelled = true; };
   }, [user]);
+
+  // تحميل قائمة المشاريع عند فتح الصفحة
+  useEffect(() => {
     async function loadProjects() {
       const { data, error } = await supabase
         .from("projects")
