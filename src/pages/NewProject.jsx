@@ -7,11 +7,25 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import './NewProject.css';
 
+// خيارات التقنيات — ترشد المبتدئ الذي قد لا يعرف تقنيته
+const TECH_OPTIONS = [
+  'HTML و CSS و JavaScript',
+  'React (مع Vite)',
+  'React (مع Create React App)',
+  'Next.js',
+  'Vue.js',
+  'React Native (موبايل)',
+  'Flutter (موبايل)',
+  'Python (Django أو Flask)',
+  'لست متأكّداً بعد',
+];
+
 // خطوات المحادثة الموجّهة
 const steps = [
   { key: 'name', bot: 'أهلاً بك! أنا رفيق. لنحوّل فكرتك إلى مشروع واضح. ما اسم الفكرة أو المشروع الذي يدور في ذهنك؟', type: 'text', placeholder: 'مثال: تطبيق لتنظيم وصفات الطبخ' },
   { key: 'audience', bot: 'فكرة جميلة! ولمن هذا المشروع؟ من سيستخدمه؟', type: 'text', placeholder: 'مثال: ربات البيوت، الطلاب، أصحاب المتاجر...' },
   { key: 'platform', bot: 'واضح. على أي منصة تتخيله؟', type: 'choice', options: ['ويب', 'موبايل', 'ويب + موبايل'] },
+  { key: 'tech_stack', bot: 'وبأي تقنية تبنيه؟ إن لم تكن متأكّداً بعد، اختر «لست متأكّداً» وسأساعدك على القرار لاحقاً.', type: 'choice', options: TECH_OPTIONS },
   { key: 'level', bot: 'وأخيراً، كيف تقيّم مستواك في البرمجة حالياً؟ هذا يساعدني أرافقك بالشكل المناسب.', type: 'choice', options: ['مبتدئ', 'متوسط', 'متقدم'] },
 ];
 
@@ -83,8 +97,9 @@ export default function NewProject() {
       status: 'active',
       level: answers.level,
       platform: answers.platform,
+      tech_stack: answers.tech_stack || null,
       progress: 0,
-      phase: 'المرحلة 1: التخطيط',
+      phase_number: 1,
     };
   }
 
@@ -97,8 +112,9 @@ export default function NewProject() {
       status: 'active',
       level: r.level,
       platform: r.platform,
+      tech_stack: 'لست متأكّداً بعد',
       progress: 0,
-      phase: 'المرحلة 1: التخطيط',
+      phase_number: 1,
     });
   }
 
@@ -244,6 +260,16 @@ export default function NewProject() {
                     <option value="ويب + موبايل">ويب + موبايل</option>
                   </select>
                 </label>
+
+                <label className="draft-field">
+                  <span>التقنية</span>
+                  <select value={draft.tech_stack} onChange={(e) => setDraft({ ...draft, tech_stack: e.target.value })}>
+                    {TECH_OPTIONS.map((opt) => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                </label>
+                
                 <label className="draft-field">
                   <span>المستوى</span>
                   <select value={draft.level} onChange={(e) => setDraft({ ...draft, level: e.target.value })}>
