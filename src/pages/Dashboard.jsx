@@ -13,21 +13,24 @@ const statusBg = { active: '#EEEDFE', done: '#E1F5EE', paused: '#FAEEDA' };
 
 const PHASE_NUMBERS = [1, 2, 3, 4, 5, 6, 7];
 
-// أسماء المراحل بالعربية للتخزين المرجعي في عمود phase (للتوافق مع البيانات القديمة)
-const PHASE_AR = {
-  1: 'التخطيط',
-  2: 'التصميم',
-  3: 'الإعداد',
-  4: 'البناء',
-  5: 'الربط',
-  6: 'البيانات',
-  7: 'السحابة والنشر',
-};
+
+// خيارات التقنيات (مطابقة لصفحة إنشاء المشروع)
+const TECH_OPTIONS = [
+  'HTML و CSS و JavaScript',
+  'React (مع Vite)',
+  'React (مع Create React App)',
+  'Next.js',
+  'Vue.js',
+  'React Native (موبايل)',
+  'Flutter (موبايل)',
+  'Python (Django أو Flask)',
+  'لست متأكّداً بعد',
+];
 
 // النموذج الفارغ يبدأ بالمرحلة 1
 const emptyForm = {
   name: '', emoji: '📁', status: 'active', level: 'مبتدئ',
-  platform: 'ويب', progress: 0, phase_number: 1,
+  platform: 'ويب', progress: 0, phase_number: 1, tech_stack: 'لست متأكّداً بعد',
 };
 
 export default function Dashboard() {
@@ -77,11 +80,7 @@ export default function Dashboard() {
     return t('roadmap.phaseLabel') + ' ' + n + ': ' + t('roadmap.phase' + n + 'title');
   }
 
-  // النصّ المخزّن في عمود phase (يبقى عربياً مرجعياً للتوافق)
-  function phaseTextForStorage(n) {
-    return 'المرحلة ' + n + ': ' + (PHASE_AR[n] || '');
-  }
-
+  
   useEffect(() => {
     async function fetchProjects() {
       setLoading(true);
@@ -119,12 +118,7 @@ export default function Dashboard() {
 
   function openEdit(project) {
     setEditingId(project.id);
-    // إن لم يكن للمشروع phase_number (بيانات قديمة)، نستخرجه من النصّ، وإلا 1
-    let pn = project.phase_number;
-    if (!pn && project.phase) {
-      const m = String(project.phase).match(/(\d+)/);
-      if (m) pn = parseInt(m[1], 10);
-    }
+    const pn = project.phase_number;
     setForm({
       name: project.name,
       emoji: project.emoji,
@@ -133,6 +127,7 @@ export default function Dashboard() {
       platform: project.platform,
       progress: project.progress,
       phase_number: pn && pn >= 1 && pn <= 7 ? pn : 1,
+      tech_stack: project.tech_stack || 'لست متأكّداً بعد',
     });
     setShowModal(true);
   }
@@ -149,7 +144,7 @@ export default function Dashboard() {
       platform: form.platform,
       progress: form.progress,
       phase_number: form.phase_number,
-      phase: phaseTextForStorage(form.phase_number),
+      tech_stack: form.tech_stack,
     };
 
     if (editingId) {
@@ -179,13 +174,9 @@ export default function Dashboard() {
 
   // عرض اسم المرحلة في بطاقة المشروع حسب اللغة (نفضّل phase_number إن وُجد)
   function cardPhaseLabel(p) {
-    let n = p.phase_number;
-    if (!n && p.phase) {
-      const m = String(p.phase).match(/(\d+)/);
-      if (m) n = parseInt(m[1], 10);
-    }
+    const n = p.phase_number;
     if (n && n >= 1 && n <= 7) return phaseLabel(n);
-    return p.phase || '';
+    return '';
   }
 
   return (
@@ -345,6 +336,15 @@ export default function Dashboard() {
                   <option value="مبتدئ">{t('home.levelBeginner')}</option>
                   <option value="متوسط">{t('home.levelIntermediate')}</option>
                   <option value="متقدم">{t('home.levelAdvanced')}</option>
+                </select>
+              </label>
+
+              <label className="field">
+                <span>{t('home.fieldTech')}</span>
+                <select value={form.tech_stack} onChange={(e) => setForm({ ...form, tech_stack: e.target.value })}>
+                  {TECH_OPTIONS.map((opt) => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
                 </select>
               </label>
 
