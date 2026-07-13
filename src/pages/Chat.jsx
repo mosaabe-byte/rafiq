@@ -102,7 +102,7 @@ export default function Chat() {
     async function loadProjects() {
       const { data, error } = await supabase
         .from("projects")
-        .select("id, name, emoji, level, phase_number, progress, platform")
+        .select("id, name, emoji, level, phase_number, progress, platform, tech_stack")
         .order("created_at", { ascending: false });
 
       if (!error && data) {

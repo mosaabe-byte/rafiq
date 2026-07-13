@@ -150,8 +150,13 @@ const roleAwareness = modelInfo && modelInfo.key === "deep"
 - مستوى المستخدم: ${project.level || "غير محدّد"}
 - المرحلة الحالية: ${project.phase_number ? `المرحلة ${project.phase_number} من 7 (هذا هو المصدر الموثوق لمكان المستخدم الآن — اعتمِده حتى لو أوحت رسائل سابقة في المحادثة بمرحلة مختلفة، فالمستخدم قد يكون تقدّم منذ ذلك الحين)` : "غير محدّدة"}
 - نسبة التقدّم: ${project.progress ?? 0}%
-- النظام الأساسي: ${project.platform || "غير محدّد"}`;
-// ما تعلّمه المستخدم في رحلة المحطات
+- النظام الأساسي: ${project.platform || "غير محدّد"}
+- تقنية المشروع: ${
+    !project.tech_stack || project.tech_stack === "لست متأكّداً بعد"
+      ? "لم يحدّدها بعد — إن سأل عن التقنية المناسبة، ساعده على اختيارها بحسب مستواه ومشروعه، ولا تفترض تقنية معيّنة."
+      : project.tech_stack
+  }`;
+   // ما تعلّمه المستخدم في رحلة المحطات
   let journey = "";
   if (completedStations && completedStations.length > 0) {
     const titles = completedStations
