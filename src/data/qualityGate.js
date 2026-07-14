@@ -60,6 +60,26 @@ export const gateUI = {
     fr: 'Remarques de Rafiq',
     en: "Rafiq's notes",
   },
+  historyTitle: {
+    ar: 'رحلة تحسّنك',
+    fr: 'Votre progression',
+    en: 'Your progress',
+  },
+  trendUp: {
+    ar: 'منذ أول قياس',
+    fr: 'depuis la première mesure',
+    en: 'since first check',
+  },
+  trendDown: {
+    ar: 'منذ أول قياس',
+    fr: 'depuis la première mesure',
+    en: 'since first check',
+  },
+  trendFlat: {
+    ar: 'ثابت منذ أول قياس',
+    fr: 'stable depuis la première mesure',
+    en: 'steady since first check',
+  },
   notesIntro: {
     ar: 'بناءً على ما سجّلته في رفيق، لاحظت ما يلي. هذه ملاحظات لطيفة لا أحكام — فأنت أدرى بمشروعك، وقد لا تكون كل خطواتك مسجّلة هنا:',
     fr: "D'après ce que vous avez enregistré dans Rafiq, j'ai remarqué ce qui suit. Ce sont des remarques bienveillantes, pas des jugements — vous connaissez mieux votre projet, et toutes vos étapes ne sont peut-être pas enregistrées ici :",

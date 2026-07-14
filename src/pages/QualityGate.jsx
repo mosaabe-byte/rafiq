@@ -9,11 +9,6 @@ import {
 } from '../data/qualityGate';
 import './QualityGate.css';
 
-function phaseNumber(phaseText) {
-  if (!phaseText) return 0;
-  const m = String(phaseText).match(/\d+/);
-  return m ? parseInt(m[0], 10) : 0;
-}
 function fmtQDate(iso, lang) {
   try {
     const locales = { ar: "ar", fr: "fr-FR", en: "en-US" };
@@ -31,6 +26,7 @@ export default function QualityGate() {
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
   const [lastResult, setLastResult] = useState(null);
+  const [history, setHistory] = useState([]);
   const [notes, setNotes] = useState([]);
 
   // بيانات رفيق الفعلية (للتحقّق من بعض الإجابات)
@@ -43,7 +39,7 @@ export default function QualityGate() {
     async function loadData() {
       const projectsRes = await supabase
         .from('projects')
-        .select('phase, phase_number')
+        .select('phase_number')
         .eq('user_id', user.id);
 
       const convRes = await supabase
@@ -56,7 +52,7 @@ export default function QualityGate() {
       const rows = projectsRes.data || [];
       let maxPhase = 0;
       rows.forEach((p) => {
-        const n = p.phase_number || phaseNumber(p.phase);
+        const n = p.phase_number;
         if (n > maxPhase) maxPhase = n;
       });
 
@@ -66,17 +62,19 @@ export default function QualityGate() {
         conversationCount: convRes.count ?? 0,
       });
 
-      // جلب آخر نتيجة سابقة لبوّابة الجودة
-      const lastRes = await supabase
+      // جلب تاريخ نتائج بوّابة الجودة (الأحدث أولاً، حتى 10 نتائج)
+      const histRes = await supabase
         .from('quality_results')
-        .select('percent, answered, total_questions, created_at')
+        .select('percent, created_at')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
+        .limit(10);
 
-      if (!cancelled && lastRes.data) {
-        setLastResult(lastRes.data);
+      if (!cancelled && histRes.data && histRes.data.length > 0) {
+        const rows = histRes.data;
+        setLastResult(rows[0]);
+        // نعكس الترتيب ليكون الأقدم أولاً (للرسم من اليسار لليمين زمنياً)
+        setHistory([...rows].reverse());
       }
     }
 
@@ -110,6 +108,10 @@ export default function QualityGate() {
           total_questions: computed.totalQuestions,
           created_at: new Date().toISOString(),
         });
+        setHistory((prev) => [
+          ...prev,
+          { percent: computed.percent, created_at: new Date().toISOString() },
+        ]);
       }
     }
   }
@@ -187,12 +189,47 @@ export default function QualityGate() {
         </div>
       )}
 
-      {/* النتيجة السابقة (تظهر قبل الحساب فقط) */}
-      {!result && lastResult && (
+      {/* النتيجة السابقة أو رسم التحسّن (يظهر قبل الحساب فقط) */}
+      {!result && history.length === 1 && (
         <div className="qg-last-result">
           <span className="qg-last-label">{tf(gateUI.lastResultLabel, lang)}</span>
-          <span className="qg-last-value">{lastResult.percent}%</span>
-          <span className="qg-last-date">{fmtQDate(lastResult.created_at, lang)}</span>
+          <span className="qg-last-value">{history[0].percent}%</span>
+          <span className="qg-last-date">{fmtQDate(history[0].created_at, lang)}</span>
+        </div>
+      )}
+
+      {!result && history.length > 1 && (
+        <div className="qg-history">
+          <div className="qg-history-head">
+            <span className="qg-history-title">{tf(gateUI.historyTitle, lang)}</span>
+            {(() => {
+              const first = history[0].percent;
+              const last = history[history.length - 1].percent;
+              const diff = last - first;
+              if (diff > 0) {
+                return <span className="qg-trend up">+{diff}% {tf(gateUI.trendUp, lang)}</span>;
+              }
+              if (diff < 0) {
+                return <span className="qg-trend down">{diff}% {tf(gateUI.trendDown, lang)}</span>;
+              }
+              return <span className="qg-trend flat">{tf(gateUI.trendFlat, lang)}</span>;
+            })()}
+          </div>
+
+          <div className="qg-chart">
+            {history.map((h, i) => (
+              <div key={i} className="qg-bar-col">
+                <div className="qg-bar-val">{h.percent}%</div>
+                <div className="qg-bar-track">
+                  <div
+                    className={'qg-bar-fill ' + resultTone(h.percent)}
+                    style={{ height: Math.max(h.percent, 4) + '%' }}
+                  />
+                </div>
+                <div className="qg-bar-date">{fmtQDate(h.created_at, lang)}</div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
