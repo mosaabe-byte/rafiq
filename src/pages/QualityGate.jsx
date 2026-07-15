@@ -49,15 +49,15 @@ export default function QualityGate() {
 
       if (cancelled) return;
 
-      const rows = projectsRes.data || [];
+      const projectRows = projectsRes.data || [];
       let maxPhase = 0;
-      rows.forEach((p) => {
+      projectRows.forEach((p) => {
         const n = p.phase_number;
         if (n > maxPhase) maxPhase = n;
       });
 
       setUserData({
-        projectCount: rows.length,
+        projectCount: projectRows.length,
         maxPhase,
         conversationCount: convRes.count ?? 0,
       });
@@ -71,10 +71,9 @@ export default function QualityGate() {
         .limit(10);
 
       if (!cancelled && histRes.data && histRes.data.length > 0) {
-        const rows = histRes.data;
-        setLastResult(rows[0]);
-        // نعكس الترتيب ليكون الأقدم أولاً (للرسم من اليسار لليمين زمنياً)
-        setHistory([...rows].reverse());
+        const histRows = histRes.data;
+        setLastResult(histRows[0]);
+        setHistory([...histRows].reverse());
       }
     }
 
