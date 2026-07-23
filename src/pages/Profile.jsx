@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import {
   IconChartBar, IconArrowLeft, IconLogout, IconLoader2, IconTrophy,
   IconRoute2, IconHistory, IconFolderPlus, IconVocabulary, IconMessage,
-  IconPencil, IconCheck, IconX,
+  IconPencil, IconCheck, IconX, IconShieldLock
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
 import { useLanguage } from '../i18n/LanguageContext';
 import './Profile.css';
+import { useNavigate } from 'react-router-dom';
 
 const LOCALES = { ar: 'ar', fr: 'fr-FR', en: 'en-US' };
 const PHASE_NUMBERS = [1, 2, 3, 4, 5, 6, 7];
@@ -34,9 +35,10 @@ function computeNextStep(data) {
 }
 
 export default function Profile() {
+  const navigate = useNavigate();
   const { user, displayName, signOut, updateProfile } = useAuth();
   const { lang, t } = useLanguage();
-
+  
   const [stats, setStats] = useState({ projects: 0, terms: 0, conversations: 0, avgProgress: 0 });
   const [phaseCounts, setPhaseCounts] = useState({});
   const [badges, setBadges] = useState([]);
@@ -168,6 +170,54 @@ export default function Profile() {
     await updateProfile({ full_name: trimmed });
     setSavingName(false);
     setEditingName(false);
+  }
+
+  // تصدير كل بيانات المستخدم في ملفّ JSON
+  const [exporting, setExporting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteText, setDeleteText] = useState('');
+
+  async function handleExport() {
+    if (!user || exporting) return;
+    setExporting(true);
+
+    const tables = ['profiles', 'projects', 'conversations', 'messages',
+      'glossary_terms', 'quality_results', 'station_completions', 'error_reports'];
+    const exportData = { exported_at: new Date().toISOString(), user_id: user.id };
+
+    for (const table of tables) {
+      const { data } = await supabase.from(table).select('*').eq('user_id', user.id);
+      exportData[table] = data || [];
+    }
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'rafiq-my-data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    setExporting(false);
+  }
+
+  // حذف كل بيانات المستخدم (بالترتيب: الأبناء قبل الآباء)
+  async function handleDeleteAccount() {
+    if (!user || deleting) return;
+    setDeleting(true);
+
+    // messages قبل conversations (علاقة تبعية)
+    const order = ['messages', 'error_reports', 'quality_results',
+      'station_completions', 'glossary_terms', 'projects', 'conversations', 'profiles'];
+
+    for (const table of order) {
+      await supabase.from(table).delete().eq('user_id', user.id);
+    }
+
+    // تسجيل الخروج بعد حذف البيانات
+    await supabase.auth.signOut();
+    navigate('/login');
   }
 
   return (
@@ -312,6 +362,50 @@ export default function Profile() {
           <div className="ns-sub">{t('profile.next_' + nextStep.key)}</div>
         </div>
       </Link>
+      <div className="profile-section data-rights">
+        <h2><IconShieldLock size={16} /> {t('profile.dataRightsTitle')}</h2>
+        <p className="data-rights-intro">{t('profile.dataRightsIntro')}</p>
+
+        <button className="data-export-btn" onClick={handleExport} disabled={exporting}>
+          {exporting ? t('profile.exporting') : t('profile.exportData')}
+        </button>
+
+        <button className="data-delete-btn" onClick={() => setShowDeleteConfirm(true)}>
+          {t('profile.deleteAccount')}
+        </button>
+      </div>
+
+      {showDeleteConfirm && (
+        <div className="modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
+          <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>{t('profile.deleteConfirmTitle')}</h3>
+            <p>{t('profile.deleteConfirmWarning')}</p>
+            <p className="delete-confirm-hint">{t('profile.deleteConfirmHint')}</p>
+            <input
+              type="text"
+              className="delete-confirm-input"
+              value={deleteText}
+              onChange={(e) => setDeleteText(e.target.value)}
+              placeholder={t('profile.deleteConfirmWord')}
+            />
+            <div className="delete-modal-actions">
+              <button
+                className="delete-modal-cancel"
+                onClick={() => { setShowDeleteConfirm(false); setDeleteText(''); }}
+              >
+                {t('profile.cancel')}
+              </button>
+              <button
+                className="delete-modal-confirm"
+                onClick={handleDeleteAccount}
+                disabled={deleting || deleteText !== t('profile.deleteConfirmWord')}
+              >
+                {deleting ? t('profile.deleting') : t('profile.deleteConfirmBtn')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-  );
+      );
 }

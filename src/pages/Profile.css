@@ -308,3 +308,112 @@
   background: #FEEAEA;
   color: #C0392B;
 }
+/* قسم بياناتك وخصوصيتك */
+.data-rights-intro {
+  font-size: 13.5px;
+  color: var(--gray-600);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.data-export-btn,
+.data-delete-btn {
+  display: block;
+  width: 100%;
+  padding: 11px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  margin-bottom: 10px;
+  transition: all 0.2s ease;
+}
+.data-export-btn {
+  background: var(--purple-50, #EEEDFE);
+  color: var(--purple, #534AB7);
+  border-color: var(--purple, #534AB7);
+}
+.data-export-btn:hover:not(:disabled) {
+  background: var(--purple, #534AB7);
+  color: #fff;
+}
+.data-delete-btn {
+  background: #fff;
+  color: #B42318;
+  border-color: #F0C4C0;
+}
+.data-delete-btn:hover {
+  background: #FDECEC;
+  border-color: #E06055;
+}
+.data-export-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* نافذة تأكيد الحذف */
+.delete-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+.delete-modal h3 {
+  color: #B42318;
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+.delete-modal p {
+  font-size: 14px;
+  color: var(--gray-700, #444);
+  line-height: 1.6;
+  margin: 0 0 10px;
+}
+.delete-confirm-hint {
+  font-weight: 600;
+  color: var(--gray-800, #333) !important;
+}
+.delete-confirm-input {
+  width: 100%;
+  padding: 10px;
+  border: 1.5px solid var(--gray-200, #ddd);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 15px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+.delete-confirm-input:focus {
+  outline: none;
+  border-color: #E06055;
+}
+.delete-modal-actions {
+  display: flex;
+  gap: 10px;
+}
+.delete-modal-cancel,
+.delete-modal-confirm {
+  flex: 1;
+  padding: 11px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+.delete-modal-cancel {
+  background: var(--gray-100, #eee);
+  color: var(--gray-700, #444);
+}
+.delete-modal-confirm {
+  background: #B42318;
+  color: #fff;
+}
+.delete-modal-confirm:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
