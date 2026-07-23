@@ -49,7 +49,7 @@ export function AuthProvider({ children }) {
     async function loadProfile() {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, full_name, created_at")
+        .select("id, full_name, country, birth_year, created_at")
         .eq("id", user.id)
         .maybeSingle();
 
@@ -71,7 +71,7 @@ export function AuthProvider({ children }) {
             id: user.id,
             full_name: user.user_metadata?.full_name || null,
           })
-          .select("id, full_name, created_at")
+          .select("id, full_name, country, birth_year, created_at")
           .maybeSingle();
         if (!cancelled) setProfile(created || null);
       }
@@ -110,7 +110,7 @@ export function AuthProvider({ children }) {
       .from("profiles")
       .update(fields)
       .eq("id", user.id)
-      .select("id, full_name, created_at")
+      .select("id, full_name, country, birth_year, created_at")
       .maybeSingle();
     if (!error && data) setProfile(data);
     return { data, error };
