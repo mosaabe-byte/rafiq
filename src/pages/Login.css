@@ -127,3 +127,21 @@
   padding: 0;
   margin-left: 4px;
 }
+.consent-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--gray-600, #666);
+  line-height: 1.5;
+  text-align: start;
+  cursor: pointer;
+}
+.consent-row input {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.consent-link {
+  color: var(--purple, #534AB7);
+  text-decoration: underline;
+}

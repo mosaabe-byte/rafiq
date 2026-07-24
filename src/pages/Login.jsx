@@ -1,8 +1,11 @@
+import { Link } from 'react-router-dom';
+import { PRIVACY_VERSION } from '../data/privacyPolicy';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { useLanguage } from '../i18n/LanguageContext';
 import './Login.css';
+import { supabase } from '../lib/supabase';
 
 export default function Login() {
   const { signIn, signUp, signInWithGoogle } = useAuth();
@@ -14,10 +17,18 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [consent, setConsent] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
+
+    // في وضع التسجيل، الموافقة على سياسة الخصوصية إلزامية
+    if (mode === 'signup' && !consent) {
+      setError(t('auth.consentRequired'));
+      return;
+    }
+
     setLoading(true);
 
     const action = mode === 'signin' ? signIn : signUp;
@@ -25,9 +36,22 @@ export default function Login() {
 
     if (error) {
       setError(error.message);
-    } else {
-      navigate('/');
+      setLoading(false);
+      return;
     }
+
+    // بعد تسجيل ناجح، سجّل نسخة الموافقة وتاريخها
+    if (mode === 'signup') {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase
+          .from('profiles')
+          .update({ consent_version: PRIVACY_VERSION, consent_at: new Date().toISOString() })
+          .eq('id', user.id);
+      }
+    }
+
+    navigate('/');
     setLoading(false);
   }
 
@@ -70,6 +94,22 @@ export default function Login() {
               minLength={6}
             />
           </label>
+
+          {mode === 'signup' && (
+            <label className="consent-row">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+              />
+              <span>
+                {t('auth.consentText')}{' '}
+                <Link to="/privacy" target="_blank" className="consent-link">
+                  {t('auth.consentLink')}
+                </Link>
+              </span>
+            </label>
+          )}
 
           {error && <div className="login-error">{error}</div>}
 

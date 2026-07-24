@@ -417,3 +417,14 @@
   opacity: 0.5;
   cursor: default;
 }
+.privacy-link {
+  display: block;
+  text-align: center;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--gray-500, #888);
+  text-decoration: underline;
+}
+.privacy-link:hover {
+  color: var(--purple, #534AB7);
+}

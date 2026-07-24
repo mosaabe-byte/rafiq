@@ -199,6 +199,9 @@ export const translations = {
       deleteConfirmBtn: "أحذف حسابي نهائياً",
       deleting: "جارٍ الحذف…",
     },
+
+    privacy: { back: 'رجوع للملف الشخصي', version: 'النسخة' },
+
     completeProfile: {
       title: "أكمل ملفّك",
       intro: "سؤالان سريعان يساعداننا على خدمتك بشكل أفضل واحترام خصوصيتك حسب بلدك.",
@@ -219,6 +222,9 @@ export const translations = {
       noAccount:"ليس لديك حساب؟", signupLink:"أنشئ حساباً",
       hasAccount:"لديك حساب فعلاً؟", signinLink:"سجّل الدخول",
       signOut:"تسجيل الخروج",
+      consentText: "أوافق على معالجة بياناتي وفق",
+      consentLink: "سياسة الخصوصية",
+      consentRequired: "يجب الموافقة على سياسة الخصوصية للمتابعة.",
     },
   },
   fr: {
@@ -392,6 +398,9 @@ export const translations = {
       deleteConfirmBtn: "Supprimer mon compte définitivement",
       deleting: "Suppression…",
     },
+
+    privacy: { back: 'Retour au profil', version: 'Version' },
+
     completeProfile: {
       title: "Complétez votre profil",
       intro: "Deux questions rapides pour mieux vous servir et respecter votre vie privée selon votre pays.",
@@ -441,6 +450,9 @@ export const translations = {
       noAccount:"Pas de compte ?", signupLink:"Créer un compte",
       hasAccount:"Déjà un compte ?", signinLink:"Se connecter",
       signOut:"Déconnexion",
+      consentText: "J'accepte le traitement de mes données selon la",
+      consentLink: "politique de confidentialité",
+      consentRequired: "Vous devez accepter la politique de confidentialité pour continuer.",
     },
   },
   en: {
@@ -643,6 +655,9 @@ export const translations = {
       deleteConfirmBtn: "Delete my account permanently",
       deleting: "Deleting…",
     },
+
+    privacy: { back: 'Back to profile', version: 'Version' },
+
     completeProfile: {
       title: "Complete your profile",
       intro: "Two quick questions to serve you better and respect your privacy according to your country.",
@@ -663,6 +678,9 @@ export const translations = {
       noAccount:"Don't have an account?", signupLink:"Sign up",
       hasAccount:"Already have an account?", signinLink:"Sign in",
       signOut:"Sign out",
+      consentText: "I agree to the processing of my data per the",
+      consentLink: "privacy policy",
+      consentRequired: "You must accept the privacy policy to continue.",
     },
   },
 };

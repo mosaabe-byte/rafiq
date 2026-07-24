@@ -373,6 +373,7 @@ export default function Profile() {
         <button className="data-delete-btn" onClick={() => setShowDeleteConfirm(true)}>
           {t('profile.deleteAccount')}
         </button>
+        <Link to="/privacy" className="privacy-link">{t('profile.privacyPolicy')}</Link>
       </div>
 
       {showDeleteConfirm && (

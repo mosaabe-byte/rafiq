@@ -12,6 +12,7 @@ import Chat from "./pages/Chat";
 import LearningPath from './pages/LearningPath';
 import SessionDetail from './pages/SessionDetail';
 import QualityGate from './pages/QualityGate';
+import Privacy from './pages/Privacy';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="quality" element={<QualityGate />} />
           <Route path="glossary" element={<Glossary />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="privacy" element={<Privacy />} />
           <Route path="chat" element={<Chat />} />
           <Route path="learn" element={<LearningPath />} />
           <Route path="learn/:id" element={<SessionDetail />} />
