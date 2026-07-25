@@ -145,3 +145,22 @@
   color: var(--purple, #534AB7);
   text-decoration: underline;
 }
+.reset-info {
+  font-size: 13.5px;
+  color: var(--gray-600, #666);
+  line-height: 1.6;
+  text-align: center;
+  margin-bottom: 18px;
+}
+.forgot-link-row {
+  text-align: center;
+  margin-top: 12px;
+}
+.forgot-link-row a {
+  font-size: 13px;
+  color: var(--purple, #534AB7);
+  text-decoration: none;
+}
+.forgot-link-row a:hover {
+  text-decoration: underline;
+}

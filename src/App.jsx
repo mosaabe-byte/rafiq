@@ -1,3 +1,4 @@
+import ForgotPassword from './pages/ForgotPassword';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './auth/AuthContext';
 import Layout from './components/Layout';
@@ -13,6 +14,7 @@ import LearningPath from './pages/LearningPath';
 import SessionDetail from './pages/SessionDetail';
 import QualityGate from './pages/QualityGate';
 import Privacy from './pages/Privacy';
+import ResetPassword from './pages/ResetPassword';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -26,6 +28,8 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route
           path="/"
           element={

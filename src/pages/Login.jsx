@@ -118,13 +118,23 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="login-divider"><span>{t('auth.or')}</span></div>
+        {/* زرّ غوغل مخفيّ مؤقّتاً حتى تفعيل مزوّد Google في سوبابيس.
+            لإعادته: احذف التعليق، وفعّل Google provider في Supabase. */}
+        {false && (
+          <>
+            <div className="login-divider"><span>{t('auth.or')}</span></div>
+            <button onClick={handleGoogle} className="btn-google">
+              {t('auth.continueGoogle')}
+            </button>
+          </>
+        )}
 
-        <button onClick={handleGoogle} className="btn-google">
-          {t('auth.continueGoogle')}
-        </button>
-
-        <div className="login-switch">
+        {mode === 'signin' && (
+          <div className="forgot-link-row">
+            <Link to="/forgot-password">{t('auth.forgotLink')}</Link>
+          </div>
+        )}
+                  <div className="login-switch">
           {mode === 'signin' ? (
             <span>{t('auth.noAccount')} <button onClick={() => setMode('signup')}>{t('auth.signupLink')}</button></span>
           ) : (
