@@ -113,7 +113,7 @@ const roleAwareness = modelInfo && modelInfo.key === "deep"
 أنت الآن تعمل بوصفك «رفيق العميق» — النموذج الأقوى والأعمق. حين تعرّف بنفسك، اذكر أنك «رفيق العميق». أنت القمّة المتاحة، فلا تقترح على المستخدم الانتقال لنموذج أقوى (أنت هو). واجه المهامّ الصعبة بثقة وعمق.`
     : `
 
-أنت الآن تعمل بوصفك «رفيق السريع» — النموذج السريع الخفيف للأسئلة اليومية. حين تعرّف بنفسك، اذكر أنك «رفيق السريع». إن واجهت مهمّة معقّdة تتجاوز ما تتقنه بثقة، اقترح على المستخدم بلطف تجربة «رفيق العميق» (النموذج الأقوى) عبر مبدّل النموذج في أعلى المحادثة.`;
+أنت الآن تعمل بوصفك «رفيق السريع» — النموذج السريع الخفيف للأسئلة اليومية. حين تعرّف بنفسك، اذكر أنك «رفيق السريع».إن واجهت مهمّة معقّدة تتجاوز ما تتقنه بثقة، اقترح على المستخدم بلطف تجربة «رفيق العميق» (النموذج الأقوى) عبر مبدّل النموذج في أعلى المحادثة.`;
 
   const boundaries = `
 
@@ -180,6 +180,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  const startedAt = Date.now();
+  let modelKeyForLog = "unknown";
+
   try {
     const { messages, project, lesson, lang, modelKey, completedStations } = req.body;
 
@@ -187,9 +190,9 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "messages مطلوبة" });
     }
 
-    // اختيار النموذج من السجلّ المركزي.
-    // getModel يحمي تلقائياً: أي مفتاح خاطئ أو غائب يرجع للنموذج الافتراضي (السريع).
+    // اختيار النموذج من السجلّ المركزي (getModel يحمي تلقائياً بالرجوع للافتراضي).
     const model = getModel(modelKey);
+    modelKeyForLog = model.key;
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -208,7 +211,13 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const errText = await response.text();
-      return res.status(response.status).json({ error: errText });
+      // مراقبة: يُسجَّل الخطأ كاملاً على الخادم (يظهر في سجلّات Vercel)، ولا يُرسَل نصّه الخام للمستخدم.
+      console.error(
+        `[RAFIQ_ERROR] upstream status=${response.status} model=${modelKeyForLog} ms=${Date.now() - startedAt} detail=${errText.slice(0, 500)}`
+      );
+      return res.status(response.status).json({
+        error: "تعذّر الوصول إلى رفيق الآن. حاول بعد لحظات.",
+      });
     }
 
     const data = await response.json();
@@ -217,9 +226,19 @@ export default async function handler(req, res) {
       .map((block) => (block.type === "text" ? block.text : ""))
       .join("");
 
-    // نُرجع مفتاح النموذج المستعمل (للواجهة، إن أرادت عرضه أو عدّ الاستهلاك لكل نموذج)
+    // إشارة استخدام خفيفة: بيانات مجرّدة فقط (لا محتوى محادثة، لا اسم مشروع) — تطبيقاً لتقليل البيانات.
+    console.log(
+      `[RAFIQ_USAGE] model=${modelKeyForLog} mode=${lesson ? "lesson" : "chat"} phase=${project?.phase_number ?? "-"} level=${project?.level ?? "-"} turns=${messages.length} ms=${Date.now() - startedAt}`
+    );
+
     return res.status(200).json({ reply, usage: data.usage, modelKey: model.key });
   } catch (error) {
-        return res.status(500).json({ error: error.message });
+    // مراقبة: يُسجَّل الخطأ الداخلي على الخادم، ويُرَدّ للمستخدم رسالة عامّة (لا تفاصيل داخلية).
+    console.error(
+      `[RAFIQ_ERROR] handler model=${modelKeyForLog} ms=${Date.now() - startedAt} message=${error.message}`
+    );
+    return res.status(500).json({
+      error: "حدث خطأ غير متوقّع. حاول مرّة أخرى.",
+    });
   }
 }
