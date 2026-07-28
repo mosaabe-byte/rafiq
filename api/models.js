@@ -25,7 +25,7 @@ export const MODELS = {
       fr: "Rapide et léger — pour les questions quotidiennes, explications et orientation",
       en: "Fast and light — for daily questions, explanations, and guidance",
     },
-    dailyLimit: 10,
+    dailyLimit: 20,
     maxTokens: 1024,
   },
 
@@ -42,7 +42,7 @@ export const MODELS = {
       fr: "Plus puissant et profond — pour les tâches difficiles : correction d'erreurs complexes, révision précise, décisions complexes",
       en: "Stronger and deeper — for hard tasks: untangling complex errors, precise review, complex decisions",
     },
-    dailyLimit: 3,
+    dailyLimit: 5,
     maxTokens: 2048,
   },
 };
