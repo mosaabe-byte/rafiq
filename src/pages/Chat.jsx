@@ -1,5 +1,5 @@
 // src/pages/Chat.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -9,7 +9,7 @@ import { useLanguage } from "../i18n/LanguageContext";
 import "./Chat.css";
 
 // الحدود اليومية لكل نموذج (مطابقة لسجلّ النماذج api/models.js)
-const DAILY_LIMITS = { fast: 10, deep: 3 };
+const DAILY_LIMITS = { fast: 20, deep: 5 };
 function getLimit(key) {
   return DAILY_LIMITS[key] ?? DAILY_LIMITS.fast;
 }
@@ -29,6 +29,7 @@ export default function Chat() {
   const [conversationId, setConversationId] = useState(null);
 
   const [messages, setMessages] = useState([]);
+  const messagesEndRef = useRef(null);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(false);
@@ -48,6 +49,11 @@ export default function Chat() {
     }
     return str;
   }
+
+  // التمرير التلقائي لآخر رسالة عند كل تحديث
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [messages, loading, loadingHistory]);
 
   async function submitReport(messageIndex) {
     if (reportSending) return;
@@ -201,7 +207,7 @@ export default function Chat() {
     }
 
     loadOrCreateConversation();
-  }, [selectedProjectId, user]);
+  }, [selectedProjectId, user?.id]);
 
   async function sendMessage() {
     const text = input.trim();
@@ -392,6 +398,7 @@ export default function Chat() {
         ))}
 
         {loading && <p className="chat-hint">{t("chat.typing")}</p>}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* تنبيه بلوغ الحدّ اليومي */}
