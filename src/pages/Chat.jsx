@@ -26,6 +26,7 @@ export default function Chat() {
   const [selectedProjectId, setSelectedProjectId] = useState("");
   const [modelKey, setModelKey] = useState("fast");
   const [completedStations, setCompletedStations] = useState([]);
+  const [userName, setUserName] = useState("");
   const [conversationId, setConversationId] = useState(null);
 
   const [messages, setMessages] = useState([]);
@@ -82,24 +83,34 @@ export default function Chat() {
     }
   }
 
-  // جلب المحطات التي أكملها المستخدم (لسياق رفيق)
+  // جلب المحطات المكتملة واسم المستخدم (لسياق رفيق والترحيب)
   useEffect(() => {
     if (!user) return;
     let cancelled = false;
 
-    async function loadCompletedStations() {
-      const { data, error } = await supabase
+    async function loadUserContext() {
+      const { data: stations, error: stationsError } = await supabase
         .from("station_completions")
         .select("station_number")
         .eq("user_id", user.id)
         .order("station_number", { ascending: true });
 
-      if (!cancelled && !error && data) {
-        setCompletedStations(data.map((r) => r.station_number));
+      if (!cancelled && !stationsError && stations) {
+        setCompletedStations(stations.map((r) => r.station_number));
+      }
+
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("name")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (!cancelled && !profileError && profile?.name) {
+        setUserName(profile.name);
       }
     }
 
-    loadCompletedStations();
+    loadUserContext();
     return () => { cancelled = true; };
   }, [user]);
 
@@ -342,9 +353,7 @@ export default function Chat() {
                 user?.user_metadata?.full_name ||
                 "";
               const envReady = completedStations.includes(1);
-              const greeting = name
-                ? `مرحباً بك ${name} 🌱`
-                : "مرحباً بك 🌱";
+              const greeting = "مرحباً بك صديقي 🌱";
 
               if (envReady) {
                 return (
