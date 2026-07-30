@@ -334,7 +334,54 @@ export default function Chat() {
         )}
 
         {selectedProjectId && !loadingHistory && messages.length === 0 && (
-          <p className="chat-hint">{t("chat.firstQuestion")}</p>
+          <div className="chat-welcome">
+            {(() => {
+              const p = projects.find((pr) => pr.id === Number(selectedProjectId));
+              const name =
+                user?.user_metadata?.name ||
+                user?.user_metadata?.full_name ||
+                "";
+              const envReady = completedStations.includes(1);
+              const greeting = name
+                ? `مرحباً بك ${name} 🌱`
+                : "مرحباً بك 🌱";
+
+              if (envReady) {
+                return (
+                  <>
+                    <p className="chat-welcome-title">{greeting}</p>
+                    <p>
+                      أهلاً بعودتك — أراك بدأت مشروعاً جديداً
+                      {p?.name ? ` «${p.name}»` : ""}. بيئتك جاهزة من قبل،
+                      فلا داعي لإعدادها ثانيةً. لنبدأ إذاً من التخطيط: ما الفكرة
+                      التي تريد أن نحوّلها إلى مشروع هذه المرّة؟
+                    </p>
+                    <p className="chat-welcome-hint">
+                      اكتب سؤالك في الأسفل، وأنا معك خطوة خطوة.
+                    </p>
+                  </>
+                );
+              }
+
+              return (
+                <>
+                  <p className="chat-welcome-title">{greeting}</p>
+                  <p>
+                    أنا رفيقك في رحلة بناء مشروعك
+                    {p?.name ? ` «${p.name}»` : ""}. لعلّك تسأل الآن: من أين أبدأ،
+                    وما أول خطوة؟ هذا طبيعيّ تماماً لكل مبتدئ — ولا تقلق، فأنا هنا
+                    لآخذ بيدك خطوة خطوة حتى تنجزه.
+                  </p>
+                  <p>
+                    لكن أخبرني أولاً: هل أعددت بيئة التطوير (Node و VS Code) من
+                    قبل، أم نُعدّها معاً؟ إن كانت جاهزة، نبدأ من التخطيط مباشرةً؛
+                    وإن لم تكن، فمحطتنا الأولى هي إعداد بيئتك — وأرافقك فيها.
+                  </p>
+                  <p className="chat-welcome-hint">أخبرني في الأسفل، وأنا معك.</p>
+                </>
+              );
+            })()}
+          </div>
         )}
 
         {messages.map((m, i) => (
