@@ -389,3 +389,14 @@
   color: var(--gray-500);
   line-height: 1.4;
 }
+.guide-band { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 8px; }
+.band-check {
+  flex: 0 0 auto; width: 20px; height: 20px; margin-top: 2px;
+  border: 1.5px solid #c9c2e8; border-radius: 6px; background: #fff;
+  display: grid; place-items: center; cursor: pointer; color: #fff;
+  transition: all .15s;
+}
+.band-check.checked { background: #5B47D6; border-color: #5B47D6; }
+.band-check:disabled { cursor: default; }
+.guide-band.done .band-text { color: #8b88a0; text-decoration: line-through; }
+.band-text { line-height: 1.7; }

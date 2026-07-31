@@ -22,6 +22,7 @@ export default function Roadmap() {
   const [openGuide, setOpenGuide] = useState(null);
   const [celebration, setCelebration] = useState(null); // {type: 'phase'|'project', text}
   const [advancing, setAdvancing] = useState(false);
+  const [completedBands, setCompletedBands] = useState([]); // ["phase-band"] مثل "1-2"
 
   async function completePhase() {
     if (!selected || advancing) return;
@@ -59,6 +60,31 @@ export default function Roadmap() {
     setAdvancing(false);
   }
 
+  async function toggleBand(phaseNum, bandNum) {
+    if (!selected) return;
+    const key = `${selected.id}-${phaseNum}-${bandNum}`;
+    if (completedBands.includes(key)) return; // مُنجَز أصلاً، لا نكرّر
+
+    // تحديث محلي فوري (ليرى المستخدم ✓ بلا انتظار)
+    setCompletedBands((prev) => [...prev, key]);
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { error } = await supabase.from('band_completions').insert({
+      user_id: user.id,
+      project_id: selected.id,
+      phase_number: phaseNum,
+      band_number: bandNum,
+    });
+
+    // إن فشل الحفظ، نتراجع عن التحديث المحلي
+    if (error) {
+      setCompletedBands((prev) => prev.filter((k) => k !== key));
+      console.error('تعذّر حفظ البند:', error.message);
+    }
+  }
+
   const phases = [
     { n: 1, title: t('roadmap.phase1title'), desc: t('roadmap.phase1desc') },
     { n: 2, title: t('roadmap.phase2title'), desc: t('roadmap.phase2desc') },
@@ -83,6 +109,16 @@ export default function Roadmap() {
         setProjects(data || []);
         setCloudOk(true);
         if (data && data.length > 0) setSelectedId(data[0].id);
+
+        // جلب البنود المُنجَزة لكل مشاريع المستخدم
+        const { data: bands } = await supabase
+          .from('band_completions')
+          .select('project_id, phase_number, band_number');
+        if (bands) {
+          setCompletedBands(
+            bands.map((b) => `${b.project_id}-${b.phase_number}-${b.band_number}`)
+          );
+        }
       }
       setLoading(false);
     }
@@ -194,9 +230,24 @@ export default function Roadmap() {
 
                       <div className="phase-guide">
                         <ol className="guide-steps">
-                          {(t('roadmap.guides')[ph.n]?.steps || []).map((step, i) => (
-                            <li key={i}>{step}</li>
-                          ))}
+                          {(t('roadmap.guides')[ph.n]?.steps || []).map((step, i) => {
+                            const bandNum = i + 1;
+                            const key = selected ? `${selected.id}-${ph.n}-${bandNum}` : '';
+                            const bandDone = completedBands.includes(key);
+                            return (
+                              <li key={i} className={'guide-band' + (bandDone ? ' done' : '')}>
+                                <button
+                                  className={'band-check' + (bandDone ? ' checked' : '')}
+                                  onClick={() => toggleBand(ph.n, bandNum)}
+                                  disabled={!selected || bandDone}
+                                  aria-label="أتممت هذا البند"
+                                >
+                                  {bandDone && <IconCheck size={13} />}
+                                </button>
+                                <span className="band-text">{step}</span>
+                              </li>
+                            );
+                          })}
                         </ol>
                         {selected && (
                           <button
