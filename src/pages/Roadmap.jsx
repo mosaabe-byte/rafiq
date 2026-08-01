@@ -32,18 +32,16 @@ export default function Roadmap() {
     const isLastPhase = current >= phases.length;
     const nextPhase = isLastPhase ? current : current + 1;
 
-    const newProgress = Math.round((nextPhase / phases.length) * 100);
-
     const { error } = await supabase
       .from('projects')
-      .update({ phase_number: nextPhase, progress: newProgress })
+      .update({ phase_number: nextPhase })
       .eq('id', selected.id);
 
     if (!error) {
       // تحديث محلي فوري
       setProjects((prev) =>
         prev.map((p) =>
-          p.id === selected.id ? { ...p, phase_number: nextPhase, progress: newProgress } : p
+          p.id === selected.id ? { ...p, phase_number: nextPhase } : p
         )
       );
 
@@ -82,10 +80,27 @@ export default function Roadmap() {
     if (error) {
       setCompletedBands((prev) => prev.filter((k) => k !== key));
       console.error('تعذّر حفظ البند:', error.message);
+      return;
     }
+
+    // نجح الحفظ: أعِد حساب التقدّم من البنود (نمرّر القائمة المحدّثة صراحةً)
+    recalcProgress(selected.id, [...completedBands, key]);
   }
 
-  const phases = [
+  // يحسب التقدّم من البنود المُنجَزة (كلّي عبر 28 بنداً) ويحفظه
+  async function recalcProgress(projectId, bandsList) {
+    const totalBands = phases.length * 4;
+    const doneCount = bandsList.filter((k) => k.startsWith(`${projectId}-`)).length;
+    const newProgress = Math.round((doneCount / totalBands) * 100);
+
+    setProjects((prev) =>
+      prev.map((p) => (p.id === projectId ? { ...p, progress: newProgress } : p))
+    );
+
+    await supabase.from('projects').update({ progress: newProgress }).eq('id', projectId);
+  }
+
+      const phases = [
     { n: 1, title: t('roadmap.phase1title'), desc: t('roadmap.phase1desc') },
     { n: 2, title: t('roadmap.phase2title'), desc: t('roadmap.phase2desc') },
     { n: 3, title: t('roadmap.phase3title'), desc: t('roadmap.phase3desc') },
