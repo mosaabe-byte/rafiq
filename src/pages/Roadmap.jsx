@@ -268,7 +268,7 @@ export default function Roadmap() {
                             disabled={advancing}
                           >
                             {advancing ? <IconLoader2 size={15} className="spin" /> : <IconCheck size={15} />}
-                            {ph.n >= phases.length ? 'أنهيتُ المشروع! 🚀' : 'أكملتُ هذه المرحلة'}
+                            {ph.n >= phases.length ? t('roadmap.finishProject') : t('roadmap.completePhase')}
                           </button>
                         )}
                       </div>

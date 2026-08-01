@@ -40,6 +40,8 @@ export const translations = {
       qualityGateTitle: "بوّابة الجودة",
       qualityGateSub: "راجع مشروعك قبل نشره للعالم",
       askRafiq:"اسأل رفيق عن هذه المرحلة",
+      completePhase:"أكملتُ هذه المرحلة",
+      finishProject:"أنهيتُ المشروع! 🚀",
       guides: {
         1: { steps: [
           "اكتب فكرة مشروعك في جملة واحدة واضحة.",
@@ -287,6 +289,8 @@ export const translations = {
       qualityGateTitle: "La porte de la qualité",
       qualityGateSub: "Révisez votre projet avant de le publier",
       askRafiq:"Demander a Rafiq sur cette etape",
+      completePhase:"J ai termine cette etape",
+      finishProject:"J ai fini le projet ! 🚀",
     guides: {
         1: { steps: [
           "Ecrivez l idee de votre projet en une phrase claire.",
@@ -534,6 +538,8 @@ export const translations = {
       qualityGateTitle: "The Quality Gate",
       qualityGateSub: "Review your project before publishing it",
       askRafiq:"Ask Rafiq about this phase",
+      completePhase:"I completed this phase",
+      finishProject:"I finished the project! 🚀",
     guides: {
 1: { steps: [
           "Write your project idea in one clear sentence.",
