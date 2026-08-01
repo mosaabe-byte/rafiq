@@ -26,6 +26,7 @@ export default function Chat() {
   const [selectedProjectId, setSelectedProjectId] = useState("");
   const [modelKey, setModelKey] = useState("fast");
   const [completedStations, setCompletedStations] = useState([]);
+  const [completedBands, setCompletedBands] = useState([]); // [{phase, band}] للمشروع المختار
   const [userName, setUserName] = useState("");
   const [conversationId, setConversationId] = useState(null);
 
@@ -55,6 +56,32 @@ export default function Chat() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, loading, loadingHistory]);
+
+  // جلب البنود المُنجَزة للمشروع المختار (لسياق رفيق)
+  useEffect(() => {
+    if (!user || !selectedProjectId) {
+      setCompletedBands([]);
+      return;
+    }
+    let cancelled = false;
+
+    async function loadBands() {
+      const { data, error } = await supabase
+        .from('band_completions')
+        .select('phase_number, band_number')
+        .eq('user_id', user.id)
+        .eq('project_id', selectedProjectId)
+        .order('phase_number', { ascending: true })
+        .order('band_number', { ascending: true });
+
+      if (!cancelled && !error && data) {
+        setCompletedBands(data.map((b) => ({ phase: b.phase_number, band: b.band_number })));
+      }
+    }
+
+    loadBands();
+    return () => { cancelled = true; };
+  }, [user?.id, selectedProjectId]);
 
   async function submitReport(messageIndex) {
     if (reportSending) return;
@@ -259,6 +286,7 @@ export default function Chat() {
           lang,
           modelKey,
           completedStations,
+          completedBands,
         }),
       });
 

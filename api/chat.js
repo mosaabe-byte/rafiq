@@ -58,7 +58,18 @@ ${lesson.content || ""}`;
   return base + language + rules + context;
 }
 
-function buildSystemPrompt(project, lang, modelInfo, completedStations) {
+// نصوص بنود المراحل (لتعريف رفيق بما أنجزه المستخدم فعلاً)
+const PHASE_BANDS = {
+  1: ["اكتب فكرة مشروعك في جملة واحدة واضحة.", "حدّد المشكلة التي يحلّها مشروعك ومن هم المستخدمون.", "اكتب قائمة بأهم 3 وظائف يجب أن ينجزها المشروع.", "ارسم تصوّراً بسيطاً للنتيجة النهائية على ورقة."],
+  2: ["ارسم الشاشات الرئيسية بشكل تخطيطي بسيط.", "حدّد كيف ينتقل المستخدم من شاشة إلى أخرى.", "اختر الألوان والخطوط الأساسية لمشروعك.", "راجع التصميم وتأكد أنه بسيط وسهل الاستخدام."],
+  3: ["ثبّت الأدوات اللازمة (محرّر الكود، Node.js).", "أنشئ مجلد المشروع وافتحه في محرّر الكود.", "هيّئ المشروع الأساسي وتأكد أنه يعمل محلياً.", "اربط المشروع بمستودع Git لحفظ نسخك."],
+  4: ["ابنِ الشاشات واحدة تلو الأخرى حسب تصميمك.", "اكتب الكود لكل وظيفة من الوظائف الأساسية.", "اختبر كل جزء بمجرد الانتهاء منه.", "أصلح الأخطاء أولاً بأول قبل الانتقال للتالي."],
+  5: ["اربط الشاشات ببعضها عبر التنقّل.", "اربط الأزرار والنماذج بالوظائف المناسبة.", "تأكد أن البيانات تنتقل بشكل صحيح بين الأجزاء.", "اختبر الرحلة الكاملة للمستخدم."],
+  6: ["اختر مكان حفظ البيانات (قاعدة بيانات سحابية).", "صمّم جداول البيانات التي يحتاجها مشروعك.", "اربط التطبيق بقاعدة البيانات للقراءة والكتابة.", "أضف حماية البيانات حتى يرى كل مستخدم بياناته فقط."],
+  7: ["جهّز المشروع للنشر وتأكد أنه يعمل دون أخطاء.", "ارفع الكود إلى مستودع Git على الإنترنت.", "اربط المستودع بمنصّة نشر (مثل Vercel).", "انشر المشروع وشارك الرابط مع الآخرين."],
+};
+
+function buildSystemPrompt(project, lang, modelInfo, completedStations, completedBands) {
   const langMap = {
     ar: "العربية",
     fr: "الفرنسية (Français)",
@@ -183,6 +194,26 @@ const compass = `
       ? "لم يحدّدها بعد — إن سأل عن التقنية المناسبة، ساعده على اختيارها بحسب مستواه ومشروعه، ولا تفترض تقنية معيّنة."
       : project.tech_stack
   }`;
+
+// البنود التي أنجزها المستخدم فعلاً في هذا المشروع (بوصلة التقدّم)
+  let bandsProgress = "";
+  if (completedBands && completedBands.length > 0) {
+    const lines = completedBands
+      .map((b) => {
+        const text = PHASE_BANDS[b.phase]?.[b.band - 1];
+        return text ? `- المرحلة ${b.phase}: ${text}` : null;
+      })
+      .filter(Boolean)
+      .join("\n");
+    if (lines) {
+      bandsProgress = `
+
+بوصلة التقدّم — ما أنجزه المستخدم فعلاً في هذا المشروع (بنود مؤكّدة):
+${lines}
+استفد من هذا بدقّة: ابنِ على ما أنجزه بدل تكراره، وأشِر إليه بطبيعية («أراك حدّدت مشكلتك، لننتقل إلى…»). ما لم يظهر هنا لم يُنجَز بعد — فلا تفترض إنجازه. هذه بوصلتك لتعرف أين هو تحديداً، فلا تسأله عمّا تعرفه من هنا.`;
+    }
+  }
+
    // ما تعلّمه المستخدم في رحلة المحطات
   let journey = "";
   if (completedStations && completedStations.length > 0) {
@@ -198,7 +229,7 @@ const compass = `
     }
   }
 
-return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + compass + boundaries + context + journey;
+return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + compass + boundaries + context + bandsProgress + journey;
 }
 
 export default async function handler(req, res) {
@@ -210,7 +241,7 @@ export default async function handler(req, res) {
   let modelKeyForLog = "unknown";
 
   try {
-    const { messages, project, lesson, lang, modelKey, completedStations } = req.body;
+    const { messages, project, lesson, lang, modelKey, completedStations, completedBands } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "messages مطلوبة" });
@@ -230,7 +261,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: model.id,
         max_tokens: model.maxTokens,
-        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations),
+        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands),
         messages: messages,
       }),
     });
