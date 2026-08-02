@@ -69,6 +69,17 @@ const PHASE_BANDS = {
   7: ["جهّز المشروع للنشر وتأكد أنه يعمل دون أخطاء.", "ارفع الكود إلى مستودع Git على الإنترنت.", "اربط المستودع بمنصّة نشر (مثل Vercel).", "انشر المشروع وشارك الرابط مع الآخرين."],
 };
 
+// تقابل مراحل المشروع بمحطات التعلّم (من جدول التقابل الموثّق)
+const PHASE_STATION_MAP = {
+  1: [9],         // التخطيط ↔ محطة 9
+  2: [10],        // التصميم ↔ محطة 10
+  3: [1, 11],     // الإعداد ↔ محطة 1 (+ 11 لـGit)
+  4: [2, 3],      // البناء ↔ محطتا 2 و3
+  5: [2],         // الربط ↔ محطة 2 (تقابل ضعيف)
+  6: [4, 5, 7],   // البيانات ↔ محطات 4، 5، 7
+  7: [8, 11, 12], // السحابة والنشر ↔ محطات 8، 11، 12
+};
+
 function buildSystemPrompt(project, lang, modelInfo, completedStations, completedBands) {
   const langMap = {
     ar: "العربية",
@@ -214,6 +225,25 @@ ${lines}
     }
   }
 
+  // جسر التعلّم: يربط مرحلة المشروع الحالية بمحطة التعلّم المقابلة
+  let learningBridge = "";
+  if (project && project.phase_number) {
+    const stationNums = PHASE_STATION_MAP[project.phase_number] || [];
+    if (stationNums.length > 0) {
+      const done = completedStations || [];
+      const parts = stationNums.map((n) => {
+        const isDone = done.includes(n);
+        return `- محطة ${n}: ${STATION_TITLES[n]}${isDone ? " — أكملها المستخدم" : " — لم يكملها بعد"}`;
+      });
+      learningBridge = `
+
+جسر التعلّم — المهارة وراء مرحلة المستخدم الحالية:
+مرحلة المشروع الحالية تقابلها محطة (أو محطات) في رحلة التعلّم تشرح مهارتها:
+${parts.join("\n")}
+استعمل هذا بحكمة: إن أكمل المستخدم المحطة المقابلة، فهو تعلّم المهارة — ابنِ على ذلك وسرّع التطبيق («تعلّمتَ هذا في محطة كذا، لنطبّقه على مشروعك مباشرة»)، لا تُعِد شرح الأساسيات. وإن لم يكملها وتعثّر في التطبيق، يمكنك أن تحيله إليها بلطف («إن أردت شرحاً خطوة بخطوة، محطة كذا تشرح هذا»). لا تُلزمه بالمحطة — هي مساعدة إن احتاجها، لا شرط. رحلة التعلّم رصيدٌ يتراكم عبر مشاريعه، وبنود المشروع تطبيقٌ لذلك الرصيد.`;
+    }
+  }
+
    // ما تعلّمه المستخدم في رحلة المحطات
   let journey = "";
   if (completedStations && completedStations.length > 0) {
@@ -229,7 +259,7 @@ ${lines}
     }
   }
 
-return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + compass + boundaries + context + bandsProgress + journey;
+return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + compass + boundaries + context + bandsProgress + learningBridge + journey;
 }
 
 export default async function handler(req, res) {
