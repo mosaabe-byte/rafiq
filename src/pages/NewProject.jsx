@@ -133,17 +133,30 @@ export default function NewProject() {
       return;
     }
 
-    const { error } = await supabase
+    const { data: created, error } = await supabase
       .from('projects')
-      .insert([{ ...project, user_id: user.id }]);
-    setSaving(false);
+      .insert([{ ...project, user_id: user.id }])
+      .select()
+      .single();
     if (error) {
+      setSaving(false);
       console.error('تعذّر حفظ المشروع:', error.message);
       if (mode === 'chat') {
         setMessages((prev) => [...prev, { from: 'bot', text: 'حدث خطأ أثناء الحفظ. تأكد من اتصالك وحاول مرة أخرى.' }]);
       }
       return;
     }
+
+    // الإحداث يُنجز البندين 1 و2 من التخطيط (الفكرة والمستخدمون) — نسجّلهما تلقائياً
+    if (created) {
+      const bands = [
+        { user_id: user.id, project_id: created.id, phase_number: 1, band_number: 1 },
+        { user_id: user.id, project_id: created.id, phase_number: 1, band_number: 2 },
+      ];
+      await supabase.from('band_completions').insert(bands);
+    }
+
+    setSaving(false);
     setSavedName(project.name);
     setDone(true);
   }
