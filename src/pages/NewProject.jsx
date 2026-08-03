@@ -98,6 +98,7 @@ export default function NewProject() {
       level: answers.level,
       platform: answers.platform,
       tech_stack: answers.tech_stack || null,
+      audience: answers.audience || null,
       progress: 0,
       phase_number: 1,
     };
@@ -113,6 +114,7 @@ export default function NewProject() {
       level: r.level,
       platform: r.platform,
       tech_stack: 'لست متأكّداً بعد',
+      audience: null,
       progress: 0,
       phase_number: 1,
     });
