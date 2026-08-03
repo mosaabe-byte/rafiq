@@ -154,6 +154,10 @@ export default function NewProject() {
         { user_id: user.id, project_id: created.id, phase_number: 1, band_number: 2 },
       ];
       await supabase.from('band_completions').insert(bands);
+
+      // تحديث التقدّم ليعكس البندين المُنجَزين (2 من 28)
+      const initialProgress = Math.round((2 / 28) * 100);
+      await supabase.from('projects').update({ progress: initialProgress }).eq('id', created.id);
     }
 
     setSaving(false);
