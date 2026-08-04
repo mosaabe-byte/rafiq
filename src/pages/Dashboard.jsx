@@ -37,6 +37,7 @@ export default function Dashboard() {
   const { t, lang } = useLanguage();
   const [filter, setFilter] = useState('all');
   const [projects, setProjects] = useState([]);
+  const [confirmDelete, setConfirmDelete] = useState(null); // المشروع المنتظر تأكيد حذفه
   const [loading, setLoading] = useState(true);
   const [cloudOk, setCloudOk] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -170,6 +171,7 @@ export default function Dashboard() {
     const { error } = await supabase.from('projects').delete().eq('id', id);
     if (error) { console.error('تعذّر الحذف:', error.message); return; }
     setProjects((prev) => prev.filter((p) => p.id !== id));
+    setConfirmDelete(null); // أغلق نافذة التأكيد بعد الحذف
   }
 
   // عرض اسم المرحلة في بطاقة المشروع حسب اللغة (نفضّل phase_number إن وُجد)
@@ -287,7 +289,7 @@ export default function Dashboard() {
                 <button className="pc-action-btn" onClick={() => openEdit(p)}>
                   <IconPencil size={14} /> {t('home.edit')}
                 </button>
-                <button className="pc-action-btn danger" onClick={() => deleteProject(p.id)}>
+                <button className="pc-action-btn danger" onClick={() => setConfirmDelete(p)}>
                   <IconTrash size={14} /> {t('home.delete')}
                 </button>
               </div>
@@ -376,6 +378,31 @@ export default function Dashboard() {
               <button className="btn-secondary" onClick={() => setShowModal(false)}>{t('home.cancel')}</button>
               <button className="btn-primary" onClick={saveProject}>
                 {editingId ? t('home.saveEdit') : t('home.saveAdd')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {confirmDelete && (
+        <div className="modal-overlay" onClick={() => setConfirmDelete(null)}>
+          <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>حذف المشروع</h3>
+            <p>
+              هل تريد حقاً حذف «{confirmDelete.name}»؟
+              سيُحذف المشروع وكل بنوده نهائياً، ولا يمكن التراجع.
+            </p>
+            <div className="delete-modal-actions">
+              <button
+                className="delete-modal-cancel"
+                onClick={() => setConfirmDelete(null)}
+              >
+                إلغاء
+              </button>
+              <button
+                className="delete-modal-confirm"
+                onClick={() => deleteProject(confirmDelete.id)}
+              >
+                نعم، احذف
               </button>
             </div>
           </div>
