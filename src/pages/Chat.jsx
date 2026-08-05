@@ -399,6 +399,9 @@ export default function Chat() {
               const lastBand = doneInPhase[doneInPhase.length - 1];
               const lastText = lastBand ? PHASE_BANDS[phase]?.[lastBand - 1] : null;
               const phaseComplete = doneInPhase.length >= 4;
+              // بنود منجزة في هذا المشروع عبر أي مرحلة (تاريخ المشروع)
+              const doneInProject = completedBands.length;
+              const isMidJourney = doneInProject > 0 && phase > 1;
 
               // حالة 1: أنجز بنوداً في مرحلته — يذكّره أين توقّف
               if (lastText && !phaseComplete) {
@@ -438,6 +441,22 @@ export default function Chat() {
                       أهلاً بعودتك إلى «{p?.name}». بيئتك جاهزة من قبل، فلنبدأ
                       التخطيط لمشروعك مباشرةً — أول خطوة أن نحدّد بوضوح مَن
                       سيستخدمه وما أهمّ ما يفعله. جاهز نبدأ؟
+                    </p>
+                    <p className="chat-welcome-hint">اكتب في الأسفل، وأنا معك خطوة خطوة.</p>
+                  </>
+                );
+              }
+
+              // حالة 3.5: عائد له تاريخ في المشروع لكن مرحلته الحالية فارغة (انتقل إليها للتوّ)
+              if (isMidJourney) {
+                const phaseName = t('roadmap.phase' + phase + 'title');
+                return (
+                  <>
+                    <p className="chat-welcome-title">{greeting}</p>
+                    <p>
+                      أهلاً بعودتك إلى «{p?.name}». أنجزتَ ما قبل هذه المرحلة،
+                      وأنت الآن في «{phaseName}». لنبدأ خطواتها — رافقني بحسب
+                      ما وصلت إليه.
                     </p>
                     <p className="chat-welcome-hint">اكتب في الأسفل، وأنا معك خطوة خطوة.</p>
                   </>
