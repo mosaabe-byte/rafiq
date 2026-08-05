@@ -38,6 +38,7 @@ export default function Dashboard() {
   const [filter, setFilter] = useState('all');
   const [projects, setProjects] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(null); // المشروع المنتظر تأكيد حذفه
+  const [deleteError, setDeleteError] = useState('');
   const [loading, setLoading] = useState(true);
   const [cloudOk, setCloudOk] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -169,9 +170,15 @@ export default function Dashboard() {
 
   async function deleteProject(id) {
     const { error } = await supabase.from('projects').delete().eq('id', id);
-    if (error) { console.error('تعذّر الحذف:', error.message); return; }
+    if (error) {
+      console.error('تعذّر الحذف:', error.message);
+      setDeleteError('تعذّر حذف المشروع. تحقّق من اتصالك بالإنترنت وحاول مجدّداً.');
+      return; // لا نُزيل من الواجهة إن فشل حذف القاعدة
+    }
+    // نجح الحذف من القاعدة فعلاً: الآن نُزيله من الواجهة
     setProjects((prev) => prev.filter((p) => p.id !== id));
-    setConfirmDelete(null); // أغلق نافذة التأكيد بعد الحذف
+    setConfirmDelete(null);
+    setDeleteError('');
   }
 
   // عرض اسم المرحلة في بطاقة المشروع حسب اللغة (نفضّل phase_number إن وُجد)
@@ -289,7 +296,7 @@ export default function Dashboard() {
                 <button className="pc-action-btn" onClick={() => openEdit(p)}>
                   <IconPencil size={14} /> {t('home.edit')}
                 </button>
-                <button className="pc-action-btn danger" onClick={() => setConfirmDelete(p)}>
+                <button className="pc-action-btn danger" onClick={() => { setConfirmDelete(p); setDeleteError(''); }}>
                   <IconTrash size={14} /> {t('home.delete')}
                 </button>
               </div>
@@ -391,6 +398,7 @@ export default function Dashboard() {
               هل تريد حقاً حذف «{confirmDelete.name}»؟
               سيُحذف المشروع وكل بنوده نهائياً، ولا يمكن التراجع.
             </p>
+            {deleteError && <p style={{ color: '#dc2626', fontSize: '0.9em' }}>{deleteError}</p>}
             <div className="delete-modal-actions">
               <button
                 className="delete-modal-cancel"
