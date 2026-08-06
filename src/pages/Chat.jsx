@@ -38,6 +38,7 @@ export default function Chat() {
   const [modelKey, setModelKey] = useState("fast");
   const [completedStations, setCompletedStations] = useState([]);
   const [completedBands, setCompletedBands] = useState([]); // [{phase, band}] للمشروع المختار
+  const [entryPhase, setEntryPhase] = useState(null); // المرحلة التي دخل منها المستخدم من «الطريق»
   const [userName, setUserName] = useState("");
   const [conversationId, setConversationId] = useState(null);
 
@@ -169,7 +170,7 @@ export default function Chat() {
 
           const phaseFromUrl = searchParams.get("phase");
           if (phaseFromUrl) {
-            setInput(tt("chat.lessonPhasePrompt", { phase: phaseFromUrl }));
+            setEntryPhase(phaseFromUrl);
           }
         }
       }
@@ -399,6 +400,46 @@ export default function Chat() {
               const lastBand = doneInPhase[doneInPhase.length - 1];
               const lastText = lastBand ? PHASE_BANDS[phase]?.[lastBand - 1] : null;
               const phaseComplete = doneInPhase.length >= 4;
+              // حالة 0: دخل من مدخل مرحلة محدّدة في «الطريق» — نخصّ تلك المرحلة
+              if (entryPhase) {
+                // نجد رقم المرحلة من اسمها (entryPhase نصّ مثل «التخطيط»)
+                let entryNum = null;
+                for (let n = 1; n <= 7; n++) {
+                  if (t('roadmap.phase' + n + 'title') === entryPhase) { entryNum = n; break; }
+                }
+                const entryDone = entryNum
+                  ? completedBands.filter((b) => b.phase === entryNum).map((b) => b.band).sort((a, b) => a - b)
+                  : [];
+                const entryComplete = entryDone.length >= 4;
+                const entryLastBand = entryDone[entryDone.length - 1];
+                const entryLastText = (entryNum && entryLastBand) ? PHASE_BANDS[entryNum]?.[entryLastBand - 1] : null;
+
+                return (
+                  <>
+                    <p className="chat-welcome-title">{greeting}</p>
+                    {entryComplete ? (
+                      <p>
+                        بخصوص مرحلة «{entryPhase}» — ما الذي يشغل بالك فيها؟
+                        تريد تعديلاً، أم إضافةً، أم فهمَ تفصيلٍ معيّن؟ أنا معك، اسألني.
+                      </p>
+                    ) : entryLastText ? (
+                      <>
+                        <p>
+                          بخصوص مرحلة «{entryPhase}» — أراك أنجزتَ حتى: «{entryLastText}».
+                          ما الذي يشغل بالك فيها؟ تعديلٌ، أم إضافةٌ، أم فهمُ تفصيل؟
+                        </p>
+                        <p>أم تريد أن نكمل بقيّة بنود هذه المرحلة؟</p>
+                      </>
+                    ) : (
+                      <p>
+                        بخصوص مرحلة «{entryPhase}» — بمَ أساعدك فيها؟ نبدأ خطواتها،
+                        أم تريد فهمَ تفصيلٍ معيّن أولاً؟ أنا معك، اسألني.
+                      </p>
+                    )}
+                    <p className="chat-welcome-hint">اكتب في الأسفل، وأنا رهن إشارتك.</p>
+                  </>
+                );
+              }
               // بنود منجزة في هذا المشروع عبر أي مرحلة (تاريخ المشروع)
               const doneInProject = completedBands.length;
               const isMidJourney = doneInProject > 0 && phase > 1;
