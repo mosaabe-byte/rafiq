@@ -225,6 +225,34 @@ ${lines}
     }
   }
 
+  // حوار البنود: يوائم توقّع الخريطة (البند المُرجَّح) بواقع الحوار
+  let bandDialogue = "";
+  if (project && project.phase_number) {
+    const phaseNum = project.phase_number;
+    const bandsInPhase = PHASE_BANDS[phaseNum] || [];
+    const doneBandsHere = (completedBands || [])
+      .filter((b) => b.phase === phaseNum)
+      .map((b) => b.band);
+    // البند المُرجَّح = أول بند لم يُنجَز في هذه المرحلة
+    let nextBandNum = null;
+    for (let i = 1; i <= bandsInPhase.length; i++) {
+      if (!doneBandsHere.includes(i)) { nextBandNum = i; break; }
+    }
+    const nextBandText = nextBandNum ? bandsInPhase[nextBandNum - 1] : null;
+
+    if (nextBandText) {
+      bandDialogue = `
+
+حوار البنود — أين المستخدم في مرحلته:
+مرحلته الحالية بنودٌ متسلسلة، وأقربُ بندٍ لم يُنجزه بعد هو: «${nextBandText}». هذا ما يُرجَّح أنه يعمل عليه الآن، بحسب خريطة الطريق.
+كيف توائم بين توقّع الخريطة وواقع الحوار:
+- ابدأ من هذا البند المُرجَّح إن لم يوجّهك المستخدم لغيره — فلخريطة الطريق جدوى، واتّباعها يمنحه إحساس التقدّم.
+- لكن لا تتشبّث به: إن سأل المستخدم عن بندٍ آخر أو موضوعٍ مختلف، سايره بصدرٍ رحب وأجب عمّا يشغله — فالخروج أحياناً مللٌ أو حيرةٌ أو حاجةٌ لتجديد، لا تعنّت. المبتدئ يحتاج بعض المرونة.
+- وإذا طال خروجه أو لمحتَ أنه فقد جدوى ما بدأه، ذكّره بحكمة ولطف على طريقة «فاصلٍ قصيرٍ ونعود»: اخدم سؤاله أولاً، ثم اجسر للعودة بلا إلزام («سؤالٌ جميل — وحين تجهز، لعلّنا نعود إلى «${nextBandText}» لنكمل ما بدأناه»). لا توبّخ، ولا تقاطع فجأةً؛ بل جدّد تركيزه وأعِد له إحساس الاتجاه.
+- إن أتمّ المستخدم البند فعلاً في حديثه لكنّه لم يؤكّده في «الطريق»، سيأتيك في تعليماتٍ لاحقةٍ كيف تذكّره بذلك بلطف.`;
+    }
+  }
+
   // جسر التعلّم: يربط مرحلة المشروع الحالية بمحطة التعلّم المقابلة
   let learningBridge = "";
   if (project && project.phase_number) {
@@ -259,7 +287,7 @@ ${parts.join("\n")}
     }
   }
 
-return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + compass + boundaries + context + bandsProgress + learningBridge + journey;
+return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + compass + boundaries + context + bandsProgress + bandDialogue + learningBridge + journey;
 }
 
 export default async function handler(req, res) {
