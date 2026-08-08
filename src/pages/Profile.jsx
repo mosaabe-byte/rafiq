@@ -10,6 +10,7 @@ import { useAuth } from '../auth/AuthContext';
 import { useLanguage } from '../i18n/LanguageContext';
 import './Profile.css';
 import { useNavigate } from 'react-router-dom';
+import { sessions } from './LearningPath';
 
 const LOCALES = { ar: 'ar', fr: 'fr-FR', en: 'en-US' };
 const PHASE_NUMBERS = [1, 2, 3, 4, 5, 6, 7];
@@ -41,6 +42,8 @@ export default function Profile() {
   
   const [stats, setStats] = useState({ projects: 0, terms: 0, conversations: 0, avgProgress: 0 });
   const [phaseCounts, setPhaseCounts] = useState({});
+  const [completedStations, setCompletedStations] = useState([]);
+  const [statusCounts, setStatusCounts] = useState({ active: 0, done: 0, published: 0, paused: 0 });
   const [badges, setBadges] = useState([]);
   const [activity, setActivity] = useState([]);
   const [nextStep, setNextStep] = useState({ key: 'addProject', to: '/' });
@@ -60,7 +63,7 @@ export default function Profile() {
 
       const projectsRes = await supabase
         .from('projects')
-        .select('name, progress, phase_number, created_at')
+        .select('name, progress, phase_number, status, created_at')
         .eq('user_id', user.id);
 
       const termsRes = await supabase
@@ -78,6 +81,11 @@ export default function Profile() {
       const reportsRes = await supabase
         .from('error_reports')
         .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+
+        const stationsRes = await supabase
+        .from('station_completions')
+        .select('station_number')
         .eq('user_id', user.id);
 
       if (cancelled) return;
@@ -99,6 +107,15 @@ export default function Profile() {
         if ((p.progress || 0) >= 100) hasCompletedProject = true;
       });
 
+      // حالات المشاريع (للإحصاءات الجديدة)
+      const sCounts = { active: 0, done: 0, published: 0, paused: 0 };
+      projectRows.forEach((p) => {
+        if (p.phase_number === 7) sCounts.published += 1;
+        if (p.status === 'done') sCounts.done += 1;
+        else if (p.status === 'paused') sCounts.paused += 1;
+        else if (p.status === 'active') sCounts.active += 1;
+      });
+
       const termCount = termsRes.count ?? 0;
       const conversationCount = convRes.count ?? 0;
       const reportCount = reportsRes.count ?? 0;
@@ -114,6 +131,8 @@ export default function Profile() {
       const recentActivity = events.slice(0, 5);
 
       setStats({ projects: projectCount, terms: termCount, conversations: conversationCount, avgProgress });
+      setStatusCounts(sCounts);
+      setCompletedStations((stationsRes.data || []).map((r) => r.station_number));
       setPhaseCounts(counts);
       setBadges(computeBadges({
         projectCount, termCount, conversationCount, reportCount,
@@ -314,6 +333,33 @@ export default function Profile() {
                 })}
               </div>
             )}
+          </div>
+
+          <div className="profile-section">
+            <h2><IconRoute2 size={16} /> رحلتي في التعلّم</h2>
+            <div className="journey-summary">
+              <div className="journey-count">
+                <span className="journey-done">{completedStations.length}</span>
+                <span className="journey-total">من {sessions.length} محطة</span>
+              </div>
+              <div className="journey-bar">
+                <div
+                  className="journey-fill"
+                  style={{ width: Math.round((completedStations.length / sessions.length) * 100) + '%' }}
+                />
+              </div>
+            </div>
+            <div className="stations-grid">
+              {sessions.map((s) => {
+                const done = completedStations.includes(s.n);
+                return (
+                  <div key={s.n} className={'station-chip' + (done ? ' done' : '')}>
+                    <span className="station-chip-num">{done ? '✓' : s.n}</span>
+                    <span className="station-chip-name">{s.title[lang] || s.title.ar}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           <div className="profile-section">

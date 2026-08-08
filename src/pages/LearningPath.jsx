@@ -21,7 +21,7 @@ const PAGE = {
   },
 };
 
-const sessions = [
+export const sessions = [
   { n: 1, title: { ar: 'إعداد البيئة', fr: "Configuration de l'environnement", en: 'Environment Setup' }, sub: { ar: 'تثبيت Node.js و VS Code، إنشاء أول مشروع، أول تشغيل محلي', fr: 'Installation de Node.js et VS Code, création du premier projet, premier lancement local', en: 'Installing Node.js and VS Code, creating your first project, first local run' } },
   { n: 2, title: { ar: 'بناء الهيكل', fr: 'Construire la structure', en: 'Building the Structure' }, sub: { ar: 'المكتبات، المجلدات، الملفات، التنقّل — مع المفاهيم قبل الكود', fr: 'Bibliothèques, dossiers, fichiers, navigation — les concepts avant le code', en: 'Libraries, folders, files, navigation — concepts before code' } },
   { n: 3, title: { ar: 'لوحة المشاريع الحيّة', fr: 'Tableau de bord des projets', en: 'Live Projects Dashboard' }, sub: { ar: 'بطاقات، إحصاءات، نصيحة يومية، فلترة، أشرطة تقدّم', fr: 'Cartes, statistiques, astuce du jour, filtrage, barres de progression', en: 'Cards, statistics, daily tip, filtering, progress bars' } },
