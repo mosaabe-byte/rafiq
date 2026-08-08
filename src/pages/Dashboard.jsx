@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   IconUser, IconDeviceMobile, IconPlus,
   IconSparkles, IconTrash, IconPencil, IconX, IconCloud, IconCloudOff,
@@ -35,6 +35,7 @@ const emptyForm = {
 
 export default function Dashboard() {
   const { t, lang } = useLanguage();
+  const navigate = useNavigate();
   const [filter, setFilter] = useState('all');
   const [projects, setProjects] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(null); // المشروع المنتظر تأكيد حذفه
@@ -303,7 +304,7 @@ export default function Dashboard() {
             </div>
           ))}
 
-          <button className="new-project-btn" onClick={openAdd}>
+          <button className="new-project-btn" onClick={() => navigate('/new')}>
             <IconPlus size={18} /> {t('home.newBtn')}
           </button>
         </div>
