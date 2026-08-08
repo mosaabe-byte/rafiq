@@ -357,29 +357,6 @@ export default function Dashboard() {
                   ))}
                 </select>
               </label>
-
-              <label className="field">
-                <span>{t('home.fieldPhase')}</span>
-                <select
-                  value={form.phase_number}
-                  onChange={(e) => setForm({ ...form, phase_number: Number(e.target.value) })}
-                >
-                  {PHASE_NUMBERS.map((n) => (
-                    <option key={n} value={n}>{phaseLabel(n)}</option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="field">
-                <span>{t('home.fieldProgress')}: {form.progress}%</span>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={form.progress}
-                  onChange={(e) => setForm({ ...form, progress: Number(e.target.value) })}
-                />
-              </label>
             </div>
 
             <div className="modal-foot">
