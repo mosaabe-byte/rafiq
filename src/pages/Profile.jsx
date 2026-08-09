@@ -297,6 +297,34 @@ export default function Profile() {
                 <div className="ps-n">{stats.projects}</div>
                 <div className="ps-l">{t('profile.statProjects')}</div>
               </div>
+              <div className="profile-stats">
+              {/* ... البطاقات الأربع الموجودة ... */}
+            </div>
+
+            {stats.projects > 0 && (
+              <div className="status-strip">
+                <div className="status-item">
+                  <span className="status-dot active"></span>
+                  <span className="status-label">جارٍ</span>
+                  <span className="status-num">{statusCounts.active}</span>
+                </div>
+                <div className="status-item">
+                  <span className="status-dot done"></span>
+                  <span className="status-label">مكتمل</span>
+                  <span className="status-num">{statusCounts.done}</span>
+                </div>
+                <div className="status-item">
+                  <span className="status-dot published"></span>
+                  <span className="status-label">منشور</span>
+                  <span className="status-num">{statusCounts.published}</span>
+                </div>
+                <div className="status-item">
+                  <span className="status-dot paused"></span>
+                  <span className="status-label">متوقّف</span>
+                  <span className="status-num">{statusCounts.paused}</span>
+                </div>
+              </div>
+            )}
               <div className="ps-box">
                 <div className="ps-n">{stats.terms}</div>
                 <div className="ps-l">{t('profile.statTerms')}</div>
@@ -311,30 +339,7 @@ export default function Profile() {
               </div>
             </div>
           </div>
-
-          <div className="profile-section">
-            <h2><IconRoute2 size={16} /> {t('profile.phasesTitle')}</h2>
-            {stats.projects === 0 ? (
-              <p className="profile-empty">{t('profile.phasesEmpty')}</p>
-            ) : (
-              <div className="phases-list">
-                {PHASE_NUMBERS.map((n) => {
-                  const c = phaseCounts[n] || 0;
-                  const pct = Math.round((c / maxPhaseCount) * 100);
-                  return (
-                    <div key={n} className="phase-row">
-                      <span className="phase-name">{t('roadmap.phase' + n + 'title')}</span>
-                      <div className="phase-track">
-                        <div className="phase-fill" style={{ width: (c === 0 ? 0 : Math.max(pct, 8)) + '%' }} />
-                      </div>
-                      <span className="phase-count">{c}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
+          
           <div className="profile-section">
             <h2><IconRoute2 size={16} /> رحلتي في التعلّم</h2>
             <div className="journey-summary">
