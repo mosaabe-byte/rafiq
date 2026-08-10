@@ -44,6 +44,7 @@ export default function Profile() {
   const [phaseCounts, setPhaseCounts] = useState({});
   const [completedStations, setCompletedStations] = useState([]);
   const [statusCounts, setStatusCounts] = useState({ active: 0, done: 0, published: 0, paused: 0 });
+  const [projectList, setProjectList] = useState([]);
   const [badges, setBadges] = useState([]);
   const [activity, setActivity] = useState([]);
   const [nextStep, setNextStep] = useState({ key: 'addProject', to: '/' });
@@ -91,7 +92,6 @@ export default function Profile() {
       if (cancelled) return;
 
       const projectRows = projectsRes.data || [];
-      const [projectList, setProjectList] = useState([]);
       const projectCount = projectRows.length;
       const avgProgress =
         projectCount > 0
