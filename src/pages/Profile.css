@@ -502,21 +502,6 @@
   color: #374151;
   line-height: 1.3;
 }
-.status-strip {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-  flex-wrap: wrap;
-}
-.status-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  background: #f9fafb;
-  border-radius: 999px;
-  font-size: 0.85rem;
-}
 .status-dot {
   width: 9px;
   height: 9px;
@@ -527,5 +512,88 @@
 .status-dot.done { background: #10b981; }
 .status-dot.published { background: #3b82f6; }
 .status-dot.paused { background: #f59e0b; }
-.status-label { color: #6b7280; }
-.status-num { font-weight: 700; color: #374151; }
+.projects-card {
+  background: #f9fafb;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.pj-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.pj-total {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary, #6d28d9);
+  line-height: 1;
+}
+.pj-total-label {
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+.pj-statuses {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.pj-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  background: #fff;
+  border-radius: 10px;
+  font-size: 0.85rem;
+}
+.pj-status-label { color: #6b7280; flex: 1; }
+.pj-status-num { font-weight: 700; color: #374151; }
+.status-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.status-dot.active { background: #6d28d9; }
+.status-dot.done { background: #10b981; }
+.status-dot.published { background: #3b82f6; }
+.status-dot.paused { background: #f59e0b; }
+.pj-progress-hdr {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+.pj-progress-pct { font-weight: 700; color: var(--primary, #6d28d9); }
+.pj-progress-track {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.pj-progress-fill {
+  height: 100%;
+  background: var(--primary, #6d28d9);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+.learn-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.ls-box {
+  background: #f9fafb;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+}
+.ls-n {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #374151;
+}
+.ls-l {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 4px;
+}

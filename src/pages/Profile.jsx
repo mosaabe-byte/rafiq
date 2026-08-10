@@ -292,50 +292,61 @@ export default function Profile() {
         <>
           <div className="profile-section">
             <h2><IconChartBar size={16} /> {t('profile.statsTitle')}</h2>
-            <div className="profile-stats">
-              <div className="ps-box">
-                <div className="ps-n">{stats.projects}</div>
-                <div className="ps-l">{t('profile.statProjects')}</div>
+
+            {/* بطاقة المشاريع الجامعة */}
+            <div className="projects-card">
+              <div className="pj-head">
+                <div className="pj-total">{stats.projects}</div>
+                <div className="pj-total-label">{t('profile.statProjects')}</div>
               </div>
-              <div className="profile-stats">
-              {/* ... البطاقات الأربع الموجودة ... */}
+
+              {stats.projects > 0 && (
+                <>
+                  <div className="pj-statuses">
+                    <div className="pj-status">
+                      <span className="status-dot active"></span>
+                      <span className="pj-status-label">جارٍ</span>
+                      <span className="pj-status-num">{statusCounts.active}</span>
+                    </div>
+                    <div className="pj-status">
+                      <span className="status-dot done"></span>
+                      <span className="pj-status-label">مكتمل</span>
+                      <span className="pj-status-num">{statusCounts.done}</span>
+                    </div>
+                    <div className="pj-status">
+                      <span className="status-dot published"></span>
+                      <span className="pj-status-label">منشور</span>
+                      <span className="pj-status-num">{statusCounts.published}</span>
+                    </div>
+                    <div className="pj-status">
+                      <span className="status-dot paused"></span>
+                      <span className="pj-status-label">متوقّف</span>
+                      <span className="pj-status-num">{statusCounts.paused}</span>
+                    </div>
+                  </div>
+
+                  <div className="pj-progress">
+                    <div className="pj-progress-hdr">
+                      <span>{t('profile.statAvgProgress')}</span>
+                      <span className="pj-progress-pct">{stats.avgProgress}%</span>
+                    </div>
+                    <div className="pj-progress-track">
+                      <div className="pj-progress-fill" style={{ width: stats.avgProgress + '%' }} />
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
-            {stats.projects > 0 && (
-              <div className="status-strip">
-                <div className="status-item">
-                  <span className="status-dot active"></span>
-                  <span className="status-label">جارٍ</span>
-                  <span className="status-num">{statusCounts.active}</span>
-                </div>
-                <div className="status-item">
-                  <span className="status-dot done"></span>
-                  <span className="status-label">مكتمل</span>
-                  <span className="status-num">{statusCounts.done}</span>
-                </div>
-                <div className="status-item">
-                  <span className="status-dot published"></span>
-                  <span className="status-label">منشور</span>
-                  <span className="status-num">{statusCounts.published}</span>
-                </div>
-                <div className="status-item">
-                  <span className="status-dot paused"></span>
-                  <span className="status-label">متوقّف</span>
-                  <span className="status-num">{statusCounts.paused}</span>
-                </div>
+            {/* بطاقتا التعلّم: المعجم والمحادثات */}
+            <div className="learn-stats">
+              <div className="ls-box">
+                <div className="ls-n">{stats.terms}</div>
+                <div className="ls-l">{t('profile.statTerms')}</div>
               </div>
-            )}
-              <div className="ps-box">
-                <div className="ps-n">{stats.terms}</div>
-                <div className="ps-l">{t('profile.statTerms')}</div>
-              </div>
-              <div className="ps-box">
-                <div className="ps-n">{stats.conversations}</div>
-                <div className="ps-l">{t('profile.statConversations')}</div>
-              </div>
-              <div className="ps-box">
-                <div className="ps-n">{stats.avgProgress}%</div>
-                <div className="ps-l">{t('profile.statAvgProgress')}</div>
+              <div className="ls-box">
+                <div className="ls-n">{stats.conversations}</div>
+                <div className="ls-l">{t('profile.statConversations')}</div>
               </div>
             </div>
           </div>
