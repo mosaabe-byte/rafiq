@@ -63,7 +63,7 @@ export default function Profile() {
 
       const projectsRes = await supabase
         .from('projects')
-        .select('name, progress, phase_number, status, created_at')
+        .select('name, emoji, progress, phase_number, status, created_at')
         .eq('user_id', user.id);
 
       const termsRes = await supabase
@@ -91,6 +91,7 @@ export default function Profile() {
       if (cancelled) return;
 
       const projectRows = projectsRes.data || [];
+      const [projectList, setProjectList] = useState([]);
       const projectCount = projectRows.length;
       const avgProgress =
         projectCount > 0
@@ -239,6 +240,24 @@ export default function Profile() {
     navigate('/login');
   }
 
+  // ترتيب المنتجات: منشور أولاً، ثم مكتمل، ثم قيد الإنجاز
+  function productRank(p) {
+    if (p.phase_number === 7) return 0;
+    if (p.status === 'done' || (p.progress || 0) >= 100) return 1;
+    return 2;
+  }
+
+  // معلومات المنتج: الشارة، النصّ التحفيزيّ، الصنف
+  function productInfo(p) {
+    if (p.phase_number === 7) {
+      return { cls: 'published', badge: 'منشور 🚀', text: 'أنجزتَه ونشرتَه للعالم — هذا فخرٌ حقيقيّ!' };
+    }
+    if (p.status === 'done' || (p.progress || 0) >= 100) {
+      return { cls: 'completed', badge: 'مكتمل ✓', text: 'أتممتَه بالكامل — إنجازٌ تستحقّ أن تفخر به!' };
+    }
+    return { cls: 'ongoing', badge: 'قيد الإنجاز ⏳', text: `${p.progress || 0}% اكتمل — واصل حتى النهاية!` };
+  }
+
   return (
     <div className="profile">
       <div className="profile-hero">
@@ -379,19 +398,30 @@ export default function Profile() {
           </div>
 
           <div className="profile-section">
-            <h2>
-              <IconTrophy size={16} /> {t('profile.badgesTitle')}
-              <span className="badges-counter">{earnedCount}/{badges.length}</span>
-            </h2>
-            <div className="badges-grid">
-              {badges.map((b) => (
-                <div key={b.key} className={'badge-card' + (b.earned ? ' earned' : ' locked')}>
-                  <div className="badge-icon">{b.icon}</div>
-                  <div className="badge-name">{t('profile.badge_' + b.key + '_name')}</div>
-                  <div className="badge-desc">{t('profile.badge_' + b.key + '_desc')}</div>
-                </div>
-              ))}
-            </div>
+            <h2><IconTrophy size={16} /> ما أنجزتَه</h2>
+            {projectList.length === 0 ? (
+              <p className="profile-empty">لم تُنشئ مشروعاً بعد — ابدأ أوّل منتج لك، وسيظهر هنا فخراً!</p>
+            ) : (
+              <div className="products-list">
+                {[...projectList]
+                  .sort((a, b) => productRank(a) - productRank(b))
+                  .map((p, i) => {
+                    const info = productInfo(p);
+                    return (
+                      <div key={i} className={'product-card ' + info.cls}>
+                        <div className="product-emoji">{p.emoji || '📦'}</div>
+                        <div className="product-body">
+                          <div className="product-name">
+                            {p.name}
+                            <span className={'product-badge ' + info.cls}>{info.badge}</span>
+                          </div>
+                          <div className="product-motiv">{info.text}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
           </div>
 
           <div className="profile-section">
