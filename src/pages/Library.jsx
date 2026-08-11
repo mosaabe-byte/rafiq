@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { IconUpload, IconLoader2, IconFile, IconPhoto, IconFileText } from '@tabler/icons-react';
+import { IconUpload, IconLoader2, IconFile, IconPhoto, IconFileText, IconDownload } from '@tabler/icons-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -146,6 +146,18 @@ export default function Library() {
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
 
+  // تنزيل/فتح ملفّ (رابط موقّع مؤقّت، لأن الـbucket خاصّ)
+  async function handleDownload(f) {
+    const { data, error } = await supabase.storage
+      .from('library')
+      .createSignedUrl(f.path, 60); // صالح 60 ثانية
+    if (error || !data?.signedUrl) {
+      console.error('تعذّر إنشاء رابط التنزيل:', error?.message);
+      return;
+    }
+    window.open(data.signedUrl, '_blank');
+  }
+
   return (
     <div className="library">
       <div className="lib-header">
@@ -205,6 +217,9 @@ export default function Library() {
                       <div className="lib-file-name">{f.name}</div>
                       <div className="lib-file-meta">{readableSize(f.size)}</div>
                     </div>
+                    <button className="lib-file-btn" onClick={() => handleDownload(f)} title="تنزيل">
+                      <IconDownload size={18} />
+                    </button>
                   </div>
                 ))}
               </div>

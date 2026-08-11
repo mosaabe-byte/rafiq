@@ -104,3 +104,18 @@
   white-space: nowrap;
 }
 .lib-file-meta { font-size: 0.78rem; color: #94a3b8; margin-top: 2px; }
+.lib-file-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: #f1f5f9;
+  color: var(--primary, #6d28d9);
+  border-radius: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.lib-file-btn:hover { background: #e2e8f0; }
