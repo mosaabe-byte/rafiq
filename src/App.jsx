@@ -15,6 +15,7 @@ import SessionDetail from './pages/SessionDetail';
 import QualityGate from './pages/QualityGate';
 import Privacy from './pages/Privacy';
 import ResetPassword from './pages/ResetPassword';
+import Library from './pages/Library';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -48,6 +49,7 @@ export default function App() {
           <Route path="chat" element={<Chat />} />
           <Route path="learn" element={<LearningPath />} />
           <Route path="learn/:id" element={<SessionDetail />} />
+          <Route path="library" element={<Library />} />
         </Route>
       </Routes>
     </BrowserRouter>

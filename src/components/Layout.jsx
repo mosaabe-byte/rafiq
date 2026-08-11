@@ -8,6 +8,7 @@ import {
   IconVocabulary,
   IconUserCircle,
   IconMessageCircle,
+  IconBooks,
 } from '@tabler/icons-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import LanguageSwitcher from '../i18n/LanguageSwitcher';
@@ -29,6 +30,7 @@ export default function Layout() {
     { to: '/roadmap', label: t('nav.roadmap'), icon: IconRoute },
     { to: '/glossary', label: t('nav.glossary'), icon: IconVocabulary },
     { to: '/chat', label: t('nav.chat'), icon: IconMessageCircle },
+    { to: '/library', label: t('nav.library'), icon: IconBooks },
     { to: '/profile', label: t('nav.profile'), icon: IconUserCircle },
   ];
 
