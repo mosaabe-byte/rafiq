@@ -134,6 +134,8 @@ export default function Profile() {
       setStats({ projects: projectCount, terms: termCount, conversations: conversationCount, avgProgress });
       setStatusCounts(sCounts);
       setCompletedStations((stationsRes.data || []).map((r) => r.station_number));
+      console.log('projectRows للمعرض:', projectRows.length, projectRows);
+      setProjectList(projectRows);
       setPhaseCounts(counts);
       setBadges(computeBadges({
         projectCount, termCount, conversationCount, reportCount,
@@ -255,7 +257,18 @@ export default function Profile() {
     if (p.status === 'done' || (p.progress || 0) >= 100) {
       return { cls: 'completed', badge: 'مكتمل ✓', text: 'أتممتَه بالكامل — إنجازٌ تستحقّ أن تفخر به!' };
     }
-    return { cls: 'ongoing', badge: 'قيد الإنجاز ⏳', text: `${p.progress || 0}% اكتمل — واصل حتى النهاية!` };
+    const pct = p.progress || 0;
+    let text;
+    if (pct === 0) {
+      text = 'رحلةُ الألف ميل تبدأ بخطوة — لنبدأ أولى خطوات هذا المنتج!';
+    } else if (pct <= 15) {
+      text = `${pct}% — انطلقتَ! البداية أصعب خطوة، وقد تجاوزتَها.`;
+    } else if (pct <= 50) {
+      text = `${pct}% — تتقدّم بثبات، والطريق يتّضح أمامك. واصِل!`;
+    } else {
+      text = `${pct}% — أوشكتَ! النهاية قريبة، لا تتوقّف الآن.`;
+    }
+    return { cls: 'ongoing', badge: 'قيد الإنجاز ⏳', text };
   }
 
   return (
