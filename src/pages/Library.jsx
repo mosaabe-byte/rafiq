@@ -238,12 +238,6 @@ export default function Library() {
               <div className="lib-files-list">
                 {groupFiles.map((f) => (
                   <div key={f.id} className="lib-file-row">
-                    <button className="lib-file-btn" onClick={() => handleDownload(f)} title="تنزيل">
-                      <IconDownload size={18} />
-                    </button>
-                    <button className="lib-file-btn danger" onClick={() => setConfirmDelete(f)} title="حذف">
-                      <IconTrash size={18} />
-                    </button>
                     <span className="lib-file-icon">{fileIcon(f.type)}</span>
                     <div className="lib-file-info">
                       <div className="lib-file-name">{f.name}</div>
@@ -251,6 +245,9 @@ export default function Library() {
                     </div>
                     <button className="lib-file-btn" onClick={() => handleDownload(f)} title="تنزيل">
                       <IconDownload size={18} />
+                    </button>
+                    <button className="lib-file-btn danger" onClick={() => setConfirmDelete(f)} title="حذف">
+                      <IconTrash size={18} />
                     </button>
                   </div>
                 ))}
