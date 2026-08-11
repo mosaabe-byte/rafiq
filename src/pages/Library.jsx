@@ -17,6 +17,8 @@ export default function Library() {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [files, setFiles] = useState([]);
+  const [loadingFiles, setLoadingFiles] = useState(true);
 
   // تحميل مشاريع المستخدم (للتصنيف)
   useEffect(() => {
@@ -30,6 +32,24 @@ export default function Library() {
       if (data) setProjects(data);
     }
     loadProjects();
+  }, [user]);
+
+  // جلب ملفّات المكتبة
+  async function loadFiles() {
+    if (!user) return;
+    setLoadingFiles(true);
+    const { data } = await supabase
+      .from('library_files')
+      .select('id, project_id, name, path, size, type, created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+    setFiles(data || []);
+    setLoadingFiles(false);
+  }
+
+  useEffect(() => {
+    loadFiles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   function onPickFile(e) {
@@ -82,6 +102,7 @@ export default function Library() {
       }
 
       setMessage({ type: 'success', text: `تمّ رفع «${file.name}» بنجاح!` });
+      loadFiles();
       setFile(null);
       setSelectedProject('');
     } catch (err) {
@@ -90,6 +111,39 @@ export default function Library() {
     } finally {
       setUploading(false);
     }
+  }
+
+  // تجميع الملفّات حسب المشروع
+  function groupedFiles() {
+    const groups = {};
+    files.forEach((f) => {
+      const key = f.project_id || 'general';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(f);
+    });
+    return groups;
+  }
+
+  // اسم المشروع من معرّفه
+  function projectName(pid) {
+    if (!pid) return 'عامّ (غير مرتبط بمشروع)';
+    const p = projects.find((pr) => pr.id === pid);
+    return p ? `${p.emoji || '📁'} ${p.name}` : 'مشروع';
+  }
+
+  // أيقونة نوع الملفّ
+  function fileIcon(type) {
+    if (type?.startsWith('image/')) return '🖼️';
+    if (type === 'application/pdf') return '📄';
+    return '📝';
+  }
+
+  // حجم مقروء
+  function readableSize(bytes) {
+    if (!bytes) return '';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
 
   return (
@@ -129,6 +183,34 @@ export default function Library() {
         <button className="lib-upload-btn" onClick={handleUpload} disabled={!file || uploading}>
           {uploading ? (<><IconLoader2 size={18} className="spin" /> جارٍ الرفع...</>) : (<><IconUpload size={18} /> ارفع إلى مكتبتي</>)}
         </button>
+      </div>
+      <div className="lib-files-section">
+        <h2 className="lib-files-title">ملفّاتي</h2>
+        {loadingFiles ? (
+          <p className="lib-empty">جارٍ التحميل...</p>
+        ) : files.length === 0 ? (
+          <p className="lib-empty">مكتبتك فارغة بعد — ارفع أوّل ملفّ ليظهر هنا.</p>
+        ) : (
+          Object.entries(groupedFiles()).map(([key, groupFiles]) => (
+            <div key={key} className="lib-group">
+              <div className="lib-group-header">
+                {projectName(key === 'general' ? null : Number(key))}
+                <span className="lib-group-count">{groupFiles.length}</span>
+              </div>
+              <div className="lib-files-list">
+                {groupFiles.map((f) => (
+                  <div key={f.id} className="lib-file-row">
+                    <span className="lib-file-icon">{fileIcon(f.type)}</span>
+                    <div className="lib-file-info">
+                      <div className="lib-file-name">{f.name}</div>
+                      <div className="lib-file-meta">{readableSize(f.size)}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
