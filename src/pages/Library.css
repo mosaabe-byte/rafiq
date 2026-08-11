@@ -119,3 +119,36 @@
   transition: background 0.2s;
 }
 .lib-file-btn:hover { background: #e2e8f0; }
+.lib-file-btn.danger { color: #dc2626; }
+.lib-file-btn.danger:hover { background: #fef2f2; }
+.lib-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+.lib-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 380px;
+  width: 100%;
+}
+.lib-modal h3 { margin: 0 0 10px; font-size: 1.1rem; color: #1e293b; }
+.lib-modal p { color: #64748b; font-size: 0.9rem; line-height: 1.5; margin: 0 0 20px; }
+.lib-modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.lib-modal-cancel, .lib-modal-confirm {
+  padding: 9px 18px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+.lib-modal-cancel { background: #f1f5f9; color: #475569; }
+.lib-modal-confirm { background: #dc2626; color: #fff; }
+.lib-modal-cancel:disabled, .lib-modal-confirm:disabled { opacity: 0.5; cursor: not-allowed; }

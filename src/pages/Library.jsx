@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { IconUpload, IconLoader2, IconFile, IconPhoto, IconFileText, IconDownload } from '@tabler/icons-react';
+import { IconUpload, IconLoader2, IconFile, IconPhoto, IconFileText, IconDownload, IconTrash } from '@tabler/icons-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -19,6 +19,8 @@ export default function Library() {
   const [message, setMessage] = useState({ type: '', text: '' });
   const [files, setFiles] = useState([]);
   const [loadingFiles, setLoadingFiles] = useState(true);
+  const [confirmDelete, setConfirmDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   // تحميل مشاريع المستخدم (للتصنيف)
   useEffect(() => {
@@ -158,6 +160,30 @@ export default function Library() {
     window.open(data.signedUrl, '_blank');
   }
 
+  // حذف موثوق: من التخزين والجدول معاً
+  async function handleDelete(f) {
+    if (deleting) return;
+    setDeleting(true);
+    try {
+      // 1) حذف من التخزين
+      const { error: stErr } = await supabase.storage.from('library').remove([f.path]);
+      if (stErr) throw stErr;
+
+      // 2) حذف من الجدول
+      const { error: dbErr } = await supabase.from('library_files').delete().eq('id', f.id);
+      if (dbErr) throw dbErr;
+
+      // نجح الاثنان: نحدّث الواجهة
+      setFiles((prev) => prev.filter((x) => x.id !== f.id));
+      setConfirmDelete(null);
+    } catch (err) {
+      console.error('تعذّر الحذف:', err.message);
+      setMessage({ type: 'error', text: 'تعذّر حذف الملفّ. تحقّق من اتصالك وحاول مجدّداً.' });
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   return (
     <div className="library">
       <div className="lib-header">
@@ -212,6 +238,12 @@ export default function Library() {
               <div className="lib-files-list">
                 {groupFiles.map((f) => (
                   <div key={f.id} className="lib-file-row">
+                    <button className="lib-file-btn" onClick={() => handleDownload(f)} title="تنزيل">
+                      <IconDownload size={18} />
+                    </button>
+                    <button className="lib-file-btn danger" onClick={() => setConfirmDelete(f)} title="حذف">
+                      <IconTrash size={18} />
+                    </button>
                     <span className="lib-file-icon">{fileIcon(f.type)}</span>
                     <div className="lib-file-info">
                       <div className="lib-file-name">{f.name}</div>
@@ -227,6 +259,22 @@ export default function Library() {
           ))
         )}
       </div>
+      {confirmDelete && (
+        <div className="lib-modal-overlay" onClick={() => setConfirmDelete(null)}>
+          <div className="lib-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>حذف الملفّ</h3>
+            <p>هل تريد حقاً حذف «{confirmDelete.name}»؟ لا يمكن التراجع.</p>
+            <div className="lib-modal-actions">
+              <button className="lib-modal-cancel" onClick={() => setConfirmDelete(null)} disabled={deleting}>
+                إلغاء
+              </button>
+              <button className="lib-modal-confirm" onClick={() => handleDelete(confirmDelete)} disabled={deleting}>
+                {deleting ? 'جارٍ الحذف...' : 'نعم، احذف'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
