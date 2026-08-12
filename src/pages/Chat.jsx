@@ -52,6 +52,9 @@ export default function Chat() {
   const [reportReason, setReportReason] = useState("");
   const [reportSending, setReportSending] = useState(false);
   const [reportedIndexes, setReportedIndexes] = useState([]);
+  const [libraryFiles, setLibraryFiles] = useState([]);
+  const [showFilePicker, setShowFilePicker] = useState(false);
+  const [attachedFile, setAttachedFile] = useState(null); // { id, name, content }
 
   // استبدال {n} أو {phase} داخل نص الترجمة
   function tt(key, vars) {
@@ -63,6 +66,19 @@ export default function Chat() {
     }
     return str;
   }
+
+  // جلب ملفّات المكتبة التي لها نصّ مستخرَج (لإرفاقها في المحادثة)
+  useEffect(() => {
+    async function loadLibrary() {
+      const { data, error } = await supabase
+        .from("library_files")
+        .select("id, name, project_id, content_text")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+      if (!error && data) setLibraryFiles(data);
+    }
+    if (user?.id) loadLibrary();
+  }, [user]);
 
   // التمرير التلقائي لآخر رسالة عند كل تحديث
   useEffect(() => {
@@ -299,6 +315,9 @@ export default function Chat() {
           modelKey,
           completedStations,
           completedBands,
+          attachedFile: attachedFile
+            ? { name: attachedFile.name, content: attachedFile.content }
+            : null,
         }),
       });
 
@@ -339,6 +358,22 @@ export default function Chat() {
     } catch (err) {
       // نسخ احتياطي إن لم يدعم المتصفّح clipboard API
     }
+  }
+
+  // الملفّات القابلة للإرفاق: ما له نصّ، ضمن المشروع المختار أو العامّ (project_id = null)
+  const attachableFiles = libraryFiles.filter(
+    (f) =>
+      f.content_text &&
+      f.content_text.trim() &&
+      (f.project_id === Number(selectedProjectId) || f.project_id === null)
+  );
+
+  function attachFile(f) {
+    setAttachedFile({ id: f.id, name: f.name, content: f.content_text });
+    setShowFilePicker(false);
+  }
+  function removeAttached() {
+    setAttachedFile(null);
   }
 
   return (
@@ -593,6 +628,55 @@ export default function Chat() {
           {tt("chat.limitTitle", { n: getLimit(modelKey) })}
           <br />
           <span className="chat-limit-sub">{t("chat.limitSub")}</span>
+        </div>
+      )}
+
+      {/* ── إرفاق ملفّ من المكتبة ── */}
+      {selectedProjectId && !limitReached && (
+        <div className="attach-bar">
+          {attachedFile ? (
+            <div className="attach-chip">
+              <span className="attach-chip-name">📎 {attachedFile.name}</span>
+              <button
+                type="button"
+                className="attach-chip-x"
+                onClick={removeAttached}
+                aria-label={t("chat.remove")}
+              >
+                ✕
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="attach-btn"
+              onClick={() => setShowFilePicker((v) => !v)}
+            >
+              📎 {t("chat.attach")}
+            </button>
+          )}
+
+          {showFilePicker && !attachedFile && (
+            <div className="attach-list">
+              {attachableFiles.length === 0 ? (
+                <p className="attach-empty">{t("chat.noTextFiles")}</p>
+              ) : (
+                attachableFiles.map((f) => (
+                  <button
+                    type="button"
+                    key={f.id}
+                    className="attach-item"
+                    onClick={() => attachFile(f)}
+                  >
+                    <span className="attach-item-name">{f.name}</span>
+                    {!f.project_id && (
+                      <span className="attach-item-tag">{t("chat.general")}</span>
+                    )}
+                  </button>
+                ))
+              )}
+            </div>
+          )}
         </div>
       )}
 

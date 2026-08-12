@@ -79,8 +79,8 @@ const PHASE_STATION_MAP = {
   6: [4, 5, 7],   // البيانات ↔ محطات 4، 5، 7
   7: [8, 11, 12], // السحابة والنشر ↔ محطات 8، 11، 12
 };
-
-function buildSystemPrompt(project, lang, modelInfo, completedStations, completedBands) {
+function buildSystemPrompt(project, lang, modelInfo, completedStations, completedBands, attachedFile) {
+{
   const langMap = {
     ar: "العربية",
     fr: "الفرنسية (Français)",
@@ -197,6 +197,38 @@ const compass = `
     5: "الربط", 6: "البيانات", 7: "السحابة والنشر",
   };
 
+  // ── حدّ حجم الملفّ المحقون في السياق (حرفًا) ──
+// نحو 3000 token تقريبًا: آمن ضمن السياق، ولا يرهق حدود النماذج اليومية.
+const MAX_FILE_CHARS = 12000;
+
+// كتلة الملفّ المرفق — تُدرَج حين يختار المستخدم ملفًّا من مكتبته
+function attachedFileBlock(attachedFile) {
+  if (!attachedFile || !attachedFile.content || !attachedFile.content.trim()) {
+    return '';
+  }
+
+  const name = (attachedFile.name || 'ملف').trim();
+  let content = attachedFile.content;
+  let truncatedNote = '';
+
+  if (content.length > MAX_FILE_CHARS) {
+    content = content.slice(0, MAX_FILE_CHARS);
+    truncatedNote =
+      '\n\n[ملاحظة: هذا مقتطف من بداية الملفّ لأنّه كبير؛ إن احتجت ما بعده فاطلب من المستخدم الجزء المحدّد الذي يهمّه.]';
+  }
+
+  return `
+=== ملفّ أرفقه المستخدم من مكتبته ===
+اسم الملفّ: ${name}
+
+المستخدم اختار هذا الملفّ صراحةً لتقرأه وتوظّفه في ردّك. اقرأه بانتباه، واستند إليه حين يسأل عنه، ولا تختلق محتوًى ليس فيه. إن كان السؤال خارج الملفّ فأجب من معرفتك العامة ونبّه أنّ ذلك ليس من الملفّ.
+
+--- بداية محتوى الملفّ ---
+${content}${truncatedNote}
+--- نهاية محتوى الملفّ ---
+`.trim();
+}
+
   const context = `
 
 سياق المستخدم الحالي (استخدمه لتُخصّص ردودك، ورحّب به بوعي بمكانه دون أن تُكرر كل هذه المعلومات حرفياً في كل رد):
@@ -303,7 +335,9 @@ ${parts.join("\n")}
     }
   }
 
-return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + compass + boundaries + context + bandsProgress + bandDialogue + foresight + learningBridge + journey;
+  const attachedFileSection = attachedFileBlock(attachedFile);
+
+return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + compass + boundaries + context + attachedFileSection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
 }
 
 export default async function handler(req, res) {
@@ -315,7 +349,7 @@ export default async function handler(req, res) {
   let modelKeyForLog = "unknown";
 
   try {
-    const { messages, project, lesson, lang, modelKey, completedStations, completedBands } = req.body;
+    const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "messages مطلوبة" });
@@ -335,7 +369,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: model.id,
         max_tokens: model.maxTokens,
-        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands),
+        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile),
         messages: messages,
       }),
     });

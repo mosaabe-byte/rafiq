@@ -230,3 +230,40 @@
 }
 .chat-welcome p { margin: 0 0 10px; }
 .chat-welcome-hint { color: #6b6880; font-size: 0.92rem; margin-bottom: 0; }
+/* ── منتقي الملفّ المرفق ── */
+.attach-bar { position: relative; margin: 0 0 8px; }
+
+.attach-btn,
+.attach-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 999px;
+  font-size: 0.85rem; cursor: pointer;
+  border: 1px solid var(--border, #ddd);
+  background: var(--surface, #f7f7f8);
+}
+.attach-chip { background: var(--accent-soft, #eef2ff); }
+.attach-chip-x {
+  border: none; background: transparent; cursor: pointer;
+  font-size: 0.9rem; padding: 0 2px; line-height: 1;
+}
+
+.attach-list {
+  position: absolute; bottom: 110%; inset-inline-start: 0;
+  min-width: 240px; max-height: 240px; overflow-y: auto;
+  background: var(--surface, #fff);
+  border: 1px solid var(--border, #ddd); border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+  padding: 6px; z-index: 20;
+}
+.attach-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  width: 100%; text-align: start;
+  padding: 8px 10px; border: none; border-radius: 8px;
+  background: transparent; cursor: pointer; font-size: 0.85rem;
+}
+.attach-item:hover { background: var(--surface-hover, #f0f0f2); }
+.attach-item-tag {
+  font-size: 0.72rem; opacity: 0.6;
+  border: 1px solid var(--border, #ddd); border-radius: 6px; padding: 1px 6px;
+}
+.attach-empty { padding: 10px; font-size: 0.82rem; opacity: 0.6; text-align: center; }

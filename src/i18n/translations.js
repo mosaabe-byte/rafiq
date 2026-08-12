@@ -150,6 +150,13 @@ export const translations = {
       lessonPhasePrompt: "أنا في مرحلة «{phase}». رافقني فيها خطوة بخطوة بحسب ما أنجزته حتى الآن.",
       modelFast: "⚡ رفيق السريع",
       modelDeep: "🧠 رفيق العميق",
+      modelFast: "⚡ رفيق السريع",
+      modelDeep: "🧠 رفيق العميق",
+      attach: "أرفق ملفًّا",
+      remove: "إزالة",
+      noTextFiles: "لا ملفّات نصّية جاهزة في هذا المشروع",
+      general: "عامّ",
+      
     },
     profile: {
       editName: "تعديل الاسم",
@@ -463,6 +470,10 @@ export const translations = {
       lessonPhasePrompt: "Je suis a l etape « {phase} ». Accompagne-moi pas a pas selon ce que j ai deja accompli.",
       modelFast: "⚡ Rafiq Rapide",
       modelDeep: "🧠 Rafiq Profond",
+      attach: "Joindre un fichier",
+      remove: "Retirer",
+      noTextFiles: "Aucun fichier texte prêt dans ce projet",
+      general: "Général",
     },
     auth: {
       signinTitle:"Connexion", signupTitle:"Créer un compte",
@@ -648,6 +659,10 @@ export const translations = {
       lessonPhasePrompt: "I'm at the « {phase} » phase. Guide me through it step by step based on what I've done so far.",
       modelFast: "⚡ Rafiq Fast",
       modelDeep: "🧠 Rafiq Deep",
+      attach: "Attach a file",
+      remove: "Remove",
+      noTextFiles: "No ready text files in this project",
+      general: "General",
     },
     profile: {
       editName: "Edit name",
