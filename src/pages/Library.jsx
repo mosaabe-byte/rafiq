@@ -88,6 +88,17 @@ export default function Library() {
         .upload(path, file);
       if (upErr) throw upErr;
 
+      // استخراج نصّ الملفّ إن كان نصّياً (للقراءة لاحقاً)
+      let contentText = null;
+      const isText = file.type.startsWith('text/') || /\.(txt|md)$/i.test(file.name);
+      if (isText) {
+        try {
+          contentText = await file.text();
+        } catch (e) {
+          console.error('تعذّر استخراج النصّ:', e.message);
+        }
+      }
+
       // 2) تسجيله في الجدول
       const { error: dbErr } = await supabase.from('library_files').insert({
         user_id: user.id,
@@ -96,6 +107,7 @@ export default function Library() {
         path,
         size: file.size,
         type: file.type || null,
+        content_text: contentText,
       });
       if (dbErr) {
         // تراجع: نحذف الملفّ المرفوع إن فشل التسجيل (لا نترك ملفّاً يتيماً)
