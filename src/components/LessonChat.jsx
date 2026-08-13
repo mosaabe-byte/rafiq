@@ -112,7 +112,15 @@ export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) 
               <div key={i} className={'lc-msg ' + (m.role === 'user' ? 'lc-user' : 'lc-bot')}>
                 <div className="lc-bubble rafiq-bubble">
                   {m.role === 'assistant'
-                    ? <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>
+                    ? <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    strong: ({ children }) => <span>{children}</span>,
+                    em: ({ children }) => <span>{children}</span>,
+                  }}
+                >
+                  {m.content}
+                </ReactMarkdown>
                     : m.content}
                 </div>
               </div>

@@ -562,7 +562,15 @@ export default function Chat() {
           <div key={i} className={"chat-row " + (m.role === "user" ? "user" : "assistant")}>
             <div className="rafiq-bubble">
               {m.role === "assistant" ? (
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>
+                <ReactMarkdown
+  remarkPlugins={[remarkGfm]}
+  components={{
+    strong: ({ children }) => <span>{children}</span>,
+    em: ({ children }) => <span>{children}</span>,
+  }}
+>
+  {m.content}
+</ReactMarkdown>
               ) : (
                 m.content
               )}
