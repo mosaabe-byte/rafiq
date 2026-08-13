@@ -80,7 +80,6 @@ const PHASE_STATION_MAP = {
   7: [8, 11, 12], // السحابة والنشر ↔ محطات 8، 11، 12
 };
 function buildSystemPrompt(project, lang, modelInfo, completedStations, completedBands, attachedFile) {
-{
   const langMap = {
     ar: "العربية",
     fr: "الفرنسية (Français)",
