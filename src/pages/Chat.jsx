@@ -7,6 +7,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../auth/AuthContext";
 import { useLanguage } from "../i18n/LanguageContext";
 import "./Chat.css";
+import DOMPurify from "dompurify";
 
 // الحدود اليومية لكل نموذج (مطابقة لسجلّ النماذج api/models.js)
 const DAILY_LIMITS = { fast: 20, deep: 5 };
@@ -376,6 +377,19 @@ export default function Chat() {
     setAttachedFile(null);
   }
 
+  // عرض SVG آمن: ينظّف الكود من أي سكربت أو حدث قبل عرضه رسماً
+  function SafeSvg({ code }) {
+    const clean = DOMPurify.sanitize(code, {
+      USE_PROFILES: { svg: true, svgFilters: true },
+    });
+    return (
+      <div
+        className="rafiq-svg"
+        dangerouslySetInnerHTML={{ __html: clean }}
+      />
+    );
+  }
+
   return (
     <div className="chat-page">
       <h2 className="chat-title">{t("chat.title")}</h2>
@@ -567,6 +581,13 @@ export default function Chat() {
   components={{
     strong: ({ children }) => <span>{children}</span>,
     em: ({ children }) => <span>{children}</span>,
+    code: ({ className, children }) => {
+      const isSvg = /language-svg/.test(className || "");
+      if (isSvg) {
+        return <SafeSvg code={String(children)} />;
+      }
+      return <code className={className}>{children}</code>;
+    },
   }}
 >
   {m.content}

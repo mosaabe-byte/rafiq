@@ -117,3 +117,5 @@
   align-items: center;
 }
 .lc-input-row button:disabled { background: #9ca3af; cursor: not-allowed; }
+.rafiq-svg { margin: 10px 0; max-width: 100%; overflow-x: auto; }
+.rafiq-svg svg { max-width: 100%; height: auto; }

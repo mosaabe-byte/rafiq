@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm';
 import { IconMessageCircle, IconX, IconSend } from '@tabler/icons-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import './LessonChat.css';
+import DOMPurify from 'dompurify';
 
 // نصوص النافذة بثلاث لغات
 const UI = {
@@ -81,6 +82,18 @@ export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) 
     }
   }
 
+  function SafeSvg({ code }) {
+    const clean = DOMPurify.sanitize(code, {
+      USE_PROFILES: { svg: true, svgFilters: true },
+    });
+    return (
+      <div
+        className="rafiq-svg"
+        dangerouslySetInnerHTML={{ __html: clean }}
+      />
+    );
+  }
+
   return (
     <>
       {/* الزرّ العائم */}
@@ -117,6 +130,13 @@ export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) 
                   components={{
                     strong: ({ children }) => <span>{children}</span>,
                     em: ({ children }) => <span>{children}</span>,
+                    code: ({ className, children }) => {
+                      const isSvg = /language-svg/.test(className || "");
+                      if (isSvg) {
+                        return <SafeSvg code={String(children)} />;
+                      }
+                      return <code className={className}>{children}</code>;
+                    },
                   }}
                 >
                   {m.content}

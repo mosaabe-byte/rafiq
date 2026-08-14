@@ -267,3 +267,12 @@
   border: 1px solid var(--border, #ddd); border-radius: 6px; padding: 1px 6px;
 }
 .attach-empty { padding: 10px; font-size: 0.82rem; opacity: 0.6; text-align: center; }
+.rafiq-svg {
+  margin: 10px 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.rafiq-svg svg {
+  max-width: 100%;
+  height: auto;
+}
