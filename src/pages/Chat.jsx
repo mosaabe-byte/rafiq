@@ -582,9 +582,12 @@ export default function Chat() {
     strong: ({ children }) => <span>{children}</span>,
     em: ({ children }) => <span>{children}</span>,
     code: ({ className, children }) => {
-      const isSvg = /language-svg/.test(className || "");
+      const raw = String(children);
+      const isSvg =
+        /language-svg/.test(className || "") || raw.includes("<svg");
       if (isSvg) {
-        return <SafeSvg code={String(children)} />;
+        const match = raw.match(/<svg[\s\S]*<\/svg>/i);
+        return <SafeSvg code={match ? match[0] : raw} />;
       }
       return <code className={className}>{children}</code>;
     },

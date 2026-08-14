@@ -131,12 +131,15 @@ export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) 
                     strong: ({ children }) => <span>{children}</span>,
                     em: ({ children }) => <span>{children}</span>,
                     code: ({ className, children }) => {
-                      const isSvg = /language-svg/.test(className || "");
-                      if (isSvg) {
-                        return <SafeSvg code={String(children)} />;
-                      }
-                      return <code className={className}>{children}</code>;
-                    },
+      const raw = String(children);
+      const isSvg =
+        /language-svg/.test(className || "") || raw.includes("<svg");
+      if (isSvg) {
+        const match = raw.match(/<svg[\s\S]*<\/svg>/i);
+        return <SafeSvg code={match ? match[0] : raw} />;
+      }
+      return <code className={className}>{children}</code>;
+    },
                   }}
                 >
                   {m.content}
