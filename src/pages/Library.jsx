@@ -4,9 +4,25 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
 import { useLanguage } from '../i18n/LanguageContext';
 import './Library.css';
+import * as pdfjsLib from "pdfjs-dist";
+import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 const MAX_SIZE = 10 * 1024 * 1024; // 10 ميغابايت
 const ACCEPTED = '.pdf,.txt,.md,.png,.jpg,.jpeg';
+
+// استخراج نصّ ملفّ PDF في المتصفّح (لجعله قابلاً للقراءة والإرفاق)
+async function extractPdfText(file) {
+  const buffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+  let text = "";
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map((it) => it.str).join(" ") + "\n";
+  }
+  return text.trim();
+}
 
 export default function Library() {
   const { user } = useAuth();
@@ -88,14 +104,21 @@ export default function Library() {
         .upload(path, file);
       if (upErr) throw upErr;
 
-      // استخراج نصّ الملفّ إن كان نصّياً (للقراءة لاحقاً)
+      // استخراج نصّ الملفّ إن أمكن (للقراءة والإرفاق لاحقاً)
       let contentText = null;
       const isText = file.type.startsWith('text/') || /\.(txt|md)$/i.test(file.name);
+      const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
       if (isText) {
         try {
           contentText = await file.text();
         } catch (e) {
           console.error('تعذّر استخراج النصّ:', e.message);
+        }
+      } else if (isPdf) {
+        try {
+          contentText = await extractPdfText(file);
+        } catch (e) {
+          console.error('تعذّر استخراج نصّ PDF:', e.message);
         }
       }
 
