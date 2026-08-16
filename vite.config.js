@@ -8,6 +8,10 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['apple-touch-icon.png', 'rafiq-icon.svg'],
+      workbox: {
+        // نماذج التضمين (wasm) كبيرة؛ نرفع حدّ التخزين المسبق ليسعها
+        maximumFileSizeToCacheInBytes: 30 * 1024 * 1024, // 30 ميغابايت
+      },
       manifest: {
         name: 'رفيق',
         short_name: 'رفيق',

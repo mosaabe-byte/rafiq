@@ -7,3 +7,5 @@ node_modules
 
 # Vercel
 .vercel
+# مجلّد البناء (يولّده Vercel تلقائياً — لا يُرفع)
+dist

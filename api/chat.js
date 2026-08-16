@@ -90,7 +90,7 @@ const PHASE_STATION_MAP = {
   6: [4, 5, 7],   // البيانات ↔ محطات 4، 5، 7
   7: [8, 11, 12], // السحابة والنشر ↔ محطات 8، 11، 12
 };
-function buildSystemPrompt(project, lang, modelInfo, completedStations, completedBands, attachedFile) {
+function buildSystemPrompt(project, lang, modelInfo, completedStations, completedBands, attachedFile, libraryContext) {
   const langMap = {
     ar: "العربية",
     fr: "الفرنسية (Français)",
@@ -265,6 +265,19 @@ ${content}${truncatedNote}
 `.trim();
 }
 
+// كتلة مقاطع المكتبة المسترجَعة دلاليّاً (RAG) — سياق صامت يثري إجابة رفيق
+function libraryContextBlock(libraryContext) {
+  if (!libraryContext || !libraryContext.trim()) return '';
+  return `
+=== مقاطع من مكتبة المستخدم (بحث دلاليّ) ===
+بحثنا في مكتبة المستخدم عن أنسب المقاطع لسؤاله، فوجدنا ما يلي. استند إليها إن كانت تخدم جوابك، واذكر أنّها من ملفّاته حين تستعملها («في أحد ملفّاتك...»). إن لم تكن ذات صلة بسؤاله الفعليّ فتجاهلها ولا تُقحمها.
+
+--- بداية المقاطع ---
+${libraryContext}
+--- نهاية المقاطع ---
+`.trim();
+}
+
   const context = `
 
 سياق المستخدم الحالي (استخدمه لتُخصّص ردودك، ورحّب به بوعي بمكانه دون أن تُكرر كل هذه المعلومات حرفياً في كل رد):
@@ -373,7 +386,9 @@ ${parts.join("\n")}
 
   const attachedFileSection = attachedFileBlock(attachedFile);
 
-return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + modeling + drawing + compass + boundaries + context + attachedFileSection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
+  const librarySection = libraryContextBlock(libraryContext);
+
+return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + modeling + drawing + compass + boundaries + context + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
 }
 
 export default async function handler(req, res) {
@@ -385,7 +400,7 @@ export default async function handler(req, res) {
   let modelKeyForLog = "unknown";
 
   try {
-    const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile } = req.body;
+    const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile, libraryContext } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "messages مطلوبة" });
@@ -405,7 +420,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: model.id,
         max_tokens: model.maxTokens,
-        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile),
+        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile, libraryContext),
         messages: messages,
       }),
     });

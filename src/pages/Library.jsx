@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { IconUpload, IconLoader2, IconFile, IconPhoto, IconFileText, IconDownload, IconTrash } from '@tabler/icons-react';
 import { supabase } from '../lib/supabase';
+import { indexFileChunks, searchLibrary } from "../lib/embedding";
 import { useAuth } from '../auth/AuthContext';
 import { useLanguage } from '../i18n/LanguageContext';
 import './Library.css';
@@ -69,7 +70,7 @@ export default function Library() {
     loadFiles();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
-
+    
   function onPickFile(e) {
     const f = e.target.files?.[0];
     setMessage({ type: '', text: '' });
@@ -122,20 +123,34 @@ export default function Library() {
         }
       }
 
-      // 2) تسجيله في الجدول
-      const { error: dbErr } = await supabase.from('library_files').insert({
-        user_id: user.id,
-        project_id: selectedProject ? Number(selectedProject) : null,
-        name: file.name,
-        path,
-        size: file.size,
-        type: file.type || null,
-        content_text: contentText,
-      });
+      // 2) تسجيله في الجدول (مع إرجاع id لربط المقاطع به)
+      const { data: inserted, error: dbErr } = await supabase
+        .from('library_files')
+        .insert({
+          user_id: user.id,
+          project_id: selectedProject ? Number(selectedProject) : null,
+          name: file.name,
+          path,
+          size: file.size,
+          type: file.type || null,
+          content_text: contentText,
+        })
+        .select('id')
+        .single();
       if (dbErr) {
         // تراجع: نحذف الملفّ المرفوع إن فشل التسجيل (لا نترك ملفّاً يتيماً)
         await supabase.storage.from('library').remove([path]);
         throw dbErr;
+      }
+
+      // 3) فهرسة المقاطع للبحث الدلاليّ (RAG) — إن كان للملفّ نصّ مستخرَج
+      if (contentText && contentText.trim()) {
+        setMessage({ type: 'success', text: `تمّ رفع «${file.name}» — جارٍ فهرسته للبحث...` });
+        try {
+          await indexFileChunks(inserted.id, user.id, contentText);
+        } catch (e) {
+          console.error('تعذّر فهرسة الملفّ:', e.message);
+        }
       }
 
       setMessage({ type: 'success', text: `تمّ رفع «${file.name}» بنجاح!` });

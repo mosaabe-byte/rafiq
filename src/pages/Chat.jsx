@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { supabase } from "../lib/supabase";
+import { searchLibrary } from "../lib/embedding";
 import { useAuth } from "../auth/AuthContext";
 import { useLanguage } from "../i18n/LanguageContext";
 import "./Chat.css";
@@ -288,6 +289,20 @@ export default function Chat() {
 
     const selectedProject = projects.find((p) => p.id === Number(selectedProjectId));
 
+    // بحث دلاليّ صامت في المكتبة (RAG) — فقط إن لم يُرفق ملفّ صراحةً
+    let libraryContext = null;
+    if (!attachedFile && user?.id) {
+      try {
+        const results = await searchLibrary(text, user.id, 4);
+        const relevant = results.filter((r) => r.similarity >= 0.4);
+        if (relevant.length > 0) {
+          libraryContext = relevant.map((r) => r.content).join("\n---\n");
+        }
+      } catch (e) {
+        console.error("تعذّر البحث في المكتبة:", e.message);
+      }
+    }
+    
     const newCount = todayCount + 1;
     setTodayCount(newCount);
     if (newCount >= limit) setLimitReached(true);
@@ -319,6 +334,7 @@ export default function Chat() {
           attachedFile: attachedFile
             ? { name: attachedFile.name, content: attachedFile.content }
             : null,
+          libraryContext,
         }),
       });
 
