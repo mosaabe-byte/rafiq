@@ -276,3 +276,47 @@
   max-width: 100%;
   height: auto;
 }
+/* ── كتلة الكود بزرّ نسخ ── */
+.code-block {
+  margin: 12px 0;
+  border: 1px solid var(--border, #d0d0d8);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #1e1e2e;
+  direction: ltr;
+  text-align: left;
+}
+.code-block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: #2a2a3c;
+  border-bottom: 1px solid #3a3a4c;
+}
+.code-block-lang {
+  font-family: Consolas, monospace;
+  font-size: 0.75rem;
+  color: #9a9ab0;
+  text-transform: uppercase;
+}
+.code-block-copy {
+  border: 1px solid #4a4a5c;
+  background: transparent;
+  color: #c0c0d0;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.code-block-copy:hover { background: #3a3a4c; }
+.code-block-body {
+  margin: 0;
+  padding: 12px 14px;
+  overflow-x: auto;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #e0e0ec;
+}
+.code-block-body code { white-space: pre; }

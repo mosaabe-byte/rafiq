@@ -406,6 +406,29 @@ export default function Chat() {
     );
   }
 
+  // كتلة كود بإطار وزرّ نسخ (تجربة مشابهة لِـ Claude)
+  function CodeBlock({ code, lang }) {
+    const [copied, setCopied] = useState(false);
+    const doCopy = async () => {
+      try {
+        await navigator.clipboard.writeText(code);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      } catch (e) {}
+    };
+    return (
+      <div className="code-block">
+        <div className="code-block-head">
+          <span className="code-block-lang">{lang || "code"}</span>
+          <button className="code-block-copy" onClick={doCopy}>
+            {copied ? t("chat.copied") : t("chat.copy")}
+          </button>
+        </div>
+        <pre className="code-block-body"><code>{code}</code></pre>
+      </div>
+    );
+  }
+
   return (
     <div className="chat-page">
       <h2 className="chat-title">{t("chat.title")}</h2>
@@ -605,6 +628,13 @@ export default function Chat() {
         const match = raw.match(/<svg[\s\S]*<\/svg>/i);
         return <SafeSvg code={match ? match[0] : raw} />;
       }
+      // كتلة كود حقيقيّة: لها لغة، أو متعدّدة الأسطر → إطار وزرّ نسخ
+      const langMatch = /language-(\w+)/.exec(className || "");
+      const isBlock = !!langMatch || raw.includes("\n");
+      if (isBlock) {
+        return <CodeBlock code={raw.replace(/\n$/, "")} lang={langMatch ? langMatch[1] : ""} />;
+      }
+      // كود صغير داخل السطر يبقى عاديّاً
       return <code className={className}>{children}</code>;
     },
   }}
