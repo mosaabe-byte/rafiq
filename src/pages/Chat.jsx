@@ -57,6 +57,7 @@ export default function Chat() {
   const [libraryFiles, setLibraryFiles] = useState([]);
   const [showFilePicker, setShowFilePicker] = useState(false);
   const [attachedFile, setAttachedFile] = useState(null); // { id, name, content }
+  const [attachedImage, setAttachedImage] = useState(null); // { dataUrl, mediaType }
 
   // استبدال {n} أو {phase} داخل نص الترجمة
   function tt(key, vars) {
@@ -310,6 +311,7 @@ export default function Chat() {
     const newMessages = [...messages, { role: "user", content: text }];
     setMessages(newMessages);
     setInput("");
+    setAttachedImage(null);
     setLoading(true);
 
     await supabase.from("messages").insert({
@@ -335,6 +337,9 @@ export default function Chat() {
             ? { name: attachedFile.name, content: attachedFile.content }
             : null,
           libraryContext,
+          attachedImage: attachedImage
+            ? { dataUrl: attachedImage.dataUrl, mediaType: attachedImage.mediaType }
+            : null,
         }),
       });
 
@@ -389,6 +394,26 @@ export default function Chat() {
     setAttachedFile({ id: f.id, name: f.name, content: f.content_text });
     setShowFilePicker(false);
   }
+
+// اختيار صورة وتحويلها إلى base64 لعرضها ولإرسالها لرفيق
+  function pickImage(e) {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    if (!f.type.startsWith("image/")) return;
+    if (f.size > 5 * 1024 * 1024) {
+      setMessage?.({ type: "error", text: "الصورة كبيرة (الحدّ 5 ميغابايت)." });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setAttachedImage({ dataUrl: reader.result, mediaType: f.type });
+    };
+    reader.readAsDataURL(f);
+  }
+  function removeImage() {
+    setAttachedImage(null);
+  }
+
   function removeAttached() {
     setAttachedFile(null);
   }
@@ -758,8 +783,43 @@ export default function Chat() {
         </div>
       )}
 
+      {/* معاينة الصورة المرفقة قبل الإرسال */}
+      {selectedProjectId && !limitReached && attachedImage && (
+        <div className="image-preview">
+          <img src={attachedImage.dataUrl} alt="معاينة" className="image-preview-img" />
+          <button
+            type="button"
+            className="image-preview-x"
+            onClick={removeImage}
+            aria-label={t("chat.remove")}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       {/* منطقة الإدخال: ثابتة أسفل الشاشة دائماً */}
       <div className="chat-input-row">
+        {selectedProjectId && !limitReached && (
+          <>
+            <input
+              type="file"
+              accept="image/*"
+              id="rafiq-image-input"
+              style={{ display: "none" }}
+              onChange={pickImage}
+            />
+            <button
+              type="button"
+              className="chat-image-btn"
+              onClick={() => document.getElementById("rafiq-image-input").click()}
+              aria-label={t("chat.attachImage")}
+              title={t("chat.attachImage")}
+            >
+              🖼️
+            </button>
+          </>
+        )}
         <input
           className="chat-input"
           value={input}

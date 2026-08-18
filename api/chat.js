@@ -410,7 +410,7 @@ export default async function handler(req, res) {
   let modelKeyForLog = "unknown";
 
   try {
-    const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile, libraryContext } = req.body;
+    const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile, libraryContext, attachedImage } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "messages مطلوبة" });
@@ -419,6 +419,31 @@ export default async function handler(req, res) {
     // اختيار النموذج من السجلّ المركزي (getModel يحمي تلقائياً بالرجوع للافتراضي).
     const model = getModel(modelKey);
     modelKeyForLog = model.key;
+
+    // إن أرفق المستخدم صورة، ندمجها في آخر رسالة له بصيغة Claude
+    let finalMessages = messages;
+    if (attachedImage && attachedImage.dataUrl) {
+      // dataUrl شكله: data:image/png;base64,XXXX — نستخرج النوع والبيانات
+      const match = attachedImage.dataUrl.match(/^data:(.+);base64,(.*)$/);
+      if (match) {
+        const mediaType = match[1];
+        const base64Data = match[2];
+        const lastIdx = messages.length - 1;
+        const lastMsg = messages[lastIdx];
+        // نبني محتوى مزيجاً: صورة + نصّ المستخدم
+        const newContent = [
+          {
+            type: "image",
+            source: { type: "base64", media_type: mediaType, data: base64Data },
+          },
+          { type: "text", text: lastMsg.content || "" },
+        ];
+        finalMessages = [
+          ...messages.slice(0, lastIdx),
+          { role: "user", content: newContent },
+        ];
+      }
+    }
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -431,7 +456,7 @@ export default async function handler(req, res) {
         model: model.id,
         max_tokens: model.maxTokens,
         system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile, libraryContext),
-        messages: messages,
+        messages: finalMessages,
       }),
     });
 

@@ -156,6 +156,7 @@ export const translations = {
       remove: "إزالة",
       noTextFiles: "لا ملفّات نصّية جاهزة في هذا المشروع",
       general: "عامّ",
+      attachImage: "أرفق صورة",
       
     },
     profile: {
@@ -474,6 +475,7 @@ export const translations = {
       remove: "Retirer",
       noTextFiles: "Aucun fichier texte prêt dans ce projet",
       general: "Général",
+      attachImage: "Joindre une image",
     },
     auth: {
       signinTitle:"Connexion", signupTitle:"Créer un compte",
@@ -663,6 +665,7 @@ export const translations = {
       remove: "Remove",
       noTextFiles: "No ready text files in this project",
       general: "General",
+      attachImage: "Attach an image",
     },
     profile: {
       editName: "Edit name",
