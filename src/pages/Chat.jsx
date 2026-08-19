@@ -58,6 +58,7 @@ export default function Chat() {
   const [showFilePicker, setShowFilePicker] = useState(false);
   const [attachedFile, setAttachedFile] = useState(null); // { id, name, content }
   const [attachedImage, setAttachedImage] = useState(null); // { dataUrl, mediaType }
+  const [userEnv, setUserEnv] = useState(null);
 
   // استبدال {n} أو {phase} داخل نص الترجمة
   function tt(key, vars) {
@@ -159,12 +160,16 @@ export default function Chat() {
 
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("full_name")
+        .select("full_name, environment")
         .eq("id", user.id)
         .maybeSingle();
 
       if (!cancelled && !profileError && profile?.full_name) {
         setUserName(profile.full_name);
+        if (!cancelled && !profileError && profile) {
+        if (profile.full_name) setUserName(profile.full_name);
+        if (profile.environment) setUserEnv(profile.environment);
+      }
       }
     }
 
@@ -337,6 +342,7 @@ export default function Chat() {
             ? { name: attachedFile.name, content: attachedFile.content }
             : null,
           libraryContext,
+          userEnv,
           attachedImage: attachedImage
             ? { dataUrl: attachedImage.dataUrl, mediaType: attachedImage.mediaType }
             : null,

@@ -90,7 +90,7 @@ const PHASE_STATION_MAP = {
   6: [4, 5, 7],   // البيانات ↔ محطات 4، 5، 7
   7: [8, 11, 12], // السحابة والنشر ↔ محطات 8، 11، 12
 };
-function buildSystemPrompt(project, lang, modelInfo, completedStations, completedBands, attachedFile, libraryContext) {
+function buildSystemPrompt(project, lang, modelInfo, completedStations, completedBands, attachedFile, libraryContext, userEnv) {
   const langMap = {
     ar: "العربية",
     fr: "الفرنسية (Français)",
@@ -263,6 +263,26 @@ function attachedFileBlock(attachedFile) {
       '\n\n[ملاحظة: هذا مقتطف من بداية الملفّ لأنّه كبير؛ إن احتجت ما بعده فاطلب من المستخدم الجزء المحدّد الذي يهمّه.]';
   }
 
+  // كتلة حالة أدوات بيئة المستخدم — فيعرفها رفيق ولا يسأل عمّا هو مسجَّل
+function environmentBlock(userEnv) {
+  if (!userEnv || typeof userEnv !== "object") return "";
+  const entries = Object.entries(userEnv);
+  if (entries.length === 0) return "";
+
+  const installed = entries.filter(([, v]) => v === "installed").map(([k]) => k);
+  const deferred = entries.filter(([, v]) => v === "deferred").map(([k]) => k);
+
+  let text = "=== حالة أدوات بيئة المستخدم (تعرفها فلا تسأل عنها من جديد) ===\n";
+  if (installed.length > 0) {
+    text += `مثبّتة وجاهزة على جهازه: ${installed.join("، ")}. ابنِ عليها مباشرةً، ولا تسأله هل ثبّتها — فهذا مؤكّد.\n`;
+  }
+  if (deferred.length > 0) {
+    text += `مؤجّلة (قرّر تثبيتها لاحقاً): ${deferred.join("، ")}. حين تصل الحاجة إليها، قُدها بصيغة «سنثبّت هذه الأداة أولاً» لا بصيغة السؤال «هل ثبّتها».\n`;
+  }
+  text += "قاعدة: لا تسأل المستخدم عن أداة حالتها مسجّلة هنا. إن احتاج المشروع أداة غير مذكورة، حينها فقط استكشف حالتها معه.";
+  return text.trim();
+}
+
   return `
 === ملفّ أرفقه المستخدم من مكتبته ===
 اسم الملفّ: ${name}
@@ -398,7 +418,9 @@ ${parts.join("\n")}
 
   const librarySection = libraryContextBlock(libraryContext);
 
-return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + context + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
+  const environmentSection = environmentBlock(userEnv);
+
+return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + context + environmentSection + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
 }
 
 export default async function handler(req, res) {
@@ -410,7 +432,7 @@ export default async function handler(req, res) {
   let modelKeyForLog = "unknown";
 
   try {
-    const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile, libraryContext, attachedImage } = req.body;
+    const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile, libraryContext, attachedImage, userEnv } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "messages مطلوبة" });
@@ -455,7 +477,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: model.id,
         max_tokens: model.maxTokens,
-        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile, libraryContext),
+        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile, libraryContext, userEnv),
         messages: finalMessages,
       }),
     });
