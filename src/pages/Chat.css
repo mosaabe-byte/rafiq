@@ -318,6 +318,7 @@
   font-size: 0.85rem;
   line-height: 1.5;
   color: #e0e0ec;
+  background: #1e1e2e;
 }
 .code-block-body code { white-space: pre; }
 /* ── زرّ الصورة ومعاينتها ── */

@@ -159,12 +159,12 @@ export default function Chat() {
 
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("name")
+        .select("full_name")
         .eq("id", user.id)
         .maybeSingle();
 
-      if (!cancelled && !profileError && profile?.name) {
-        setUserName(profile.name);
+      if (!cancelled && !profileError && profile?.full_name) {
+        setUserName(profile.full_name);
       }
     }
 
