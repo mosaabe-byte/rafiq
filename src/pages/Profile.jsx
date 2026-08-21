@@ -307,39 +307,6 @@ export default function Profile() {
   return (
     <div className="profile">
       <div className="profile-hero">
-              {/* ── بيئة العمل: أدوات المستخدم ── */}
-      <div className="env-section">
-        <h3 className="env-title">{t('profile.envTitle')}</h3>
-        <p className="env-hint">{t('profile.envHint')}</p>
-        <div className="env-tools">
-          {[
-            { key: 'node', label: 'Node.js' },
-            { key: 'git', label: 'Git' },
-            { key: 'vscode', label: 'VS Code' },
-            { key: 'postgresql', label: 'PostgreSQL' },
-          ].map((tool) => (
-            <div className="env-tool" key={tool.key}>
-              <span className="env-tool-name">{tool.label}</span>
-              <div className="env-tool-actions">
-                <button
-                  className={'env-tool-btn' + (environment[tool.key] === 'installed' ? ' active-installed' : '')}
-                  onClick={() => updateTool(tool.key, 'installed')}
-                  disabled={savingTool === tool.key}
-                >
-                  {t('profile.envInstalled')}
-                </button>
-                <button
-                  className={'env-tool-btn' + (environment[tool.key] === 'deferred' ? ' active-deferred' : '')}
-                  onClick={() => updateTool(tool.key, 'deferred')}
-                  disabled={savingTool === tool.key}
-                >
-                  {t('profile.envDeferred')}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
         <div className="big-avatar">{initial}</div>
         <div className="hero-info">
           {editingName ? (
@@ -475,7 +442,39 @@ export default function Profile() {
               })}
             </div>
           </div>
-
+                {/* ── بيئة العمل: أدوات المستخدم ── */}
+      <div className="env-section">
+        <h3 className="env-title">{t('profile.envTitle')}</h3>
+        <p className="env-hint">{t('profile.envHint')}</p>
+        <div className="env-tools">
+          {[
+            { key: 'node', label: 'Node.js' },
+            { key: 'git', label: 'Git' },
+            { key: 'vscode', label: 'VS Code' },
+            { key: 'postgresql', label: 'PostgreSQL' },
+          ].map((tool) => (
+            <div className="env-tool" key={tool.key}>
+              <span className="env-tool-name">{tool.label}</span>
+              <div className="env-tool-actions">
+                <button
+                  className={'env-tool-btn' + (environment[tool.key] === 'installed' ? ' active-installed' : '')}
+                  onClick={() => updateTool(tool.key, 'installed')}
+                  disabled={savingTool === tool.key}
+                >
+                  {t('profile.envInstalled')}
+                </button>
+                <button
+                  className={'env-tool-btn' + (environment[tool.key] === 'deferred' ? ' active-deferred' : '')}
+                  onClick={() => updateTool(tool.key, 'deferred')}
+                  disabled={savingTool === tool.key}
+                >
+                  {t('profile.envDeferred')}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
           <div className="profile-section">
             <h2><IconTrophy size={16} /> ما أنجزتَه</h2>
             {projectList.length === 0 ? (
