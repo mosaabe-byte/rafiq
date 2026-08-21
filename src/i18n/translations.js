@@ -208,6 +208,10 @@ export const translations = {
       deleteConfirmWord: "حذف",
       deleteConfirmBtn: "أحذف حسابي نهائياً",
       deleting: "جارٍ الحذف…",
+      envTitle: "بيئة العمل",
+      envHint: "أخبر رفيق بالأدوات المثبّتة على جهازك، فلا يسألك عنها ويبني عليها مباشرةً.",
+      envInstalled: "مثبّتة",
+      envDeferred: "لاحقاً",
     },
 
     privacy: { back: 'رجوع للملف الشخصي', version: 'النسخة' },
@@ -428,6 +432,10 @@ export const translations = {
       deleteConfirmWord: "supprimer",
       deleteConfirmBtn: "Supprimer mon compte définitivement",
       deleting: "Suppression…",
+      envTitle: "Environnement de travail",
+      envHint: "Indiquez à Rafiq les outils installés sur votre machine.",
+      envInstalled: "Installé",
+      envDeferred: "Plus tard",
     },
 
     privacy: { back: 'Retour au profil', version: 'Version' },
@@ -716,6 +724,10 @@ export const translations = {
       deleteConfirmWord: "delete",
       deleteConfirmBtn: "Delete my account permanently",
       deleting: "Deleting…",
+      envTitle: "Work environment",
+      envHint: "Tell Rafiq which tools are installed on your machine.",
+      envInstalled: "Installed",
+      envDeferred: "Later",
     },
 
     privacy: { back: 'Back to profile', version: 'Version' },

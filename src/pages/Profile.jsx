@@ -49,6 +49,8 @@ export default function Profile() {
   const [activity, setActivity] = useState([]);
   const [nextStep, setNextStep] = useState({ key: 'addProject', to: '/' });
   const [loading, setLoading] = useState(true);
+  const [environment, setEnvironment] = useState({});
+  const [savingTool, setSavingTool] = useState(null);
 
   // حالة تعديل الاسم
   const [editingName, setEditingName] = useState(false);
@@ -84,12 +86,22 @@ export default function Profile() {
         .select('id', { count: 'exact', head: true })
         .eq('user_id', user.id);
 
-        const stationsRes = await supabase
+      const stationsRes = await supabase
         .from('station_completions')
         .select('station_number')
         .eq('user_id', user.id);
 
+      const profileRes = await supabase
+        .from('profiles')
+        .select('environment')
+        .eq('id', user.id)
+        .maybeSingle();
+
       if (cancelled) return;
+
+      if (profileRes.data?.environment) {
+        setEnvironment(profileRes.data.environment);
+      }
 
       const projectRows = projectsRes.data || [];
       const projectCount = projectRows.length;
@@ -271,9 +283,63 @@ export default function Profile() {
     return { cls: 'ongoing', badge: 'قيد الإنجاز ⏳', text };
   }
 
+    // تحديث حالة أداة في بيئة المستخدم وحفظها فوراً
+  async function updateTool(tool, status) {
+    if (!user) return;
+    setSavingTool(tool);
+    // إن ضغط الحالة نفسها، نزيلها (تبديل)؛ وإلّا نضبطها
+    const newEnv = { ...environment };
+    if (newEnv[tool] === status) {
+      delete newEnv[tool];
+    } else {
+      newEnv[tool] = status;
+    }
+    const { error } = await supabase
+      .from('profiles')
+      .update({ environment: newEnv })
+      .eq('id', user.id);
+    if (!error) {
+      setEnvironment(newEnv);
+    }
+    setSavingTool(null);
+  }
+
   return (
     <div className="profile">
       <div className="profile-hero">
+              {/* ── بيئة العمل: أدوات المستخدم ── */}
+      <div className="env-section">
+        <h3 className="env-title">{t('profile.envTitle')}</h3>
+        <p className="env-hint">{t('profile.envHint')}</p>
+        <div className="env-tools">
+          {[
+            { key: 'node', label: 'Node.js' },
+            { key: 'git', label: 'Git' },
+            { key: 'vscode', label: 'VS Code' },
+            { key: 'postgresql', label: 'PostgreSQL' },
+          ].map((tool) => (
+            <div className="env-tool" key={tool.key}>
+              <span className="env-tool-name">{tool.label}</span>
+              <div className="env-tool-actions">
+                <button
+                  className={'env-tool-btn' + (environment[tool.key] === 'installed' ? ' active-installed' : '')}
+                  onClick={() => updateTool(tool.key, 'installed')}
+                  disabled={savingTool === tool.key}
+                >
+                  {t('profile.envInstalled')}
+                </button>
+                <button
+                  className={'env-tool-btn' + (environment[tool.key] === 'deferred' ? ' active-deferred' : '')}
+                  onClick={() => updateTool(tool.key, 'deferred')}
+                  disabled={savingTool === tool.key}
+                >
+                  {t('profile.envDeferred')}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
         <div className="big-avatar">{initial}</div>
         <div className="hero-info">
           {editingName ? (
