@@ -363,3 +363,53 @@
   font-size: 0.8rem;
   line-height: 1;
 }
+/* ── الجسم: محادثة + مساحة عمل ── */
+.chat-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  gap: 0;
+}
+.chat-body .chat-messages {
+  flex: 1;
+  min-width: 0;
+}
+/* مساحة العمل: عمود جانبيّ على الحاسوب */
+.chat-workspace {
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+  border-inline-start: 1px solid var(--border, #e0e0e8);
+  background: var(--card-bg, #fafafa);
+  min-height: 0;
+}
+.workspace-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border, #e0e0e8);
+  font-weight: 700;
+}
+.workspace-close {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #888;
+}
+.workspace-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+}
+/* على الهاتف: مساحة العمل تحت المحادثة (لا جنبها) */
+@media (max-width: 768px) {
+  .chat-body { flex-direction: column; }
+  .chat-workspace {
+    width: 100%;
+    border-inline-start: none;
+    border-top: 1px solid var(--border, #e0e0e8);
+    max-height: 40vh;
+  }
+}

@@ -157,7 +157,9 @@ export const translations = {
       noTextFiles: "لا ملفّات نصّية جاهزة في هذا المشروع",
       general: "عامّ",
       attachImage: "أرفق صورة",
-      
+      workspace: "مساحة العمل",
+      close: "إغلاق",
+      openWorkspace: "افتح في مساحة العمل",
     },
     profile: {
       editName: "تعديل الاسم",
@@ -484,6 +486,9 @@ export const translations = {
       noTextFiles: "Aucun fichier texte prêt dans ce projet",
       general: "Général",
       attachImage: "Joindre une image",
+      workspace: "Espace de travail",
+      close: "Fermer",
+      openWorkspace: "Ouvrir dans l'espace",
     },
     auth: {
       signinTitle:"Connexion", signupTitle:"Créer un compte",
@@ -674,6 +679,9 @@ export const translations = {
       noTextFiles: "No ready text files in this project",
       general: "General",
       attachImage: "Attach an image",
+      workspace: "Workspace",
+      close: "Close",
+      openWorkspace: "Open in workspace",
     },
     profile: {
       editName: "Edit name",

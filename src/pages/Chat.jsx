@@ -59,6 +59,7 @@ export default function Chat() {
   const [attachedFile, setAttachedFile] = useState(null); // { id, name, content }
   const [attachedImage, setAttachedImage] = useState(null); // { dataUrl, mediaType }
   const [userEnv, setUserEnv] = useState(null);
+  const [workspaceContent, setWorkspaceContent] = useState(null); // { type, content } — المُنتَج المعروض
 
   // استبدال {n} أو {phase} داخل نص الترجمة
   function tt(key, vars) {
@@ -465,6 +466,35 @@ export default function Chat() {
     );
   }
 
+    // عرض رسالة في مساحة العمل بنفس تنسيق المحادثة (كود، رسم، نصّ)
+  function renderWorkspaceMessage(content) {
+    return (
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          strong: ({ children }) => <span>{children}</span>,
+          em: ({ children }) => <span>{children}</span>,
+          code: ({ className, children }) => {
+            const raw = String(children);
+            const isSvg = /language-svg/.test(className || "") || raw.includes("<svg");
+            if (isSvg) {
+              const match = raw.match(/<svg[\s\S]*<\/svg>/i);
+              return <SafeSvg code={match ? match[0] : raw} />;
+            }
+            const langMatch = /language-(\w+)/.exec(className || "");
+            const isBlock = !!langMatch || raw.includes("\n");
+            if (isBlock) {
+              return <CodeBlock code={raw.replace(/\n$/, "")} lang={langMatch ? langMatch[1] : ""} />;
+            }
+            return <code className={className}>{children}</code>;
+          },
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    );
+  }
+
   return (
     <div className="chat-page">
       <h2 className="chat-title">{t("chat.title")}</h2>
@@ -498,8 +528,10 @@ export default function Chat() {
           </button>
         </div>
       )}
-      {/* منطقة الرسائل: تتمدّد وتتمرّر وحدها */}
-      <div className="chat-messages">
+      {/* الجسم: محادثة + مساحة عمل (على الحاسوب جنباً إلى جنب) */}
+      <div className={"chat-body" + (workspaceContent ? " has-workspace" : "")}>
+        {/* منطقة الرسائل: تتمدّد وتتمرّر وحدها */}
+        <div className="chat-messages">
         {!selectedProjectId && (
           <p className="chat-hint">{t("chat.pickToStart")}</p>
         )}
@@ -688,6 +720,16 @@ export default function Chat() {
                   {copiedIndex === i ? t("chat.copied") : t("chat.copy")}
                 </button>
 
+                {/* افتح المخرج في مساحة العمل — يظهر إن كان الردّ يحوي كوداً أو رسماً */}
+                {(m.content.includes("```") || m.content.includes("<svg")) && (
+                  <button
+                    className="chat-action-btn"
+                    onClick={() => setWorkspaceContent({ type: "message", content: renderWorkspaceMessage(m.content) })}
+                  >
+                    {t("chat.openWorkspace")}
+                  </button>
+                )}
+
                 {reportedIndexes.includes(i) ? (
                   <span className="chat-report-thanks">{t("chat.reportThanks")}</span>
                 ) : (
@@ -734,6 +776,26 @@ export default function Chat() {
 
         {loading && <p className="chat-hint">{t("chat.typing")}</p>}
         <div ref={messagesEndRef} />
+      </div>
+
+        {/* مساحة العمل: تظهر حين يكون فيها مُنتَج */}
+        {workspaceContent && (
+          <div className="chat-workspace">
+            <div className="workspace-head">
+              <span className="workspace-title">{t("chat.workspace")}</span>
+              <button
+                className="workspace-close"
+                onClick={() => setWorkspaceContent(null)}
+                aria-label={t("chat.close")}
+              >
+                ✕
+              </button>
+            </div>
+            <div className="workspace-body">
+              {workspaceContent.content}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* تنبيه بلوغ الحدّ اليومي */}
