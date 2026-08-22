@@ -352,13 +352,18 @@ export default function Chat() {
       const data = await res.json();
 
       if (data.reply) {
-        setMessages([...newMessages, { role: "assistant", content: data.reply }]);
+        // إن اقتُطِع الردّ بسبب الطول، نُلحق تنبيهاً واضحاً فلا يظنّ المستخدم الناقص كاملاً
+        let replyText = data.reply;
+        if (data.truncated) {
+          replyText += "\n\n---\n\n⚠️ **هذا الردّ طويل ولم يكتمل بعد.** اكتب «تابع» لإكمال بقيّته.";
+        }
+        setMessages([...newMessages, { role: "assistant", content: replyText }]);
 
         await supabase.from("messages").insert({
           conversation_id: conversationId,
           user_id: user.id,
           role: "assistant",
-          content: data.reply,
+          content: replyText,
           input_tokens: data.usage?.input_tokens ?? null,
           output_tokens: data.usage?.output_tokens ?? null,
         });

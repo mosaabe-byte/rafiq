@@ -499,12 +499,15 @@ export default async function handler(req, res) {
       .map((block) => (block.type === "text" ? block.text : ""))
       .join("");
 
+    // هل اقتُطِع الردّ بسبب حدّ الطول؟ (max_tokens) لا لأنّه اكتمل طبيعيّاً (end_turn)
+    const truncated = data.stop_reason === "max_tokens";
+
     // إشارة استخدام خفيفة: بيانات مجرّدة فقط (لا محتوى محادثة، لا اسم مشروع) — تطبيقاً لتقليل البيانات.
     console.log(
       `[RAFIQ_USAGE] model=${modelKeyForLog} mode=${lesson ? "lesson" : "chat"} phase=${project?.phase_number ?? "-"} level=${project?.level ?? "-"} turns=${messages.length} ms=${Date.now() - startedAt}`
     );
 
-    return res.status(200).json({ reply, usage: data.usage, modelKey: model.key });
+    return res.status(200).json({ reply, truncated, usage: data.usage, modelKey: model.key });
   } catch (error) {
     // مراقبة: يُسجَّل الخطأ الداخلي على الخادم، ويُرَدّ للمستخدم رسالة عامّة (لا تفاصيل داخلية).
     console.error(

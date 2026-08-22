@@ -26,7 +26,7 @@ export const MODELS = {
       en: "Fast and light — for daily questions, explanations, and guidance",
     },
     dailyLimit: 20,
-    maxTokens: 1024,
+    maxTokens: 2048,
   },
 
   deep: {
@@ -43,7 +43,7 @@ export const MODELS = {
       en: "Stronger and deeper — for hard tasks: untangling complex errors, precise review, complex decisions",
     },
     dailyLimit: 5,
-    maxTokens: 2048,
+    maxTokens: 4096,
   },
 };
 
