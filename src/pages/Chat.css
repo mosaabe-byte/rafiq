@@ -320,7 +320,13 @@
   color: #e0e0ec;
   background: #1e1e2e;
 }
-.code-block-body code { white-space: pre; }
+.code-block-body code {
+  white-space: pre;
+  background: transparent;   /* يلغي الخلفيّة الفاتحة الموروثة */
+  color: #e0e0ec;            /* نصّ فاتح صريح على الجسم الداكن */
+  padding: 0;
+  font-family: inherit;
+}
 /* ── زرّ الصورة ومعاينتها ── */
 .chat-image-btn {
   border: none;
