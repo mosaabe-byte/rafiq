@@ -62,6 +62,7 @@ export default function Chat() {
   const [workspaceContent, setWorkspaceContent] = useState(null); // { type, content } — المُنتَج المعروض
   const [workspaceEditInput, setWorkspaceEditInput] = useState("");
   const [workspaceEditing, setWorkspaceEditing] = useState(false);
+  const [envSuggestion, setEnvSuggestion] = useState(null); // { tool, status }
 
   // استبدال {n} أو {phase} داخل نص الترجمة
   function tt(key, vars) {
@@ -360,6 +361,13 @@ export default function Chat() {
         if (data.truncated) {
           replyText += "\n\n---\n\n⚠️ **هذا الردّ طويل ولم يكتمل بعد.** اكتب «تابع» لإكمال بقيّته.";
         }
+
+        // استخراج وسم التوثيق التلقائيّ [[ENV:tool=status]] إن وُجد
+        const envMatch = replyText.match(/\[\[ENV:(node|git|vscode|postgresql)=(installed|deferred)\]\]/);
+        if (envMatch) {
+          setEnvSuggestion({ tool: envMatch[1], status: envMatch[2] });
+          replyText = replyText.replace(envMatch[0], "").trim(); // نخفي الوسم من العرض
+        }
         setMessages([...newMessages, { role: "assistant", content: replyText }]);
 
         await supabase.from("messages").insert({
@@ -497,7 +505,7 @@ export default function Chat() {
     );
   }
 
-      async function requestWorkspaceEdit() {
+    async function requestWorkspaceEdit() {
     if (!workspaceEditInput.trim() || !workspaceContent?.raw) return;
     setWorkspaceEditing(true);
     const editRequest = workspaceEditInput.trim();
@@ -561,6 +569,20 @@ export default function Chat() {
       setMessages([...messages, { role: "assistant", content: t("chat.errorPrefix") + t("chat.errorUnknown") }]);
     }
     setWorkspaceEditing(false);
+  }
+
+    // توثيق حالة الأداة في البيئة (بضغط المستخدم — لا تلقائيّاً)
+  async function confirmEnvSuggestion() {
+    if (!envSuggestion || !user) return;
+    const newEnv = { ...(userEnv || {}), [envSuggestion.tool]: envSuggestion.status };
+    const { error } = await supabase
+      .from("profiles")
+      .update({ environment: newEnv })
+      .eq("id", user.id);
+    if (!error) {
+      setUserEnv(newEnv);
+    }
+    setEnvSuggestion(null);
   }
 
   return (
@@ -955,6 +977,25 @@ export default function Chat() {
           >
             ✕
           </button>
+        </div>
+      )}
+
+            {/* اقتراح توثيق حالة أداة في البيئة */}
+      {envSuggestion && (
+        <div className="env-suggestion">
+          <span className="env-suggestion-text">
+            {t("chat.envDocPrompt")
+              .replace("{tool}", envSuggestion.tool)
+              .replace("{status}", envSuggestion.status === "installed" ? t("chat.envInstalledShort") : t("chat.envDeferredShort"))}
+          </span>
+          <div className="env-suggestion-actions">
+            <button className="env-suggestion-yes" onClick={confirmEnvSuggestion}>
+              {t("chat.envDocConfirm")}
+            </button>
+            <button className="env-suggestion-no" onClick={() => setEnvSuggestion(null)}>
+              {t("chat.envDocDismiss")}
+            </button>
+          </div>
         </div>
       )}
 

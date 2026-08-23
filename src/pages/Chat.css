@@ -440,3 +440,26 @@
   white-space: nowrap;
 }
 .workspace-edit-btn:disabled { opacity: 0.5; cursor: default; }
+/* ── اقتراح توثيق البيئة ── */
+.env-suggestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  margin: 8px 0;
+  background: #f0ebfb;
+  border: 1px solid #d5c7f0;
+  border-radius: 10px;
+  flex-wrap: wrap;
+}
+.env-suggestion-text { font-size: 0.9rem; color: #3D2A73; }
+.env-suggestion-actions { display: flex; gap: 8px; }
+.env-suggestion-yes {
+  padding: 5px 14px; border: none; border-radius: 7px;
+  background: #6C4AB6; color: #fff; cursor: pointer; font-weight: 600;
+}
+.env-suggestion-no {
+  padding: 5px 14px; border: 1px solid #d0d0d8; border-radius: 7px;
+  background: transparent; cursor: pointer;
+}
