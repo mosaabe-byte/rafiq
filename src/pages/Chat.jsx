@@ -60,6 +60,8 @@ export default function Chat() {
   const [attachedImage, setAttachedImage] = useState(null); // { dataUrl, mediaType }
   const [userEnv, setUserEnv] = useState(null);
   const [workspaceContent, setWorkspaceContent] = useState(null); // { type, content } — المُنتَج المعروض
+  const [workspaceEditInput, setWorkspaceEditInput] = useState("");
+  const [workspaceEditing, setWorkspaceEditing] = useState(false);
 
   // استبدال {n} أو {phase} داخل نص الترجمة
   function tt(key, vars) {
@@ -495,6 +497,72 @@ export default function Chat() {
     );
   }
 
+      async function requestWorkspaceEdit() {
+    if (!workspaceEditInput.trim() || !workspaceContent?.raw) return;
+    setWorkspaceEditing(true);
+    const editRequest = workspaceEditInput.trim();
+    setWorkspaceEditInput("");
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [
+            { role: "user", content: editRequest },
+          ],
+          project: projects.find((p) => p.id === Number(selectedProjectId)) || null,
+          lang,
+          modelKey,
+          completedStations,
+          completedBands,
+          userEnv,
+          workspaceEdit: {
+            current: workspaceContent.raw,
+            request: editRequest,
+          },
+        }),
+      });
+
+      const data = await res.json();
+      if (data.reply) {
+        // نفصل المُنتَج المحدَّث (داخل الوسم) عن الشرح
+        const startTag = "===WORKSPACE_START===";
+        const endTag = "===WORKSPACE_END===";
+        const s = data.reply.indexOf(startTag);
+        const e = data.reply.indexOf(endTag);
+
+        if (s !== -1 && e !== -1 && e > s) {
+          const updated = data.reply.slice(s + startTag.length, e).trim();
+          const explanation = (data.reply.slice(0, s) + data.reply.slice(e + endTag.length)).trim();
+          // المُنتَج المحدَّث يحلّ محلّ القديم في المساحة
+          setWorkspaceContent({ type: "message", raw: updated, content: renderWorkspaceMessage(updated) });
+          // الشرح يظهر في المحادثة
+          if (explanation) {
+            const newMsgs = [...messages, { role: "assistant", content: explanation }];
+            setMessages(newMsgs);
+            await supabase.from("messages").insert({
+              conversation_id: conversationId, user_id: user.id,
+              role: "assistant", content: explanation,
+            });
+          }
+        } else {
+          // لم يضع رفيق الوسم: نعرض الردّ كاملاً في المحادثة (أأمن، لا نفقد شيئاً)
+          const newMsgs = [...messages, { role: "assistant", content: data.reply }];
+          setMessages(newMsgs);
+          await supabase.from("messages").insert({
+            conversation_id: conversationId, user_id: user.id,
+            role: "assistant", content: data.reply,
+          });
+        }
+      }
+    } catch (err) {
+      // خطأ: لا نكسر المساحة، نضيف تنبيهاً للمحادثة
+      setMessages([...messages, { role: "assistant", content: t("chat.errorPrefix") + t("chat.errorUnknown") }]);
+    }
+    setWorkspaceEditing(false);
+  }
+
   return (
     <div className="chat-page">
       <h2 className="chat-title">{t("chat.title")}</h2>
@@ -724,7 +792,7 @@ export default function Chat() {
                 {(m.content.includes("```") || m.content.includes("<svg")) && (
                   <button
                     className="chat-action-btn"
-                    onClick={() => setWorkspaceContent({ type: "message", content: renderWorkspaceMessage(m.content) })}
+                    onClick={() => setWorkspaceContent({ type: "message", raw: m.content, content: renderWorkspaceMessage(m.content) })}
                   >
                     {t("chat.openWorkspace")}
                   </button>
@@ -794,6 +862,25 @@ export default function Chat() {
             <div className="workspace-body">
               {workspaceContent.content}
             </div>
+            {workspaceContent.raw && (
+              <div className="workspace-edit">
+                <input
+                  className="workspace-edit-input"
+                  value={workspaceEditInput}
+                  onChange={(e) => setWorkspaceEditInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && requestWorkspaceEdit()}
+                  placeholder={t("chat.workspaceEditPlaceholder")}
+                  disabled={workspaceEditing}
+                />
+                <button
+                  className="workspace-edit-btn"
+                  onClick={requestWorkspaceEdit}
+                  disabled={workspaceEditing || !workspaceEditInput.trim()}
+                >
+                  {workspaceEditing ? "..." : t("chat.workspaceEditBtn")}
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

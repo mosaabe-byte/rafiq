@@ -432,7 +432,7 @@ export default async function handler(req, res) {
   let modelKeyForLog = "unknown";
 
   try {
-    const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile, libraryContext, attachedImage, userEnv } = req.body;
+  const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile, libraryContext, attachedImage, userEnv, workspaceEdit } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "messages مطلوبة" });
@@ -467,6 +467,24 @@ export default async function handler(req, res) {
       }
     }
 
+        // تعديل حيّ لمُنتَج في مساحة العمل
+    let editSystem = null;
+    if (workspaceEdit && workspaceEdit.current) {
+      editSystem = `أنت رفيق، ترافق المستخدم في تعديل مُنتَج يعرضه في «مساحة العمل».
+المُنتَج الحاليّ:
+${workspaceEdit.current}
+
+طلب المستخدم: ${workspaceEdit.request}
+
+المطلوب منك بدقّة:
+1. اكتب أولاً شرحاً موجزاً (جملة أو جملتين) لِما عدّلته ولماذا — بالعربية، ودّياً، ليتعلّم المستخدم ويطمئنّ أنّ تعديله أُخِذ في الحسبان.
+2. ثمّ ضع المُنتَج المحدَّث كاملاً بين وسمين، هكذا بالضبط:
+===WORKSPACE_START===
+(المُنتَج المحدَّث كاملاً هنا — بنفس صيغة الأصل: إن كان خطّة Markdown فخطّة، إن كان كوداً فكود)
+===WORKSPACE_END===
+لا تكتب شيئاً بعد ===WORKSPACE_END===. أعطِ المُنتَج كاملاً محدَّثاً، لا جزءاً منه.`;
+    }
+
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -477,7 +495,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: model.id,
         max_tokens: model.maxTokens,
-        system: lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile, libraryContext, userEnv),
+                system: editSystem ? editSystem : (lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile, libraryContext, userEnv)),
         messages: finalMessages,
       }),
     });

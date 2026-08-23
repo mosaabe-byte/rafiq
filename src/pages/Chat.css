@@ -413,3 +413,30 @@
     max-height: 40vh;
   }
 }
+/* ── حقل تعديل مساحة العمل ── */
+.workspace-edit {
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--border, #e0e0e8);
+}
+.workspace-edit-input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--border, #d0d0d8);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+.workspace-edit-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary, #6C4AB6);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.workspace-edit-btn:disabled { opacity: 0.5; cursor: default; }

@@ -160,6 +160,8 @@ export const translations = {
       workspace: "مساحة العمل",
       close: "إغلاق",
       openWorkspace: "افتح في مساحة العمل",
+      workspaceEditPlaceholder: "اطلب تعديلاً على هذا المُنتَج...",
+      workspaceEditBtn: "عدّل",
     },
     profile: {
       editName: "تعديل الاسم",
@@ -489,6 +491,8 @@ export const translations = {
       workspace: "Espace de travail",
       close: "Fermer",
       openWorkspace: "Ouvrir dans l'espace",
+      workspaceEditPlaceholder: "Demandez une modification...",
+      workspaceEditBtn: "Modifier",
     },
     auth: {
       signinTitle:"Connexion", signupTitle:"Créer un compte",
@@ -682,6 +686,8 @@ export const translations = {
       workspace: "Workspace",
       close: "Close",
       openWorkspace: "Open in workspace",
+      workspaceEditPlaceholder: "Request an edit to this output...",
+      workspaceEditBtn: "Edit",
     },
     profile: {
       editName: "Edit name",
