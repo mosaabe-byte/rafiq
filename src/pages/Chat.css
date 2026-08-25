@@ -373,6 +373,7 @@
 .chat-body .chat-messages {
   flex: 1;
   min-width: 0;
+  padding: 0 20px;
 }
 /* مساحة العمل: عمود جانبيّ على الحاسوب */
 .chat-workspace {
@@ -518,4 +519,9 @@
 /* على الهاتف: عمود السياق يختفي (المحادثة أولاً) */
 @media (max-width: 900px) {
   .context-panel { display: none; }
+}
+/* حدّ عرض الرسائل للقراءة المريحة داخل العمود الأوسط */
+.chat-body .chat-messages {
+  max-width: 720px;
+  margin: 0 auto;
 }
