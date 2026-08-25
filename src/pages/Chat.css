@@ -378,7 +378,8 @@
 .chat-workspace {
   display: flex;
   flex-direction: column;
-  width: 45%;
+  width: 42%;
+  min-width: 320px;
   border-inline-start: 1px solid var(--border, #e0e0e8);
   background: var(--card-bg, #fafafa);
   min-height: 0;
