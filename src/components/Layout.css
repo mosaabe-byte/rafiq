@@ -1,11 +1,15 @@
 .app-shell {
-  max-width: 1400px;
+  max-width: 480px;
   margin: 0 auto;
   min-height: 100vh;
   background: var(--white);
   display: flex;
   flex-direction: column;
   position: relative;
+}
+/* صفحة المحادثة وحدها تتّسع لتخطيطها الثلاثيّ */
+.app-shell.wide {
+  max-width: 1400px;
 }
 .app-topbar {
   display: flex;
