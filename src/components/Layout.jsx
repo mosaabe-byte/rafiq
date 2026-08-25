@@ -1,6 +1,6 @@
 import { useAuth } from '../auth/AuthContext';
 import CompleteProfile from './CompleteProfile';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import {
   IconLayoutGrid,
   IconCirclePlus,
@@ -17,6 +17,8 @@ import './Layout.css';
 export default function Layout() {
   const { t } = useLanguage();
   const { profile, loading } = useAuth();
+  const location = useLocation();
+  const isWide = location.pathname === '/chat';
 
   // شاشة إكمال الملفّ: تظهر إن كان المستخدم مسجّلاً لكن لم يحدّد بلده بعد.
   // ننتظر تحميل profile أولاً (لتفادي الوميض)، ثم نفحص country.
@@ -35,7 +37,7 @@ export default function Layout() {
   ];
 
   return (
-    <div className="app-shell">
+    <div className={"app-shell" + (isWide ? " wide" : "")}>
       <header className="app-topbar">
         <div className="app-logo">
           <div className="logo-mark">ر</div>
