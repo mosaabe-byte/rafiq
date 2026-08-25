@@ -1,7 +1,7 @@
 /* Chat.css — أنماط شاشة المحادثة، تتبع اتجاه اللغة تلقائياً (لا direction ثابت) */
 
 .chat-page {
-  max-width: 760px;
+  max-width: 1400px;
   margin: 0 auto;
   height: calc(100vh - 120px);
   display: flex;
