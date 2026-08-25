@@ -585,6 +585,58 @@ export default function Chat() {
     setEnvSuggestion(null);
   }
 
+    // عمود سياق المشروع (يمين الشاشة على الحاسوب)
+  function ProjectContext() {
+    if (!selectedProjectId) return null;
+    const p = projects.find((pr) => pr.id === Number(selectedProjectId));
+    if (!p) return null;
+    const phase = p.phase_number || 1;
+    const phaseName = t("roadmap.phase" + phase + "title");
+    const doneInPhase = completedBands.filter((b) => b.phase === phase).map((b) => b.band);
+    const bands = PHASE_BANDS[phase] || [];
+
+    return (
+      <aside className="context-panel">
+        <div className="context-project">
+          <span className="context-emoji">{p.emoji || "📦"}</span>
+          <span className="context-name">{p.name}</span>
+        </div>
+
+        <div className="context-block">
+          <div className="context-label">{t("chat.ctxPhase")}</div>
+          <div className="context-phase">{phaseName}</div>
+        </div>
+
+        {typeof p.progress === "number" && (
+          <div className="context-block">
+            <div className="context-label">{t("chat.ctxProgress")}</div>
+            <div className="context-progress-track">
+              <div className="context-progress-fill" style={{ width: p.progress + "%" }} />
+            </div>
+            <div className="context-progress-pct">{p.progress}%</div>
+          </div>
+        )}
+
+        {bands.length > 0 && (
+          <div className="context-block">
+            <div className="context-label">{t("chat.ctxBands")}</div>
+            <ul className="context-bands">
+              {bands.map((band, idx) => {
+                const done = doneInPhase.includes(idx + 1);
+                return (
+                  <li key={idx} className={"context-band" + (done ? " done" : "")}>
+                    <span className="context-band-mark">{done ? "✓" : "○"}</span>
+                    <span className="context-band-text">{band}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+      </aside>
+    );
+  }
+
   return (
     <div className="chat-page">
       <h2 className="chat-title">{t("chat.title")}</h2>
@@ -620,6 +672,7 @@ export default function Chat() {
       )}
       {/* الجسم: محادثة + مساحة عمل (على الحاسوب جنباً إلى جنب) */}
       <div className={"chat-body" + (workspaceContent ? " has-workspace" : "")}>
+        <ProjectContext />
         {/* منطقة الرسائل: تتمدّد وتتمرّر وحدها */}
         <div className="chat-messages">
         {!selectedProjectId && (

@@ -464,3 +464,58 @@
   padding: 5px 14px; border: 1px solid #d0d0d8; border-radius: 7px;
   background: transparent; cursor: pointer;
 }
+/* ── عمود سياق المشروع (يمين) ── */
+.context-panel {
+  width: 240px;
+  min-width: 240px;
+  padding: 14px;
+  border-inline-end: 1px solid var(--border, #e0e0e8);
+  background: var(--card-bg, #fafafa);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.context-project {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.context-emoji { font-size: 1.3rem; }
+.context-block { display: flex; flex-direction: column; gap: 6px; }
+.context-label {
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.context-phase { font-weight: 600; color: var(--primary, #6C4AB6); }
+.context-progress-track {
+  height: 8px;
+  background: #e5e5ec;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.context-progress-fill {
+  height: 100%;
+  background: var(--primary, #6C4AB6);
+  border-radius: 4px;
+}
+.context-progress-pct { font-size: 0.8rem; color: #666; }
+.context-bands { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.context-band {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+.context-band-mark { color: #bbb; flex-shrink: 0; }
+.context-band.done .context-band-mark { color: #1e7e34; }
+.context-band.done .context-band-text { color: #555; }
+/* على الهاتف: عمود السياق يختفي (المحادثة أولاً) */
+@media (max-width: 900px) {
+  .context-panel { display: none; }
+}

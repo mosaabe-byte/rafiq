@@ -167,6 +167,9 @@ export const translations = {
       envDocDismiss: "ليس الآن",
       envInstalledShort: "مثبّتة",
       envDeferredShort: "مؤجّلة",
+      ctxPhase: "المرحلة الحاليّة",
+      ctxProgress: "التقدّم",
+      ctxBands: "بنود المرحلة",
     },
     profile: {
       editName: "تعديل الاسم",
@@ -503,6 +506,9 @@ export const translations = {
       envDocDismiss: "Plus tard",
       envInstalledShort: "installé",
       envDeferredShort: "reporté",
+      ctxPhase: "Phase actuelle",
+      ctxProgress: "Progression",
+      ctxBands: "Étapes de la phase",
     },
     auth: {
       signinTitle:"Connexion", signupTitle:"Créer un compte",
@@ -703,6 +709,9 @@ export const translations = {
       envDocDismiss: "Not now",
       envInstalledShort: "installed",
       envDeferredShort: "deferred",
+      ctxPhase: "Current phase",
+      ctxProgress: "Progress",
+      ctxBands: "Phase steps",
     },
     profile: {
       editName: "Edit name",
