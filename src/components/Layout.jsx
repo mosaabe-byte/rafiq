@@ -14,11 +14,24 @@ import { useLanguage } from '../i18n/LanguageContext';
 import LanguageSwitcher from '../i18n/LanguageSwitcher';
 import './Layout.css';
 
+const WIDTHS = {
+  '/': 'grid',
+  '/roadmap': 'grid',
+  '/library': 'grid',
+  '/glossary': 'grid',
+  '/profile': 'grid',
+  '/chat': 'work',
+};
+
+function widthFor(pathname) {
+  return WIDTHS[pathname] || 'read';
+}
+
 export default function Layout() {
   const { t } = useLanguage();
   const { profile, loading } = useAuth();
   const location = useLocation();
-  const isWide = location.pathname === '/chat';
+  const width = widthFor(location.pathname);'/chat';
 
   // شاشة إكمال الملفّ: تظهر إن كان المستخدم مسجّلاً لكن لم يحدّد بلده بعد.
   // ننتظر تحميل profile أولاً (لتفادي الوميض)، ثم نفحص country.
@@ -37,7 +50,7 @@ export default function Layout() {
   ];
 
   return (
-    <div className={"app-shell" + (isWide ? " wide" : "")}>
+    <div className="app-shell" data-w={width}>
       <header className="app-topbar">
         <div className="app-logo">
           <div className="logo-mark">ر</div>

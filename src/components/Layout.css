@@ -1,5 +1,5 @@
 .app-shell {
-  max-width: 480px;
+  max-width: 720px;
   margin: 0 auto;
   min-height: 100vh;
   background: var(--white);
@@ -7,9 +7,12 @@
   flex-direction: column;
   position: relative;
 }
-/* صفحة المحادثة وحدها تتّسع لتخطيطها الثلاثيّ */
-.app-shell.wide {
-  max-width: 1400px;
+
+.app-shell[data-w="grid"] { 
+  max-width: 1100px; 
+}
+.app-shell[data-w="work"] { 
+  max-width: 1400px; 
 }
 .app-topbar {
   display: flex;
@@ -64,7 +67,7 @@
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 480px;
+  max-width: 720px;
   display: flex;
   background: var(--white);
   border-top: 1px solid var(--gray-100);
