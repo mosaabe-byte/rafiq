@@ -109,3 +109,41 @@
   color: var(--white);
   border-color: var(--purple);
 }
+/* ===== الشريط الجانبيّ: من 960 بكسل فأعلى ===== */
+@media (min-width: 960px) {
+
+  .app-nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    width: 240px;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 4px;
+    padding: 24px 12px;
+    border-top: none;
+    border-left: 1px solid var(--border, #e5e7eb);
+    overflow-y: auto;
+  }
+
+  .app-nav .nav-item {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 15px;
+  }
+
+  .app-nav .nav-item.active {
+    background: var(--bg-soft, #eef2ff);
+  }
+
+  .app-shell {
+    margin-right: 240px;
+  }
+}
