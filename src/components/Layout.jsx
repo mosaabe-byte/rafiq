@@ -31,7 +31,7 @@ export default function Layout() {
   const { t } = useLanguage();
   const { profile, loading } = useAuth();
   const location = useLocation();
-  const width = widthFor(location.pathname);'/chat';
+  const width = widthFor(location.pathname);
 
   // شاشة إكمال الملفّ: تظهر إن كان المستخدم مسجّلاً لكن لم يحدّد بلده بعد.
   // ننتظر تحميل profile أولاً (لتفادي الوميض)، ثم نفحص country.
@@ -64,7 +64,7 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <nav className="bottom-nav">
+      <nav className="app-nav">
         {navItems.map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
