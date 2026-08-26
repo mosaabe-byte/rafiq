@@ -146,6 +146,7 @@
   }
 
   #root {
-    padding-right: 240px;
+    padding-right: 264px;
+    padding-left: 24px;
   }
 }
