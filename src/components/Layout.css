@@ -129,9 +129,6 @@
     overflow-y: auto;
     background: var(--white, #fff);
     z-index: 50;
-      body {
-    overflow-x: hidden;
-  }
   }
 
   .app-nav .nav-item {
