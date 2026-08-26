@@ -148,8 +148,7 @@
     background: var(--bg-soft, #eef2ff);
   }
 
-  .app-shell {
-    margin-right: 240px;
-    margin-left: auto;
+  #root {
+    padding-right: 240px;
   }
 }
