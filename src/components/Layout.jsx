@@ -64,18 +64,30 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <nav className="app-nav">
-        {navItems.map(({ to, label, icon: Icon, end }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={end}
-            className={({ isActive }) => 'nav-item' + (isActive ? ' active' : '')}
-          >
-            <Icon size={22} stroke={1.8} />
-            <span>{label}</span>
-          </NavLink>
-        ))}
+            <nav className="app-nav">
+        <div className="nav-brand">
+          <div className="logo-mark">ر</div>
+          <span>{t('appName')}</span>
+        </div>
+
+        <div className="nav-links">
+          {navItems.map(({ to, label, icon: Icon, end }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={end}
+              className={({ isActive }) => 'nav-item' + (isActive ? ' active' : '')}
+            >
+              <Icon size={22} stroke={1.8} />
+              <span>{label}</span>
+            </NavLink>
+          ))}
+        </div>
+
+        <div className="nav-foot">
+          <LanguageSwitcher />
+          <div className="app-avatar">ع</div>
+        </div>
       </nav>
     </div>
   );
