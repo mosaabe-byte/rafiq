@@ -415,6 +415,9 @@
     border-top: 1px solid var(--border, #e0e0e8);
     max-height: 40vh;
   }
+  .context-panel {
+    display: none;
+  }
 }
 /* ── حقل تعديل مساحة العمل ── */
 .workspace-edit {
