@@ -113,6 +113,8 @@
 @media (min-width: 960px) {
 
   .app-nav {
+    transform: none;
+    max-width: none;
     position: fixed;
     top: 0;
     right: 0;
@@ -131,7 +133,8 @@
     z-index: 50;
   }
 
-  .app-nav .nav-item {
+    .app-nav .nav-item {
+    flex: none;
     flex-direction: row;
     justify-content: flex-start;
     gap: 12px;
