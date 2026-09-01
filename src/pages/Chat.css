@@ -410,6 +410,7 @@
   .chat-body { flex-direction: column; }
   .chat-workspace {
     width: 100%;
+    min-width: 0;
     border-inline-start: none;
     border-top: 1px solid var(--border, #e0e0e8);
     max-height: 40vh;
