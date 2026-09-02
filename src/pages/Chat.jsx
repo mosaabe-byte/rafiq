@@ -968,56 +968,7 @@ export default function Chat() {
           <span className="chat-limit-sub">{t("chat.limitSub")}</span>
         </div>
       )}
-
-      {/* ── إرفاق ملفّ من المكتبة ── */}
-      {selectedProjectId && !limitReached && (
-        <div className="attach-bar">
-          {attachedFile ? (
-            <div className="attach-chip">
-              <span className="attach-chip-name">📎 {attachedFile.name}</span>
-              <button
-                type="button"
-                className="attach-chip-x"
-                onClick={removeAttached}
-                aria-label={t("chat.remove")}
-              >
-                ✕
-              </button>
-            </div>
-          ) : (
-            <button
-              type="button"
-              className="attach-btn"
-              onClick={() => setShowFilePicker((v) => !v)}
-            >
-              📎 {t("chat.attach")}
-            </button>
-          )}
-
-          {showFilePicker && !attachedFile && (
-            <div className="attach-list">
-              {attachableFiles.length === 0 ? (
-                <p className="attach-empty">{t("chat.noTextFiles")}</p>
-              ) : (
-                attachableFiles.map((f) => (
-                  <button
-                    type="button"
-                    key={f.id}
-                    className="attach-item"
-                    onClick={() => attachFile(f)}
-                  >
-                    <span className="attach-item-name">{f.name}</span>
-                    {!f.project_id && (
-                      <span className="attach-item-tag">{t("chat.general")}</span>
-                    )}
-                  </button>
-                ))
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
+    
       {/* معاينة الصورة المرفقة قبل الإرسال */}
       {selectedProjectId && !limitReached && attachedImage && (
         <div className="image-preview">
@@ -1056,6 +1007,52 @@ export default function Chat() {
       <div className="chat-input-row">
         {selectedProjectId && !limitReached && (
           <>
+          {/* ── إرفاق ملفّ من المكتبة ── */}
+        <div className="attach-bar">
+          {attachedFile ? (
+            <div className="attach-chip">
+              <span className="attach-chip-name">📎 {attachedFile.name}</span>
+              <button
+                type="button"
+                className="attach-chip-x"
+                onClick={removeAttached}
+                aria-label={t("chat.remove")}
+              >
+                ✕
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="attach-btn"
+              onClick={() => setShowFilePicker((v) => !v)}
+            >
+              📎
+            </button>
+          )}
+
+          {showFilePicker && !attachedFile && (
+            <div className="attach-list">
+              {attachableFiles.length === 0 ? (
+                <p className="attach-empty">{t("chat.noTextFiles")}</p>
+              ) : (
+                attachableFiles.map((f) => (
+                  <button
+                    type="button"
+                    key={f.id}
+                    className="attach-item"
+                    onClick={() => attachFile(f)}
+                  >
+                    <span className="attach-item-name">{f.name}</span>
+                    {!f.project_id && (
+                      <span className="attach-item-tag">{t("chat.general")}</span>
+                    )}
+                  </button>
+                ))
+              )}
+            </div>
+          )}
+        </div>
             <input
               type="file"
               accept="image/*"

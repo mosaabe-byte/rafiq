@@ -231,7 +231,7 @@
 .chat-welcome p { margin: 0 0 10px; }
 .chat-welcome-hint { color: #6b6880; font-size: 0.92rem; margin-bottom: 0; }
 /* ── منتقي الملفّ المرفق ── */
-.attach-bar { position: relative; margin: 0 0 8px; }
+.attach-bar { position: relative; flex-shrink: 0; }
 
 .attach-btn,
 .attach-chip {
