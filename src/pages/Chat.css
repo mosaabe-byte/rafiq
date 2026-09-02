@@ -165,7 +165,21 @@
   gap: 8px;
   padding-bottom: 12px;
   flex-shrink: 0;
+  flex-wrap: nowrap;
+  gap: 6px;
 }
+
+.chat-input-row .chat-input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.chat-input-row .attach-btn,
+.chat-input-row .chat-image-btn,
+.chat-input-row .chat-send {
+  flex-shrink: 0;
+}
+
 .chat-input {
   flex: 1;
   padding: 10px 12px;
