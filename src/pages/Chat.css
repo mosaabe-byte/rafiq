@@ -525,7 +525,9 @@
   .context-panel { display: none; }
 }
 /* حدّ عرض الرسائل للقراءة المريحة داخل العمود الأوسط */
-.chat-body .chat-messages {
-  max-width: 720px;
-  margin: 0 auto;
+@media (min-width: 901px) {
+  .chat-body .chat-messages {
+    max-width: 720px;
+    margin: 0 auto;
+  }
 }
