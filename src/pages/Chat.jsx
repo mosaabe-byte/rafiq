@@ -641,6 +641,7 @@ export default function Chat() {
     <div className="chat-page">
       <h2 className="chat-title">{t("chat.title")}</h2>
 
+            <div className="chat-controls">
       <select
         className="chat-select"
         value={selectedProjectId}
@@ -670,6 +671,7 @@ export default function Chat() {
           </button>
         </div>
       )}
+        </div>
       {/* الجسم: محادثة + مساحة عمل (على الحاسوب جنباً إلى جنب) */}
       <div className={"chat-body" + (workspaceContent ? " has-workspace" : "")}>
         <ProjectContext />
