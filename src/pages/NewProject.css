@@ -303,3 +303,11 @@
 }
 .draft-field input:focus,
 .draft-field select:focus { border-color: var(--purple); }
+
+@media (min-width: 960px) {
+  .newproject {
+    height: 100vh;
+    max-height: none;
+    padding-bottom: 12px;
+  }
+}
