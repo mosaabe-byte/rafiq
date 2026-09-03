@@ -567,3 +567,10 @@
     margin: 0 auto;
   }
 }
+
+@media (min-width: 960px) {
+  .chat-page {
+    height: 100vh;
+    padding-bottom: 12px;
+  }
+}

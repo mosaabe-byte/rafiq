@@ -109,6 +109,17 @@
   color: var(--white);
   border-color: var(--purple);
 }
+.nav-brand,
+.nav-foot {
+  display: none;
+}
+
+.nav-links {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+
 /* ===== الشريط الجانبيّ: من 960 بكسل فأعلى ===== */
 @media (min-width: 960px) {
 
@@ -117,9 +128,9 @@
     max-width: none;
     position: fixed;
     top: 0;
-    right: 0;
+    inset-inline-end: 0;      /* بدل right: 0 */
     bottom: 0;
-    left: auto;
+    inset-inline-start: auto; /* بدل left: auto */
     width: 240px;
     height: 100vh;
     flex-direction: column;
@@ -127,10 +138,24 @@
     gap: 4px;
     padding: 24px 12px;
     border-top: none;
-    border-left: 1px solid var(--border, #e5e7eb);
-    overflow-y: auto;
+    border-inline-start: 1px solid var(--border, #e5e7eb);  /* بدل border-left */
+    overflow: hidden;
     background: var(--white, #fff);
     z-index: 50;
+  }
+
+    html[dir="rtl"] .app-nav {
+    inset-inline-end: auto;
+    inset-inline-start: auto;
+    right: 0;
+    left: auto;
+  }
+
+  html[dir="ltr"] .app-nav {
+    inset-inline-end: auto;
+    inset-inline-start: auto;
+    right: auto;
+    left: 0;
   }
 
     .app-nav .nav-item {
@@ -148,9 +173,18 @@
     background: var(--bg-soft, #eef2ff);
   }
 
-  #root {
+  html[dir="rtl"] #root {
+    padding-inline-end: 0;
+    padding-inline-start: 0;
     padding-right: 264px;
     padding-left: 24px;
+  }
+
+  html[dir="ltr"] #root {
+    padding-inline-end: 0;
+    padding-inline-start: 0;
+    padding-right: 24px;
+    padding-left: 264px;
   }
     .app-topbar {
     display: none;
@@ -170,6 +204,8 @@
     flex-direction: column;
     gap: 4px;
     flex: 1;
+    overflow-y: auto;
+    min-height: 0;
   }
 
   .nav-foot {
@@ -184,14 +220,4 @@
   .app-content {
     padding-bottom: 24px;
   }
-}
-.nav-brand,
-.nav-foot {
-  display: none;
-}
-
-.nav-links {
-  display: flex;
-  flex: 1;
-  width: 100%;
 }
