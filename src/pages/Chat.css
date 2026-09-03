@@ -557,11 +557,11 @@
 .context-band.done .context-band-mark { color: #1e7e34; }
 .context-band.done .context-band-text { color: #555; }
 /* على الهاتف: عمود السياق يختفي (المحادثة أولاً) */
-@media (max-width: 900px) {
+@media (max-width: 959px) {
   .context-panel { display: none; }
 }
 /* حدّ عرض الرسائل للقراءة المريحة داخل العمود الأوسط */
-@media (min-width: 901px) {
+@media (min-width: 960px) {
   .chat-body .chat-messages {
     max-width: 720px;
     margin: 0 auto;
@@ -572,5 +572,8 @@
   .chat-page {
     height: 100vh;
     padding-bottom: 12px;
+  }
+  .chat-title {
+    display: none;
   }
 }
