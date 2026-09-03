@@ -370,22 +370,22 @@ export default function Profile() {
                   <div className="pj-statuses">
                     <div className="pj-status">
                       <span className="status-dot active"></span>
-                      <span className="pj-status-label">جارٍ</span>
+                      <span className="pj-status-label">{t('profile.status_active')}</span>
                       <span className="pj-status-num">{statusCounts.active}</span>
                     </div>
                     <div className="pj-status">
                       <span className="status-dot done"></span>
-                      <span className="pj-status-label">مكتمل</span>
+                      <span className="pj-status-label">{t('profile.status_done')}</span>
                       <span className="pj-status-num">{statusCounts.done}</span>
                     </div>
                     <div className="pj-status">
                       <span className="status-dot published"></span>
-                      <span className="pj-status-label">منشور</span>
+                      <span className="pj-status-label">{t('profile.status_published')}</span>
                       <span className="pj-status-num">{statusCounts.published}</span>
                     </div>
                     <div className="pj-status">
                       <span className="status-dot paused"></span>
-                      <span className="pj-status-label">متوقّف</span>
+                      <span className="pj-status-label">{t('profile.status_paused')}</span>
                       <span className="pj-status-num">{statusCounts.paused}</span>
                     </div>
                   </div>
