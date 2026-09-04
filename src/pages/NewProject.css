@@ -306,7 +306,7 @@
 
 @media (min-width: 960px) {
   .newproject {
-    height: 100vh;
+    height: calc(100dvh - 61px);
     max-height: none;
     padding-bottom: 12px;
   }
