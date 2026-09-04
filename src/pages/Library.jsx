@@ -27,7 +27,7 @@ async function extractPdfText(file) {
 
 export default function Library() {
   const { user } = useAuth();
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
 
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(''); // '' = عام
@@ -237,8 +237,8 @@ export default function Library() {
   return (
     <div className="library">
       <div className="lib-header">
-        <h1>مكتبتي</h1>
-        <p className="lib-sub">ارفع ملفّاتك ومراجعك، صنّفها حسب مشاريعك، وسيقرؤها رفيق حين تحتاج.</p>
+        <h1>{t('library.title')}</h1>
+        <p className="lib-sub">{t('library.sub')}</p>
       </div>
 
       <div className="lib-upload-card">
@@ -250,14 +250,14 @@ export default function Library() {
             hidden
           />
           <IconUpload size={28} />
-          <span>{file ? file.name : 'اختر ملفّاً للرفع'}</span>
-          <span className="lib-hint">PDF، نصوص، أو صور — حتّى 10 ميغابايت</span>
+          <span>{file ? file.name : t('library.pickFile')}</span>
+          <span className="lib-hint">{t('library.hint')}</span>
         </label>
 
         <label className="lib-field">
-          <span>لأيّ مشروع؟</span>
+          <span>{t('library.whichProject')}</span>
           <select value={selectedProject} onChange={(e) => setSelectedProject(e.target.value)}>
-            <option value="">عامّ (غير مرتبط بمشروع)</option>
+            <option value="">{t('library.general')}</option>
             {projects.map((p) => (
               <option key={p.id} value={p.id}>{p.emoji} {p.name}</option>
             ))}
@@ -269,15 +269,15 @@ export default function Library() {
         )}
 
         <button className="lib-upload-btn" onClick={handleUpload} disabled={!file || uploading}>
-          {uploading ? (<><IconLoader2 size={18} className="spin" /> جارٍ الرفع...</>) : (<><IconUpload size={18} /> ارفع إلى مكتبتي</>)}
+          {uploading ? (<><IconLoader2 size={18} className="spin" />{t('library.uploading')}</>) : (<><IconUpload size={18} />{t('library.uploadBtn')}</>)}
         </button>
       </div>
       <div className="lib-files-section">
-        <h2 className="lib-files-title">ملفّاتي</h2>
+        <h2 className="lib-files-title">{t('library.myFiles')}</h2>
         {loadingFiles ? (
-          <p className="lib-empty">جارٍ التحميل...</p>
+          <p className="lib-empty">{t('library.loading')}</p>
         ) : files.length === 0 ? (
-          <p className="lib-empty">مكتبتك فارغة بعد — ارفع أوّل ملفّ ليظهر هنا.</p>
+          <p className="lib-empty">{t('library.empty')}</p>
         ) : (
           Object.entries(groupedFiles()).map(([key, groupFiles]) => (
             <div key={key} className="lib-group">
@@ -293,10 +293,10 @@ export default function Library() {
                       <div className="lib-file-name">{f.name}</div>
                       <div className="lib-file-meta">{readableSize(f.size)}</div>
                     </div>
-                    <button className="lib-file-btn" onClick={() => handleDownload(f)} title="تنزيل">
+                    <button className="lib-file-btn" onClick={() => handleDownload(f)} title={t('library.download')}>
                       <IconDownload size={18} />
                     </button>
-                    <button className="lib-file-btn danger" onClick={() => setConfirmDelete(f)} title="حذف">
+                    <button className="lib-file-btn danger" onClick={() => setConfirmDelete(f)} title={t('library.delete')}>
                       <IconTrash size={18} />
                     </button>
                   </div>
@@ -309,14 +309,14 @@ export default function Library() {
       {confirmDelete && (
         <div className="lib-modal-overlay" onClick={() => setConfirmDelete(null)}>
           <div className="lib-modal" onClick={(e) => e.stopPropagation()}>
-            <h3>حذف الملفّ</h3>
-            <p>هل تريد حقاً حذف «{confirmDelete.name}»؟ لا يمكن التراجع.</p>
+            <h3>{t('library.deleteTitle')}</h3>
+            <p>{t('library.deleteWarn').replace('{name}', confirmDelete.name)}</p>
             <div className="lib-modal-actions">
               <button className="lib-modal-cancel" onClick={() => setConfirmDelete(null)} disabled={deleting}>
-                إلغاء
+                {t('library.cancel')}
               </button>
               <button className="lib-modal-confirm" onClick={() => handleDelete(confirmDelete)} disabled={deleting}>
-                {deleting ? 'جارٍ الحذف...' : 'نعم، احذف'}
+                {deleting ? t('library.deleting') : 'نعم، احذف'}
               </button>
             </div>
           </div>
