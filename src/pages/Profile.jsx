@@ -417,11 +417,11 @@ export default function Profile() {
           </div>
           
           <div className="profile-section">
-            <h2><IconRoute2 size={16} /> رحلتي في التعلّم</h2>
+            <h2><IconRoute2 size={16} /> {t('profile.journeyTitle')}</h2>
             <div className="journey-summary">
               <div className="journey-count">
                 <span className="journey-done">{completedStations.length}</span>
-                <span className="journey-total">من {sessions.length} محطة</span>
+                <span className="journey-total">{t('profile.journeyTotal').replace('{n}', sessions.length)}</span>
               </div>
               <div className="journey-bar">
                 <div
@@ -476,9 +476,9 @@ export default function Profile() {
         </div>
       </div>
           <div className="profile-section">
-            <h2><IconTrophy size={16} /> ما أنجزتَه</h2>
+            <h2><IconTrophy size={16} /> {t('profile.productsTitle')}</h2>
             {projectList.length === 0 ? (
-              <p className="profile-empty">لم تُنشئ مشروعاً بعد — ابدأ أوّل منتج لك، وسيظهر هنا فخراً!</p>
+              <p className="profile-empty">{t('profile.productsEmpty')}</p>
             ) : (
               <div className="products-list">
                 {[...projectList]

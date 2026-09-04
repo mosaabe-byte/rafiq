@@ -737,7 +737,7 @@ export default function Chat() {
                         أم تريد فهمَ تفصيلٍ معيّن أولاً؟ أنا معك، اسألني.
                       </p>
                     )}
-                    <p className="chat-welcome-hint">اكتب في الأسفل، وأنا رهن إشارتك.</p>
+                    <p className="chat-welcome-hint">{t('chat.welcomeHint')}</p>
                   </>
                 );
               }
@@ -974,7 +974,7 @@ export default function Chat() {
       {/* معاينة الصورة المرفقة قبل الإرسال */}
       {selectedProjectId && !limitReached && attachedImage && (
         <div className="image-preview">
-          <img src={attachedImage.dataUrl} alt="معاينة" className="image-preview-img" />
+          <img src={attachedImage.dataUrl} alt={t('chat.imageAlt')} className="image-preview-img" />
           <button
             type="button"
             className="image-preview-x"

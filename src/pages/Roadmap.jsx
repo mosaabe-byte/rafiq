@@ -255,7 +255,7 @@ export default function Roadmap() {
                                   className={'band-check' + (bandDone ? ' checked' : '')}
                                   onClick={() => toggleBand(ph.n, bandNum)}
                                   disabled={!selected || bandDone}
-                                  aria-label="أتممت هذا البند"
+                                  aria-label={t('roadmap.bandDone')}
                                 >
                                   {bandDone && <IconCheck size={13} />}
                                 </button>

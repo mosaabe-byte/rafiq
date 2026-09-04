@@ -195,26 +195,26 @@ export default function Dashboard() {
         <div className="welcome-overlay" onClick={dismissWelcome}>
           <div className="welcome-card" onClick={(e) => e.stopPropagation()}>
             <div className="welcome-icon"><IconSparkles size={30} /></div>
-            <h2>أهلاً بك في رفيق</h2>
-            <p className="welcome-sub">رفيقك لبناء أوّل تطبيق لك — خطوة بخطوة، بلا خوف.</p>
+           <h2>{t('home.welcomeTitle')}</h2>
+            <p className="welcome-sub">{t('home.welcomeSub')}</p>
 
             <div className="welcome-steps">
               <div className="welcome-step">
                 <span className="ws-emoji">🗺️</span>
-                <span>ابدأ بمشروع جديد، وسأرافقك عبر 7 مراحل من الفكرة إلى النشر.</span>
+                <span>{t('home.welcomeStep1')}</span>
               </div>
               <div className="welcome-step">
                 <span className="ws-emoji">💬</span>
-                <span>اسألني أيّ شيء في أيّ وقت — أنا هنا لأشرح وأرافق، لا لأحكم.</span>
+                <span>{t('home.welcomeStep2')}</span>
               </div>
               <div className="welcome-step">
                 <span className="ws-emoji">📖</span>
-                <span>كلّ مصطلح يلتبس عليك، أضِفه لمعجمك الشخصي وسأشرحه لك.</span>
+                <span>{t('home.welcomeStep3')}</span>
               </div>
             </div>
 
             <button className="welcome-btn" onClick={dismissWelcome}>
-              لنبدأ رحلتنا ✨
+             {t('home.welcomeBtn')}
             </button>
           </div>
         </div>
