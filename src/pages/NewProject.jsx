@@ -5,6 +5,7 @@ import {
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { useLanguage } from '../i18n/LanguageContext';
 import './NewProject.css';
 
 // خيارات التقنيات — ترشد المبتدئ الذي قد لا يعرف تقنيته
@@ -58,6 +59,7 @@ export default function NewProject() {
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [input, setInput] = useState('');
+  const { t } = useLanguage();
 
   // حالة اللصق
   const [pasteText, setPasteText] = useState('');
@@ -179,9 +181,9 @@ export default function NewProject() {
         <div className="chat-area" style={{ justifyContent: 'center' }}>
           <div className="success-card">
             <div className="success-icon"><IconCheck size={26} /></div>
-            <div className="success-title">تمت إضافة "{savedName}" إلى مشاريعك!</div>
+            <div className="success-title">{t('new.successTitle').replace('{name}', savedName)}</div>
             <button className="go-dashboard" onClick={() => navigate('/')}>
-              <IconArrowLeft size={16} /> اذهب إلى لوحة مشاريعي
+              <IconArrowLeft size={16} /> {t('new.goDashboard')}
             </button>
           </div>
         </div>
@@ -194,14 +196,14 @@ export default function NewProject() {
       <div className="np-header">
         <div className="np-title">
           <IconSparkles size={18} className="np-spark" />
-          <span>حوّل فكرتك إلى مشروع</span>
+          <span>{t('new.title')}</span>
         </div>
         <div className="mode-tabs">
           <button className={'mode-tab' + (mode === 'chat' ? ' active' : '')} onClick={() => switchMode('chat')}>
-            <IconMessageCircle size={15} /> محادثة موجّهة
+            <IconMessageCircle size={15} /> {t('new.tabChat')}
           </button>
           <button className={'mode-tab' + (mode === 'paste' ? ' active' : '')} onClick={() => switchMode('paste')}>
-            <IconClipboardText size={15} /> الصق فكرتك
+            <IconClipboardText size={15} /> {t('new.tabPaste')}
           </button>
         </div>
       </div>
@@ -228,7 +230,7 @@ export default function NewProject() {
                     onKeyDown={(e) => e.key === 'Enter' && submitAnswer(input)}
                     placeholder={current.placeholder} autoFocus
                   />
-                  <button className="send-btn" onClick={() => submitAnswer(input)} disabled={!input.trim()}>إرسال</button>
+                  <button className="send-btn" onClick={() => submitAnswer(input)} disabled={!input.trim()}>{t('new.send')}</button>
                 </div>
               ) : (
                 <div className="choices-row">
@@ -243,7 +245,7 @@ export default function NewProject() {
           {allAnswered && (
             <div className="input-zone">
               <button className="save-project-btn" onClick={() => saveProject(buildFromChat())} disabled={saving}>
-                {saving ? (<><IconLoader2 size={18} className="spin" /> جارٍ الحفظ...</>) : (<><IconCheck size={18} /> أضف إلى مشاريعي</>)}
+                {saving ? (<><IconLoader2 size={18} className="spin" /> {t('new.saving')}</>) : (<><IconCheck size={18} /> {t('new.addToProjects')}</>)}
               </button>
             </div>
           )}
@@ -252,27 +254,27 @@ export default function NewProject() {
         <>
           <div className="chat-area">
             <div className="paste-intro">
-              الصق فكرتك أو خلاصة محادثة أجريتها في أي مكان، وسيستخرج رفيق منها اسم المشروع ومنصته ومستواه تلقائياً. يمكنك تعديل أي حقل قبل الحفظ.
+             {t('new.pasteIntro')}
             </div>
             <textarea
               className="paste-box"
               value={pasteText}
               onChange={(e) => setPasteText(e.target.value)}
-              placeholder="مثال: أريد بناء تطبيق موبايل لمساعدة الطلاب على تنظيم مذاكرتهم، مستواي متوسط..."
+              placeholder={t('new.pastePlaceholder')}
             />
             <button className="analyze-btn" onClick={analyzePaste} disabled={!pasteText.trim()}>
-              <IconWand size={17} /> حلّل الفكرة
+              <IconWand size={17} /> {t('new.analyze')}
             </button>
 
             {draft && (
               <div className="draft-card">
-                <div className="draft-title">راجِع المشروع المستخرج وعدّله إن لزم:</div>
+                <div className="draft-title">{t('new.draftTitle')}</div>
                 <label className="draft-field">
-                  <span>اسم المشروع</span>
+                  <span>{t('new.fieldName')}</span>
                   <input type="text" value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} />
                 </label>
                 <label className="draft-field">
-                  <span>المنصة</span>
+                  <span>{t('new.fieldPlatform')}</span>
                   <select value={draft.platform} onChange={(e) => setDraft({ ...draft, platform: e.target.value, emoji: platformEmoji[e.target.value] })}>
                     <option value="ويب">ويب</option>
                     <option value="موبايل">موبايل</option>
@@ -281,7 +283,7 @@ export default function NewProject() {
                 </label>
 
                 <label className="draft-field">
-                  <span>التقنية</span>
+                  <span>{t('new.fieldTech')}</span>
                   <select value={draft.tech_stack} onChange={(e) => setDraft({ ...draft, tech_stack: e.target.value })}>
                     {TECH_OPTIONS.map((opt) => (
                       <option key={opt} value={opt}>{opt}</option>
@@ -290,7 +292,7 @@ export default function NewProject() {
                 </label>
                 
                 <label className="draft-field">
-                  <span>المستوى</span>
+                  <span>{t('new.fieldLevel')}</span>
                   <select value={draft.level} onChange={(e) => setDraft({ ...draft, level: e.target.value })}>
                     <option value="مبتدئ">مبتدئ</option>
                     <option value="متوسط">متوسط</option>
