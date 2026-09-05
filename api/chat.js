@@ -160,13 +160,16 @@ const roleAwareness = modelInfo && modelInfo.key === "deep"
 
   if (!project) return base + language + identity + style + nextStep + boundaries;
 
-  const level = (project.level || "").trim();
+  const rawLevel = (project.level || "").trim();
+  const level = /متقدّم|متقدم|محترف|advanced/i.test(rawLevel) ? "advanced"
+              : /متوسّط|متوسط|intermediate/i.test(rawLevel) ? "intermediate"
+              : "beginner";
   let levelGuidance = "";
-  if (level.includes("متقدّم") || level.includes("متقدم") || level.includes("محترف")) {
+  if (level === "advanced") {
     levelGuidance = `
 
 مستوى المستخدم متقدّم: خاطبه كزميل لا كمبتدئ. قلّل التشبيهات المبسّطة، وافترض معرفة الأساسيات، وادخل في التفاصيل التقنية بسرعة، واذكر المصطلحات الإنجليزية الدقيقة. طبّق بقوة مبدأ «الـ Why قبل الـ How»: اشرح لماذا هذا الحلّ لا غيره، وما بدائله، ومتى يفشل، وما معايير الأداء والأمان وقابلية الصيانة. هدفك أن تبني فيه عقلية المحترف الكاملة استعداداً لسوق العمل والأدوات الاحترافية.`;
-  } else if (level.includes("متوسط")) {
+  } else if (level === "intermediate") {
     levelGuidance = `
 
 مستوى المستخدم متوسط: وازِن بين التبسيط والعمق. اشرح المفاهيم الجديدة دون إطالة في الأساسيات. ابدأ بإدخال جرعة من وعي المحترف تدريجياً: بعد كل حلّ، ألمِح باختصار إلى «لماذا» اخترناه وما بديله المحتمل، لتعوّده على التفكير النقدي لا الحفظ.`;
@@ -323,12 +326,12 @@ function environmentBlock(userEnv) {
 سياق المستخدم الحالي (استخدمه لتُخصّص ردودك، ورحّب به بوعي بمكانه دون أن تُكرر كل هذه المعلومات حرفياً في كل رد):
 - اسم المشروع: ${project.name || "غير محدّد"}
 - المستخدمون المستهدفون: ${project.audience || "لم يحدّدهم صراحةً — لا تفترض طبيعة المشروع من اسمه، بل اسأل المستخدم عمّن سيستخدمه إن احتجت ذلك."}
-- مستوى المستخدم: ${project.level || "غير محدّد"}
+- مستوى المستخدم: ${level === "advanced" ? "متقدّم" : level === "intermediate" ? "متوسّط" : "مبتدئ"}
 - المرحلة الحالية: ${project.phase_number ? `المرحلة ${project.phase_number} من 7 — «${PHASE_NAMES[project.phase_number] || ""}» (هذا هو المصدر الموثوق لمكان المستخدم الآن — اعتمِده حتى لو أوحت رسائل سابقة في المحادثة بمرحلة مختلفة، فالمستخدم قد يكون تقدّم منذ ذلك الحين). حين تذكر خطوةً أو بنداً، سمِّ المرحلة التي ينتمي إليها ليعرف المستخدم موقعه في الرحلة («أنت في مرحلة «${PHASE_NAMES[project.phase_number] || ""}»، وخطوتها التالية…»)، لا تذكر البند معلّقاً بلا إطار مرحلته.` : "غير محدّدة"}
 - نسبة التقدّم: ${project.progress ?? 0}%
 - النظام الأساسي: ${project.platform || "غير محدّد"}
 - تقنية المشروع: ${
-    !project.tech_stack || project.tech_stack === "لست متأكّداً بعد"
+    !project.tech_stack || project.tech_stack.includes("متأكد") || project.tech_stack.includes("متأكّد")
       ? "لم يحدّدها بعد — إن سأل عن التقنية المناسبة، ساعده على اختيارها بحسب مستواه ومشروعه، ولا تفترض تقنية معيّنة."
       : project.tech_stack
   }`;
