@@ -418,3 +418,11 @@
   flex-shrink: 0;
   color: rgba(255, 255, 255, 0.7);
 }
+@media (min-width: 960px) {
+  .projects-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    align-items: start;
+  }
+}

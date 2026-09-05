@@ -690,3 +690,17 @@
   color: #fff;
   border-color: #b8860b;
 }
+@media (min-width: 960px) {
+  .env-tools {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .products-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    align-items: start;
+  }
+}
