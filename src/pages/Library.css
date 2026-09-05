@@ -190,4 +190,9 @@
     flex: 1 0 100%;
     order: 3;
   }
+    .lib-files-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
 }
