@@ -275,3 +275,11 @@
   line-height: 1.6;
   padding: 0 2px;
 }
+@media (min-width: 960px) {
+  .terms-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    align-items: start;
+  }
+}
