@@ -587,9 +587,33 @@ export default function Chat() {
 
     // عمود سياق المشروع (يمين الشاشة على الحاسوب)
   function ProjectContext() {
-    if (!selectedProjectId) return null;
-    const p = projects.find((pr) => pr.id === Number(selectedProjectId));
-    if (!p) return null;
+    const p = selectedProjectId
+      ? projects.find((pr) => pr.id === Number(selectedProjectId))
+      : null;
+
+    if (!p) {
+      return (
+        <aside className="context-panel context-empty">
+          <div className="context-project">
+            <span className="context-emoji">📦</span>
+            <span className="context-name">—</span>
+          </div>
+
+          <div className="context-block">
+            <div className="context-label">{t("chat.ctxPhase")}</div>
+            <div className="context-phase">—</div>
+          </div>
+
+          <div className="context-block">
+            <div className="context-label">{t("chat.ctxProgress")}</div>
+            <div className="context-progress-track">
+              <div className="context-progress-fill" style={{ width: "0%" }} />
+            </div>
+            <div className="context-progress-pct">0%</div>
+          </div>
+        </aside>
+      );
+    }
     const phase = p.phase_number || 1;
     const phaseName = t("roadmap.phase" + phase + "title");
     const doneInPhase = completedBands.filter((b) => b.phase === phase).map((b) => b.band);
@@ -655,31 +679,28 @@ export default function Chat() {
         ))}
       </select>
 
-{selectedProjectId && (
         <div className="model-switch">
           <button
             className={"model-opt" + (modelKey === "fast" ? " active" : "")}
             onClick={() => setModelKey("fast")}
+            disabled={!selectedProjectId}
           >
             {t("chat.modelFast")}
           </button>
           <button
             className={"model-opt" + (modelKey === "deep" ? " active" : "")}
             onClick={() => setModelKey("deep")}
+            disabled={!selectedProjectId}
           >
             {t("chat.modelDeep")}
           </button>
         </div>
-      )}
         </div>
       {/* الجسم: محادثة + مساحة عمل (على الحاسوب جنباً إلى جنب) */}
       <div className={"chat-body" + (workspaceContent ? " has-workspace" : "")}>
         <ProjectContext />
         {/* منطقة الرسائل: تتمدّد وتتمرّر وحدها */}
         <div className="chat-messages">
-        {!selectedProjectId && (
-          <p className="chat-hint">{t("chat.pickToStart")}</p>
-        )}
 
         {selectedProjectId && loadingHistory && (
           <p className="chat-hint">{t("chat.loadingHistory")}</p>

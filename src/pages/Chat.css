@@ -401,6 +401,7 @@
   flex: 1;
   min-height: 0;
   gap: 0;
+  margin-bottom: 12px;
 }
 .chat-body .chat-messages {
   flex: 1;
@@ -581,4 +582,11 @@
 .rafiq-bubble pre:has(.code-block) {
   background: transparent;
   padding: 0;
+}
+.model-opt:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.context-empty {
+  opacity: 0.5;
 }
