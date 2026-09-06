@@ -341,6 +341,7 @@
   cursor: pointer;
 }
 .code-block-copy:hover { background: #3a3a4c; }
+.rafiq-bubble .code-block-body,
 .code-block-body {
   margin: 0;
   padding: 12px 14px;
@@ -576,4 +577,8 @@
   .chat-title {
     display: none;
   }
+}
+.rafiq-bubble pre:has(.code-block) {
+  background: transparent;
+  padding: 0;
 }
