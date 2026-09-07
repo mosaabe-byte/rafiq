@@ -88,7 +88,7 @@ export default function NewProject() {
   function submitAnswer(value) {
     if (!value || (typeof value === 'string' && !value.trim())) return;
     const newAnswers = { ...answers, [current.key]: value };
-    const newMessages = [...messages, { from: 'user', text: value }];
+    const newMessages = [...messages, { from: 'user', text: optionLabel(value) }];
     setAnswers(newAnswers);
     setInput('');
     if (stepIndex < steps.length - 1) {
