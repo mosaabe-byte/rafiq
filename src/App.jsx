@@ -16,6 +16,7 @@ import QualityGate from './pages/QualityGate';
 import Privacy from './pages/Privacy';
 import ResetPassword from './pages/ResetPassword';
 import Library from './pages/Library';
+import UpdatePrompt from './components/UpdatePrompt';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -27,6 +28,7 @@ function PrivateRoute({ children }) {
 export default function App() {
   return (
     <BrowserRouter>
+      <UpdatePrompt />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />

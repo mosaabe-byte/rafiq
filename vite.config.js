@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       includeAssets: ['apple-touch-icon.png', 'rafiq-icon.svg'],
       workbox: {
         // نماذج التضمين (wasm) كبيرة؛ نرفع حدّ التخزين المسبق ليسعها

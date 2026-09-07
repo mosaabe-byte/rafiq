@@ -3,6 +3,7 @@ export const translations = {
     appName: "رفيق",
     dir: "rtl", label: "العربية",
     nav: { projects:"مشاريعي", roadmap:"الطريق", newProject:"جديد", glossary:"المعجم", chat:"المحادثة", library:"مكتبتي", profile:"ملفي" },
+    update: { available: "نسخة جديدة من رفيق متاحة", reload: "تحديث", dismiss: "إغلاق" },
     home: {
       title:"مشاريعي", cloud:"متصل بالسحابة",
       cloudOff:"غير متصل",
@@ -331,6 +332,7 @@ export const translations = {
     appName: "Rafiq",
     dir: "ltr", label: "Français",
     nav: { projects:"Projets", roadmap:"Parcours", newProject:"Nouveau", glossary:"Glossaire", chat:"Chat", library:"Bibliothèque", profile:"Profil" },
+    update: { available: "Une nouvelle version de Rafiq est disponible", reload: "Mettre à jour", dismiss: "Fermer" },
     home: {
       title:"Mes projets", cloud:"Connecté au cloud",
       cloudOff:"Hors ligne",
@@ -658,6 +660,7 @@ export const translations = {
     appName: "Rafiq",
     dir: "ltr", label: "English",
     nav: { projects:"Projects", roadmap:"Roadmap", newProject:"New", glossary:"Glossary", chat:"Chat", library:"Library", profile:"Profile" },
+    update: { available: "A new version of Rafiq is available", reload: "Update", dismiss: "Dismiss" },
     home: {
       title:"My Projects", cloud:"Connected to cloud",
       cloudOff:"Offline",
