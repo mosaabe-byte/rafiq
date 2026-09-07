@@ -30,6 +30,7 @@ const PHASE_BANDS = {
 export default function Chat() {
   const { user } = useAuth();
   const { lang, t } = useLanguage();
+  const bandsOf = (phase) => t('roadmap.guides')?.[phase]?.steps || PHASE_BANDS[phase] || [];
   const [searchParams] = useSearchParams();
 
   const [todayCount, setTodayCount] = useState(0);
@@ -617,7 +618,7 @@ export default function Chat() {
     const phase = p.phase_number || 1;
     const phaseName = t("roadmap.phase" + phase + "title");
     const doneInPhase = completedBands.filter((b) => b.phase === phase).map((b) => b.band);
-    const bands = PHASE_BANDS[phase] || [];
+    const bands = bandsOf(phase);
 
     return (
       <aside className="context-panel">
@@ -720,7 +721,7 @@ export default function Chat() {
                 .sort((a, b) => a - b);
               const totalDone = completedBands.length;
               const lastBand = doneInPhase[doneInPhase.length - 1];
-              const lastText = lastBand ? PHASE_BANDS[phase]?.[lastBand - 1] : null;
+              const lastText = lastBand ? bandsOf(phase)?.[lastBand - 1] : null;
               const phaseComplete = doneInPhase.length >= 4;
               // حالة 0: دخل من مدخل مرحلة محدّدة في «الطريق» — نخصّ تلك المرحلة
               if (entryPhase) {
@@ -734,7 +735,7 @@ export default function Chat() {
                   : [];
                 const entryComplete = entryDone.length >= 4;
                 const entryLastBand = entryDone[entryDone.length - 1];
-                const entryLastText = (entryNum && entryLastBand) ? PHASE_BANDS[entryNum]?.[entryLastBand - 1] : null;
+                const entryLastText = (entryNum && entryLastBand) ? bandsOf(entryNum)?.[entryLastBand - 1] : null;
 
                 return (
                   <>
