@@ -29,6 +29,9 @@ export const translations = {
       welcomeStep2: "اسألني أيّ شيء في أيّ وقت — أنا هنا لأشرح وأرافق، لا لأحكم.",
       welcomeStep3: "كلّ مصطلح يلتبس عليك، أضِفه لمعجمك الشخصي وسأشرحه لك.",
       welcomeBtn: "لنبدأ رحلتنا ✨",
+      platformWeb: "ويب",
+      platformMobile: "موبايل",
+      platformBoth: "ويب + موبايل",
     },
     new: {
       title: "Transformez votre idée en projet",
@@ -354,6 +357,9 @@ export const translations = {
       welcomeStep2: "Posez-moi n'importe quelle question, à tout moment — je suis là pour expliquer et accompagner, pas pour juger.",
       welcomeStep3: "Chaque terme qui vous échappe, ajoutez-le à votre glossaire et je vous l'expliquerai.",
       welcomeBtn: "Commençons notre parcours ✨",
+      platformWeb: "Web",
+      platformMobile: "Mobile",
+      platformBoth: "Web + Mobile",
     },
     new: {
       title: "Transformez votre idée en projet",
@@ -678,6 +684,9 @@ export const translations = {
       welcomeStep2: "Ask me anything, anytime — I'm here to explain and accompany, not to judge.",
       welcomeStep3: "Any term that confuses you, add it to your personal glossary and I'll explain it.",
       welcomeBtn: "Let's begin our journey ✨",
+      platformWeb: "Web",
+      platformMobile: "Mobile",
+      platformBoth: "Web + Mobile",
     },
     new: {
       title: "Turn your idea into a project",

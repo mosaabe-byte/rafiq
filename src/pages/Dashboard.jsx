@@ -29,12 +29,21 @@ const TECH_OPTIONS = [
 
 // النموذج الفارغ يبدأ بالمرحلة 1
 const emptyForm = {
-  name: '', emoji: '📁', status: 'active', level: 'مبتدئ',
-  platform: 'ويب', progress: 0, phase_number: 1, tech_stack: 'لست متأكّداً بعد',
+    name: '', emoji: '📁', status: 'active', level: 'beginner',
+  platform: 'web', progress: 0, phase_number: 1, tech_stack: 'لست متأكّداً بعد',
 };
 
 export default function Dashboard() {
   const { t, lang } = useLanguage();
+    const levelLabel = (v) =>
+    v === 'advanced' ? t('home.levelAdvanced')
+    : v === 'intermediate' ? t('home.levelIntermediate')
+    : t('home.levelBeginner');
+
+  const platformLabel = (v) =>
+    v === 'both' ? t('home.platformBoth')
+    : v === 'mobile' ? t('home.platformMobile')
+    : t('home.platformWeb');
   const navigate = useNavigate();
   const [filter, setFilter] = useState('all');
   const [projects, setProjects] = useState([]);
@@ -278,8 +287,8 @@ export default function Dashboard() {
                 <div className="pc-info">
                   <div className="pc-name">{p.name}</div>
                   <div className="pc-meta">
-                    <span><IconUser size={12} /> {p.level}</span>
-                    <span><IconDeviceMobile size={12} /> {p.platform}</span>
+                    <span><IconUser size={12} /> {levelLabel(p.level)}</span>
+                    <span><IconDeviceMobile size={12} /> {platformLabel(p.platform)}</span>
                   </div>
                 </div>
                 <span className={'pc-badge badge-' + p.status}>{statusLabel[p.status]}</span>
@@ -343,9 +352,9 @@ export default function Dashboard() {
               <label className="field">
                 <span>{t('home.fieldLevel')}</span>
                 <select value={form.level} onChange={(e) => setForm({ ...form, level: e.target.value })}>
-                  <option value="مبتدئ">{t('home.levelBeginner')}</option>
-                  <option value="متوسط">{t('home.levelIntermediate')}</option>
-                  <option value="متقدم">{t('home.levelAdvanced')}</option>
+                  <option value="beginner">{t('home.levelBeginner')}</option>
+                  <option value="intermediate">{t('home.levelIntermediate')}</option>
+                  <option value="advanced">{t('home.levelAdvanced')}</option>
                 </select>
               </label>
 

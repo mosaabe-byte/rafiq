@@ -25,24 +25,24 @@ const TECH_OPTIONS = [
 const steps = [
   { key: 'name', bot: 'أهلاً بك! أنا رفيق. لنحوّل فكرتك إلى مشروع واضح. ما اسم الفكرة أو المشروع الذي يدور في ذهنك؟', type: 'text', placeholder: 'مثال: تطبيق لتنظيم وصفات الطبخ' },
   { key: 'audience', bot: 'فكرة جميلة! ولمن هذا المشروع؟ من سيستخدمه؟', type: 'text', placeholder: 'مثال: ربات البيوت، الطلاب، أصحاب المتاجر...' },
-  { key: 'platform', bot: 'واضح. على أي منصة تتخيله؟', type: 'choice', options: ['ويب', 'موبايل', 'ويب + موبايل'] },
+  { key: 'platform', bot: 'واضح. على أي منصة تتخيله؟', type: 'choice', options: ['web', 'mobile', 'both'] },
   { key: 'tech_stack', bot: 'وبأي تقنية تبنيه؟ إن لم تكن متأكّداً بعد، اختر «لست متأكّداً» وسأساعدك على القرار لاحقاً.', type: 'choice', options: TECH_OPTIONS },
-  { key: 'level', bot: 'وأخيراً، كيف تقيّم مستواك في البرمجة حالياً؟ هذا يساعدني أرافقك بالشكل المناسب.', type: 'choice', options: ['مبتدئ', 'متوسط', 'متقدم'] },
+  { key: 'level', bot: 'وأخيراً، كيف تقيّم مستواك في البرمجة حالياً؟ هذا يساعدني أرافقك بالشكل المناسب.', type: 'choice', options: ['beginner', 'intermediate', 'advanced'] },
 ];
 
-const platformEmoji = { 'ويب': '🌐', 'موبايل': '📱', 'ويب + موبايل': '💻' };
+const platformEmoji = { web: '🌐', mobile: '📱', both: '💻' };
 
 // تحليل نص حر لاستخراج اسم/منصة/مستوى — يفيد عند لصق فكرة أو خلاصة محادثة
 function analyzeIdea(text) {
   const hasWeb = /(ويب|موقع|web|site)/i.test(text);
   const hasMobile = /(موبايل|جوال|هاتف|mobile|app|android|ios|ايفون|اندرويد)/i.test(text);
-  let platform = 'ويب';
-  if (hasWeb && hasMobile) platform = 'ويب + موبايل';
-  else if (hasMobile) platform = 'موبايل';
+  let platform = 'web';
+  if (hasWeb && hasMobile) platform = 'both';
+  else if (hasMobile) platform = 'mobile';
 
-  let level = 'مبتدئ';
-  if (/(متقدم|محترف|خبير|expert|advanced)/i.test(text)) level = 'متقدم';
-  else if (/(متوسط|intermediate)/i.test(text)) level = 'متوسط';
+    let level = 'beginner';
+  if (/(متقدم|محترف|خبير|expert|advanced)/i.test(text)) level = 'advanced';
+  else if (/(متوسط|intermediate)/i.test(text)) level = 'intermediate';
 
   let name = (text.trim().split(/[.\n،]/)[0] || '').trim();
   if (name.length > 60) name = name.slice(0, 57) + '...';
@@ -60,6 +60,14 @@ export default function NewProject() {
   const [answers, setAnswers] = useState({});
   const [input, setInput] = useState('');
   const { t } = useLanguage();
+  const optionLabel = (v) =>
+    v === 'web' ? t('home.platformWeb')
+    : v === 'mobile' ? t('home.platformMobile')
+    : v === 'both' ? t('home.platformBoth')
+    : v === 'beginner' ? t('home.levelBeginner')
+    : v === 'intermediate' ? t('home.levelIntermediate')
+    : v === 'advanced' ? t('home.levelAdvanced')
+    : v;
 
   // حالة اللصق
   const [pasteText, setPasteText] = useState('');
@@ -235,7 +243,7 @@ export default function NewProject() {
               ) : (
                 <div className="choices-row">
                   {current.options.map((opt) => (
-                    <button key={opt} className="choice-chip" onClick={() => submitAnswer(opt)}>{opt}</button>
+                    <button key={opt} className="choice-chip" onClick={() => submitAnswer(opt)}>{optionLabel(opt)}</button>
                   ))}
                 </div>
               )}
@@ -276,9 +284,9 @@ export default function NewProject() {
                 <label className="draft-field">
                   <span>{t('new.fieldPlatform')}</span>
                   <select value={draft.platform} onChange={(e) => setDraft({ ...draft, platform: e.target.value, emoji: platformEmoji[e.target.value] })}>
-                    <option value="ويب">ويب</option>
-                    <option value="موبايل">موبايل</option>
-                    <option value="ويب + موبايل">ويب + موبايل</option>
+                    <option value="web">{t('home.platformWeb')}</option>
+                    <option value="mobile">{t('home.platformMobile')}</option>
+                    <option value="both">{t('home.platformBoth')}</option>
                   </select>
                 </label>
 
@@ -294,9 +302,9 @@ export default function NewProject() {
                 <label className="draft-field">
                   <span>{t('new.fieldLevel')}</span>
                   <select value={draft.level} onChange={(e) => setDraft({ ...draft, level: e.target.value })}>
-                    <option value="مبتدئ">مبتدئ</option>
-                    <option value="متوسط">متوسط</option>
-                    <option value="متقدم">متقدم</option>
+                    <option value="beginner">{t('home.levelBeginner')}</option>
+                    <option value="intermediate">{t('home.levelIntermediate')}</option>
+                    <option value="advanced">{t('home.levelAdvanced')}</option>
                   </select>
                 </label>
                 <button className="save-project-btn" onClick={() => saveProject(draft)} disabled={saving}>
