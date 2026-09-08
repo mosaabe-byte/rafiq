@@ -590,3 +590,31 @@
 .context-empty {
   opacity: 0.5;
 }
+.conv-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.conv-select {
+  padding: 7px 10px;
+  border: 1px solid var(--border, #d0d0d8);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  background: var(--white, #fff);
+  max-width: 160px;
+}
+.conv-new-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border, #d0d0d8);
+  background: transparent;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--purple, #534AB7);
+  flex-shrink: 0;
+}
+.conv-new-btn:hover { background: var(--gray-50, #F7F6F3); }

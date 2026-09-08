@@ -198,6 +198,7 @@ export const translations = {
       ctxPhase: "المرحلة الحاليّة",
       ctxProgress: "التقدّم",
       ctxBands: "بنود المرحلة",
+      convLabel: "محادثة", newConversation: "محادثة جديدة",
     },
     profile: {
       editName: "تعديل الاسم",
@@ -622,6 +623,7 @@ export const translations = {
       ctxPhase: "Phase actuelle",
       ctxProgress: "Progression",
       ctxBands: "Étapes de la phase",
+      convLabel: "Discussion", newConversation: "Nouvelle discussion",
     },
     auth: {
       signinTitle:"Connexion", signupTitle:"Créer un compte",
@@ -853,6 +855,7 @@ export const translations = {
       ctxPhase: "Current phase",
       ctxProgress: "Progress",
       ctxBands: "Phase steps",
+      convLabel: "Conversation", newConversation: "New conversation",
     },
     profile: {
       editName: "Edit name",

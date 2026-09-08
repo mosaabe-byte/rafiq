@@ -291,6 +291,39 @@ export default function Chat() {
     loadOrCreateConversation();
   }, [selectedProjectId, user?.id]);
 
+    async function startNewConversation() {
+     if (!selectedProjectId || !user) return;
+
+    const { data: created, error } = await supabase
+      .from("conversations")
+      .insert({ user_id: user.id, project_id: selectedProjectId })
+      .select("id, title, created_at")
+      .single();
+
+    if (error) return;
+
+    setConversations([created, ...conversations]);
+    setConversationId(created.id);
+    setMessages([]);
+  }
+
+    async function switchConversation(convId) {
+    if (convId === conversationId) return;
+
+    setLoadingHistory(true);
+    setConversationId(convId);
+    setMessages([]);
+
+    const { data: msgs } = await supabase
+      .from("messages")
+      .select("role, content")
+      .eq("conversation_id", convId)
+      .order("created_at", { ascending: true });
+
+    if (msgs) setMessages(msgs);
+    setLoadingHistory(false);
+  }
+
   async function sendMessage() {
     const text = input.trim();
     if (!text || loading || !conversationId) return;
@@ -698,6 +731,30 @@ export default function Chat() {
           >
             {t("chat.modelDeep")}
           </button>
+                  {selectedProjectId && (
+          <div className="conv-switch">
+            {conversations.length > 1 && (
+              <select
+                className="conv-select"
+                value={conversationId || ''}
+                onChange={(e) => switchConversation(e.target.value)}
+              >
+                {conversations.map((c, i) => (
+                  <option key={c.id} value={c.id}>
+                    {c.title || `${t('chat.convLabel')} ${conversations.length - i}`}
+                  </option>
+                ))}
+              </select>
+            )}
+            <button
+              className="conv-new-btn"
+              onClick={startNewConversation}
+              title={t('chat.newConversation')}
+            >
+              ＋
+            </button>
+          </div>
+        )}
         </div>
         </div>
       {/* الجسم: محادثة + مساحة عمل (على الحاسوب جنباً إلى جنب) */}
