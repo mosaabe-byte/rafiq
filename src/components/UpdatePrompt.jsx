@@ -29,6 +29,8 @@ export default function UpdatePrompt() {
     });
 
     const timer = setInterval(() => reg?.update(), 60000);
+    const onFocus = () => reg?.update();
+    window.addEventListener('focus', onFocus);
 
     let reloaded = false;
     const onChange = () => {
@@ -41,6 +43,7 @@ export default function UpdatePrompt() {
     return () => {
       clearInterval(timer);
       navigator.serviceWorker.removeEventListener('controllerchange', onChange);
+      window.removeEventListener('focus', onFocus);
     };
   }, []);
 
