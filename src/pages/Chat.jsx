@@ -279,7 +279,7 @@ export default function Chat() {
 
       const { data: msgs, error: msgsError } = await supabase
         .from("messages")
-        .select("role, content")
+        .select("id, role, content")
         .eq("conversation_id", convId)
         .order("created_at", { ascending: true });
 
@@ -316,12 +316,32 @@ export default function Chat() {
 
     const { data: msgs } = await supabase
       .from("messages")
-      .select("role, content")
+      .select("id, role, content")
       .eq("conversation_id", convId)
       .order("created_at", { ascending: true });
 
     if (msgs) setMessages(msgs);
     setLoadingHistory(false);
+  }
+
+    async function deleteExchange(index) {
+    const userMsg = messages[index];
+    const botMsg = messages[index + 1]?.role === "assistant" ? messages[index + 1] : null;
+
+    const ids = [userMsg?.id, botMsg?.id].filter(Boolean);
+    if (ids.length) {
+      await supabase.from("messages").delete().in("id", ids);
+    }
+
+    const next = [...messages];
+    next.splice(index, botMsg ? 2 : 1);
+    setMessages(next);
+  }
+
+    async function editExchange(index) {
+    const text = messages[index]?.content || "";
+    await deleteExchange(index);
+    setInput(text);
   }
 
   async function sendMessage() {
@@ -500,6 +520,7 @@ export default function Chat() {
         setTimeout(() => setCopied(false), 1500);
       } catch (e) {}
     };
+      
     return (
       <div className="code-block">
         <div className="code-block-head">
@@ -956,7 +977,7 @@ export default function Chat() {
                     {t("chat.openWorkspace")}
                   </button>
                 )}
-
+                
                 {reportedIndexes.includes(i) ? (
                   <span className="chat-report-thanks">{t("chat.reportThanks")}</span>
                 ) : (
@@ -970,6 +991,17 @@ export default function Chat() {
                     {t("chat.report")}
                   </button>
                 )}
+              </div>
+            )}
+
+            {m.role === "user" && m.id && (
+              <div className="chat-actions">
+                <button className="chat-action-btn" onClick={() => editExchange(i)}>
+                  {t("chat.editMessage")}
+                </button>
+                <button className="chat-action-btn report" onClick={() => deleteExchange(i)}>
+                  {t("chat.deleteMessage")}
+                </button>
               </div>
             )}
 
