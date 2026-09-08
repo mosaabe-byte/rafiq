@@ -44,6 +44,7 @@ export default function Chat() {
   const [entryPhase, setEntryPhase] = useState(null); // المرحلة التي دخل منها المستخدم من «الطريق»
   const [userName, setUserName] = useState("");
   const [conversationId, setConversationId] = useState(null);
+  const [conversations, setConversations] = useState([]);
 
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
@@ -240,23 +241,24 @@ export default function Chat() {
     async function loadOrCreateConversation() {
       setLoadingHistory(true);
       setMessages([]);
+      setConversations([]);
       setConversationId(null);
 
-      const { data: existing, error: findError } = await supabase
+      const { data: convs, error: findError } = await supabase
         .from("conversations")
-        .select("id")
+        .select("id, title, created_at")
         .eq("user_id", user.id)
         .eq("project_id", selectedProjectId)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
+        .order("created_at", { ascending: false });
 
       if (findError) {
         setLoadingHistory(false);
         return;
       }
 
-      let convId = existing?.id;
+      setConversations(convs || []);
+
+      let convId = convs?.[0]?.id;
 
       if (!convId) {
         const { data: created, error: createError } = await supabase
@@ -270,6 +272,7 @@ export default function Chat() {
           return;
         }
         convId = created.id;
+        setConversations([created]);
       }
 
       setConversationId(convId);
