@@ -425,6 +425,27 @@ export default function Chat() {
           setEnvSuggestion({ tool: envMatch[1], status: envMatch[2] });
           replyText = replyText.replace(envMatch[0], "").trim(); // نخفي الوسم من العرض
         }
+
+        // استخراج وسم ذاكرة المشروع [[MEM:...]] إن وُجد
+        const memMatch = replyText.match(/\[\[MEM:([\s\S]+?)\]\]/);
+        if (memMatch) {
+          const note = memMatch[1].trim();
+          replyText = replyText.replace(memMatch[0], "").trim();
+
+          const proj = projects.find((p) => p.id === Number(selectedProjectId));
+          const prev = proj?.project_memory || "";
+          const next = prev ? `${prev}\n- ${note}` : `- ${note}`;
+
+          await supabase
+            .from("projects")
+            .update({ project_memory: next })
+            .eq("id", selectedProjectId);
+
+          setProjects(projects.map((p) =>
+            p.id === Number(selectedProjectId) ? { ...p, project_memory: next } : p
+          ));
+        }
+
         setMessages([...newMessages, { role: "assistant", content: replyText }]);
 
         await supabase.from("messages").insert({

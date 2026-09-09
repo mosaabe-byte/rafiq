@@ -323,6 +323,17 @@ function environmentBlock(userEnv) {
   return text.trim();
 }
 
+// تعليمة ذاكرة المشروع — متى يوثّق رفيق قراراً وكيف
+function memoryInstruction() {
+  return `
+
+ذاكرة المشروع — وسم التوثيق: حين يُتَّخذ في هذه المحادثة قرارٌ ثابت يخصّ المشروع نفسه لا سير الحديث (اختيار تقنية، تحديد المستخدمين المستهدفين، قرار معماريّ صريح، خلاصة يريد المستخدم بقاءها)، ضع في آخر ردّك — على سطر مستقلّ — وسماً بهذه الصيغة الحرفيّة: [[MEM:نصّ البند]]. سطر واحد موجز لا فقرة، وبنداً واحداً في الردّ الواحد.
+
+متى تكتبه تلقائيّاً: حين يكون القرار صريحاً لا لبس فيه («سنستعمل React»، «المستخدمون هم المعلّمون»). ومتى تستأذن أوّلاً: حين يكون رأياً أو نقاشاً لم يُحسَم — اسأل «أدوّن هذا في ذاكرة مشروعك؟» ولا تضع الوسم إلّا بعد موافقته.
+
+ولا تشرح الوسم للمستخدم؛ هو إشارة نظام. ولا تدوّن ما هو مسجَّل أصلاً في سياق المشروع أعلاه (المرحلة، التقدّم، المستوى) — الذاكرة لما ليس فيه.`;
+}
+
   const context = `
 
 سياق المستخدم الحالي (استخدمه لتُخصّص ردودك، ورحّب به بوعي بمكانه دون أن تُكرر كل هذه المعلومات حرفياً في كل رد):
@@ -438,7 +449,7 @@ ${parts.join("\n")}
 
   const environmentSection = environmentBlock(userEnv);
 
-return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + context + environmentSection + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
+return base + language + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + context + environmentSection + memoryInstruction() + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
 }
 
 export default async function handler(req, res) {
