@@ -336,7 +336,10 @@ function environmentBlock(userEnv) {
     !project.tech_stack || project.tech_stack.includes("متأكد") || project.tech_stack.includes("متأكّد")
       ? "لم يحدّدها بعد — إن سأل عن التقنية المناسبة، ساعده على اختيارها بحسب مستواه ومشروعه، ولا تفترض تقنية معيّنة."
       : project.tech_stack
-  }`;
+  }${project.project_memory ? `
+
+- ذاكرة المشروع (قرارات وخلاصات موثّقة من محادثات سابقة — اعتمِدها ولا تقل إنّك تتذكّرها، بل انسبها إلى ملفّ المشروع):
+${project.project_memory}` : ""}`;
 
 // البنود التي أنجزها المستخدم فعلاً في هذا المشروع (بوصلة التقدّم)
   let bandsProgress = "";
