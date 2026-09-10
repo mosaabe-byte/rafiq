@@ -475,6 +475,9 @@ export default function Chat() {
           ));
         }
 
+        // نزع أيّ وسم نظام لم يُطابق الصيغتين المعروفتين
+        replyText = replyText.replace(/\[\[(ENV|MEM)[^\]]*\]\]/g, "").trim();
+
         setMessages([...newMessages, { role: "assistant", content: replyText }]);
 
         await supabase.from("messages").insert({
