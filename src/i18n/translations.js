@@ -200,6 +200,7 @@ export const translations = {
       ctxBands: "بنود المرحلة",
       convLabel: "محادثة", newConversation: "محادثة جديدة",
       editMessage: "تعديل", deleteMessage: "حذف",
+      ctxMemory: "ذاكرة المشروع",
     },
     profile: {
       editName: "تعديل الاسم",
@@ -626,6 +627,7 @@ export const translations = {
       ctxBands: "Étapes de la phase",
       convLabel: "Discussion", newConversation: "Nouvelle discussion",
       editMessage: "Modifier", deleteMessage: "Supprimer",
+      ctxMemory: "Mémoire du projet",
     },
     auth: {
       signinTitle:"Connexion", signupTitle:"Créer un compte",
@@ -859,6 +861,7 @@ export const translations = {
       ctxBands: "Phase steps",
       convLabel: "Conversation", newConversation: "New conversation",
       editMessage: "Edit", deleteMessage: "Delete",
+      ctxMemory: "Project memory",
     },
     profile: {
       editName: "Edit name",

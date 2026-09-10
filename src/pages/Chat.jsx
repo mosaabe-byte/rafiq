@@ -344,6 +344,22 @@ export default function Chat() {
     setInput(text);
   }
 
+    async function deleteMemoryNote(noteIndex) {
+    const proj = projects.find((p) => p.id === Number(selectedProjectId));
+    const lines = (proj?.project_memory || "").split("\n").filter((l) => l.trim());
+    lines.splice(noteIndex, 1);
+    const next = lines.join("\n");
+
+    await supabase
+      .from("projects")
+      .update({ project_memory: next || null })
+      .eq("id", selectedProjectId);
+
+    setProjects(projects.map((p) =>
+      p.id === Number(selectedProjectId) ? { ...p, project_memory: next || null } : p
+    ));
+  }
+
   async function sendMessage() {
     const text = input.trim();
     if (!text || loading || !conversationId) return;
@@ -733,6 +749,25 @@ export default function Chat() {
                   </li>
                 );
               })}
+            </ul>
+          </div>
+        )}
+        {p.project_memory && (
+          <div className="context-block">
+            <div className="context-label">{t("chat.ctxMemory")}</div>
+            <ul className="context-memory">
+              {p.project_memory.split("\n").filter((l) => l.trim()).map((line, idx) => (
+                <li key={idx} className="context-memory-item">
+                  <span className="context-memory-text">{line.replace(/^-\s*/, "")}</span>
+                  <button
+                    className="context-memory-del"
+                    onClick={() => deleteMemoryNote(idx)}
+                    title={t("chat.deleteMessage")}
+                  >
+                    ✕
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
         )}
