@@ -404,6 +404,19 @@ export default function Chat() {
       model_key: modelKey,
     });
 
+    // عنوان المحادثة من أوّل رسالة فيها
+    if (messages.length === 0) {
+      const title = text.slice(0, 40) + (text.length > 40 ? "…" : "");
+      await supabase
+        .from("conversations")
+        .update({ title })
+        .eq("id", conversationId);
+
+      setConversations(conversations.map((c) =>
+        c.id === conversationId ? { ...c, title } : c
+      ));
+    }
+
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
