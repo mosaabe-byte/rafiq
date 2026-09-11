@@ -477,7 +477,7 @@
   padding: 8px 16px;
   border: none;
   border-radius: 8px;
-  background: var(--primary, #6C4AB6);
+  background: var(--purple);
   color: var(--white);
   cursor: pointer;
   font-weight: 600;
@@ -534,7 +534,7 @@
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
-.context-phase { font-weight: 600; color: var(--primary, #6C4AB6); }
+.context-phase { font-weight: 600; color: var(--purple); }
 .context-progress-track {
   height: 8px;
   background: #e5e5ec;
@@ -543,7 +543,7 @@
 }
 .context-progress-fill {
   height: 100%;
-  background: var(--primary, #6C4AB6);
+  background: var(--purple);
   border-radius: 4px;
 }
 .context-progress-pct { font-size: 0.8rem; color: #666; }
