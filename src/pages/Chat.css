@@ -25,7 +25,7 @@
   flex-shrink: 0;
   font-family: inherit;
   font-size: 14px;
-  background: var(--white, #fff);
+  background: var(--white, var(--white));
   color: var(--gray-900);
 }
 
@@ -66,7 +66,7 @@
   border: none;
 }
 .chat-row.assistant .rafiq-bubble {
-  background: var(--white, #ffffff);
+  background: var(--white, var(--white));
   border: 1px solid var(--gray-100, #e5e5e5);
 }
 
@@ -80,7 +80,7 @@
   font-size: 12px;
   border: 1px solid var(--gray-200, #ddd);
   border-radius: 6px;
-  background: var(--white, #fff);
+  background: var(--white, var(--white));
   color: var(--gray-600, #555);
   cursor: pointer;
   font-family: inherit;
@@ -128,7 +128,7 @@
   border: none;
   border-radius: 8px;
   background: #dc2626;
-  color: #fff;
+  color: var(--white);
   cursor: pointer;
   font-weight: 600;
   font-family: inherit;
@@ -138,7 +138,7 @@
   font-size: 13px;
   border: 1px solid var(--gray-200, #ddd);
   border-radius: 8px;
-  background: var(--white, #fff);
+  background: var(--white, var(--white));
   color: var(--gray-600, #555);
   cursor: pointer;
   font-family: inherit;
@@ -281,7 +281,7 @@
 .attach-list {
   position: absolute; bottom: 110%; inset-inline-start: 0;
   min-width: 240px; max-height: 240px; overflow-y: auto;
-  background: var(--surface, #fff);
+  background: var(--surface, var(--white));
   border: 1px solid var(--border, #ddd); border-radius: 12px;
   box-shadow: 0 6px 24px rgba(0,0,0,0.12);
   padding: 6px; z-index: 20;
@@ -310,7 +310,7 @@
 /* ── كتلة الكود بزرّ نسخ ── */
 .code-block {
   margin: 12px 0;
-  border: 1px solid var(--border, #d0d0d8);
+  border: 1px solid var(--gray-100);
   border-radius: 10px;
   overflow: hidden;
   background: #1e1e2e;
@@ -379,14 +379,14 @@
   max-width: 160px;
   max-height: 160px;
   border-radius: 10px;
-  border: 1px solid var(--border, #d0d0d8);
+  border: 1px solid var(--gray-100);
 }
 .image-preview-x {
   position: absolute;
   top: -8px;
   inset-inline-end: -8px;
   background: #000;
-  color: #fff;
+  color: var(--white);
   border: none;
   border-radius: 50%;
   width: 22px;
@@ -414,7 +414,7 @@
   flex-direction: column;
   width: 42%;
   min-width: 320px;
-  border-inline-start: 1px solid var(--border, #e0e0e8);
+  border-inline-start: 1px solid var(--gray-100);
   background: var(--card-bg, #fafafa);
   min-height: 0;
 }
@@ -468,7 +468,7 @@
   flex: 1;
   min-width: 0;
   padding: 8px 12px;
-  border: 1px solid var(--border, #d0d0d8);
+  border: 1px solid var(--gray-100);
   border-radius: 8px;
   font-family: inherit;
   font-size: 0.9rem;
@@ -478,7 +478,7 @@
   border: none;
   border-radius: 8px;
   background: var(--primary, #6C4AB6);
-  color: #fff;
+  color: var(--white);
   cursor: pointer;
   font-weight: 600;
   white-space: nowrap;
@@ -501,7 +501,7 @@
 .env-suggestion-actions { display: flex; gap: 8px; }
 .env-suggestion-yes {
   padding: 5px 14px; border: none; border-radius: 7px;
-  background: #6C4AB6; color: #fff; cursor: pointer; font-weight: 600;
+  background: #6C4AB6; color: var(--white); cursor: pointer; font-weight: 600;
 }
 .env-suggestion-no {
   padding: 5px 14px; border: 1px solid #d0d0d8; border-radius: 7px;
@@ -598,17 +598,17 @@
 }
 .conv-select {
   padding: 7px 10px;
-  border: 1px solid var(--border, #d0d0d8);
+  border: 1px solid var(--gray-100);
   border-radius: 8px;
   font-family: inherit;
   font-size: 0.85rem;
-  background: var(--white, #fff);
+  background: var(--white, var(--white));
   max-width: 160px;
 }
 .conv-new-btn {
   width: 34px;
   height: 34px;
-  border: 1px solid var(--border, #d0d0d8);
+  border: 1px solid var(--gray-100);
   background: transparent;
   border-radius: 8px;
   font-size: 1.1rem;

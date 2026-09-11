@@ -42,7 +42,7 @@
   font-size: 12px;
   padding: 6px 14px;
   border-radius: 16px;
-  border: 1px solid var(--gray-100);
+  border: 1px solid var(--gray-200);
   background: transparent;
   color: var(--gray-600);
   transition: all 0.15s;
@@ -62,13 +62,13 @@
 }
 
 .project-card {
-  border: 1px solid var(--gray-100);
+  border: 1px solid var(--gray-200);
   border-radius: 14px;
   background: var(--white);
   overflow: hidden;
   transition: border-color 0.15s;
 }
-.project-card:hover { border-color: var(--gray-200); }
+.project-card:hover { border-color: var(--gray-400); }
 
 .pc-top {
   display: flex;
@@ -301,7 +301,7 @@
 @keyframes welcomeFade { from { opacity: 0; } to { opacity: 1; } }
 
 .welcome-card {
-  background: #fff;
+  background: var(--white);
   border-radius: 20px;
   padding: 30px 24px;
   max-width: 380px;
@@ -318,8 +318,8 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: #EEEDFE;
-  color: #534AB7;
+  background: var(--purple-light);
+  color: var(--purple);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -361,8 +361,8 @@
 .welcome-btn {
   width: 100%;
   padding: 13px;
-  background: #534AB7;
-  color: #fff;
+  background: var(--purple);
+  color: var(--white);
   border: none;
   border-radius: 13px;
   font-size: 15px;
@@ -376,7 +376,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: linear-gradient(135deg, #534AB7, #6D63D9);
+  background: linear-gradient(135deg, var(--purple), #6D63D9);
   border-radius: 16px;
   padding: 16px;
   margin: 12px 0 16px;
@@ -394,7 +394,7 @@
   height: 46px;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.18);
-  color: #fff;
+  color: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -406,7 +406,7 @@
 .learn-banner-title {
   font-size: 16px;
   font-weight: 700;
-  color: #fff;
+  color: var(--white);
   margin-bottom: 2px;
 }
 .learn-banner-sub {
