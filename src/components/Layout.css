@@ -138,7 +138,7 @@
     gap: 4px;
     padding: 24px 12px;
     border-top: none;
-    border-inline-start: 1px solid var(--border, #e5e7eb);  /* بدل border-left */
+    border-inline-start: 1px solid var(--gray-200);  /* بدل border-left */
     overflow: hidden;
     background: var(--white, #fff);
     z-index: 50;

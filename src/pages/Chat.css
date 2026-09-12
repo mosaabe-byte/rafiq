@@ -269,7 +269,7 @@
   display: inline-flex; align-items: center; gap: 6px;
   padding: 6px 12px; border-radius: 999px;
   font-size: 0.85rem; cursor: pointer;
-  border: 1px solid var(--border, #ddd);
+  border: 1px solid var(--gray-200);
   background: var(--gray-50);
 }
 .attach-chip { background: var(--purple-light); }
@@ -282,7 +282,7 @@
   position: absolute; bottom: 110%; inset-inline-start: 0;
   min-width: 240px; max-height: 240px; overflow-y: auto;
   background: var(--white);
-  border: 1px solid var(--border, #ddd); border-radius: 12px;
+  border: 1px solid var(--gray-200); border-radius: 12px;
   box-shadow: 0 6px 24px rgba(0,0,0,0.12);
   padding: 6px; z-index: 20;
 }
@@ -295,7 +295,7 @@
 .attach-item:hover { background: var(--gray-100); }
 .attach-item-tag {
   font-size: 0.72rem; opacity: 0.6;
-  border: 1px solid var(--border, #ddd); border-radius: 6px; padding: 1px 6px;
+  border: 1px solid var(--gray-200); border-radius: 6px; padding: 1px 6px;
 }
 .attach-empty { padding: 10px; font-size: 0.82rem; opacity: 0.6; text-align: center; }
 .rafiq-svg {
@@ -512,7 +512,7 @@
   width: 240px;
   min-width: 240px;
   padding: 14px;
-  border-inline-end: 1px solid var(--border, #e0e0e8);
+  border-inline-end: 1px solid var(--gray-200);
   background: var(--gray-50);
   overflow-y: auto;
   display: flex;
