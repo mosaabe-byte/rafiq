@@ -43,7 +43,7 @@ export default function Profile() {
   const [stats, setStats] = useState({ projects: 0, terms: 0, conversations: 0, avgProgress: 0 });
   const [phaseCounts, setPhaseCounts] = useState({});
   const [completedStations, setCompletedStations] = useState([]);
-  const [statusCounts, setStatusCounts] = useState({ active: 0, done: 0, published: 0, paused: 0 });
+  const [statusCounts, setStatusCounts] = useState({ active: 0, done: 0, paused: 0 });
   const [projectList, setProjectList] = useState([]);
   const [badges, setBadges] = useState([]);
   const [activity, setActivity] = useState([]);
@@ -121,9 +121,8 @@ export default function Profile() {
       });
 
       // حالات المشاريع (للإحصاءات الجديدة)
-      const sCounts = { active: 0, done: 0, published: 0, paused: 0 };
+      const sCounts = { active: 0, done: 0, paused: 0 };
       projectRows.forEach((p) => {
-        if (p.phase_number === 7) sCounts.published += 1;
         if (p.status === 'done') sCounts.done += 1;
         else if (p.status === 'paused') sCounts.paused += 1;
         else if (p.status === 'active') sCounts.active += 1;
@@ -264,7 +263,7 @@ export default function Profile() {
   // معلومات المنتج: الشارة، النصّ التحفيزيّ، الصنف
   function productInfo(p) {
     if (p.phase_number === 7) {
-      return { cls: 'published', badge: 'منشور 🚀', text: 'أنجزتَه ونشرتَه للعالم — هذا فخرٌ حقيقيّ!' };
+      return { cls: 'published', badge: 'مرحلة النشر 🚀', text: 'بلغتَ المرحلة الأخيرة — خطوة واحدة تفصل مشروعك عن العالم.' };
     }
     if (p.status === 'done' || (p.progress || 0) >= 100) {
       return { cls: 'completed', badge: 'مكتمل ✓', text: 'أتممتَه بالكامل — إنجازٌ تستحقّ أن تفخر به!' };
@@ -377,11 +376,6 @@ export default function Profile() {
                       <span className="status-dot done"></span>
                       <span className="pj-status-label">{t('profile.status_done')}</span>
                       <span className="pj-status-num">{statusCounts.done}</span>
-                    </div>
-                    <div className="pj-status">
-                      <span className="status-dot published"></span>
-                      <span className="pj-status-label">{t('profile.status_published')}</span>
-                      <span className="pj-status-num">{statusCounts.published}</span>
                     </div>
                     <div className="pj-status">
                       <span className="status-dot paused"></span>
