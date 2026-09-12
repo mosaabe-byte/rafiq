@@ -22,7 +22,7 @@ function computeBadges(data) {
     { key: 'glossaryBuilder', icon: '📚', earned: data.termCount >= 5 },
     { key: 'firstChat', icon: '💬', earned: data.conversationCount >= 1 },
     { key: 'achiever', icon: '🎯', earned: data.hasCompletedProject },
-    { key: 'publisher', icon: '🌐', earned: data.hasPublishedProject },
+    { key: 'publisher', icon: '🌐', earned: data.hasReachedDeployPhase },
     { key: 'inspector', icon: '🔍', earned: data.reportCount >= 1 },
   ];
 }
@@ -31,7 +31,7 @@ function computeNextStep(data) {
   if (data.projectCount === 0) return { key: 'addProject', to: '/' };
   if (data.conversationCount === 0) return { key: 'tryChat', to: '/chat' };
   if (data.termCount === 0) return { key: 'buildGlossary', to: '/glossary' };
-  if (!data.hasPublishedProject) return { key: 'reachDeploy', to: '/roadmap' };
+  if (!data.hasReachedDeployPhase) return { key: 'reachDeploy', to: '/roadmap' };
   return { key: 'keepGoing', to: '/learn' };
 }
 
@@ -111,12 +111,12 @@ export default function Profile() {
           : 0;
 
       const counts = {};
-      let hasPublishedProject = false;
+      let hasReachedDeployPhase = false;
       let hasCompletedProject = false;
       projectRows.forEach((p) => {
         const n = p.phase_number;
         if (n) counts[n] = (counts[n] || 0) + 1;
-        if (n === 7) hasPublishedProject = true;
+        if (n === 7) hasReachedDeployPhase = true;
         if ((p.progress || 0) >= 100) hasCompletedProject = true;
       });
 
@@ -150,11 +150,11 @@ export default function Profile() {
       setPhaseCounts(counts);
       setBadges(computeBadges({
         projectCount, termCount, conversationCount, reportCount,
-        hasPublishedProject, hasCompletedProject,
+        hasReachedDeployPhase, hasCompletedProject,
       }));
       setActivity(recentActivity);
       setNextStep(computeNextStep({
-        projectCount, termCount, conversationCount, hasPublishedProject,
+        projectCount, termCount, conversationCount, hasReachedDeployPhase,
       }));
       setLoading(false);
     }
