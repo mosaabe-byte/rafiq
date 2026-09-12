@@ -21,7 +21,7 @@
   width: 52px;
   height: 52px;
   border-radius: 15px;
-  background: var(--purple-50, #EEEDFE);
+  background: var(--purple-light);
   color: var(--purple, #534AB7);
   display: flex;
   align-items: center;
@@ -35,7 +35,7 @@
 }
 .privacy-updated {
   font-size: 12.5px;
-  color: var(--gray-500, #888);
+  color: var(--gray-600);
 }
 .privacy-section {
   margin-bottom: 20px;
@@ -48,6 +48,6 @@
 .privacy-section p {
   font-size: 14.5px;
   line-height: 1.7;
-  color: var(--gray-700, #444);
+  color: var(--gray-600);
   margin: 0;
 }

@@ -28,7 +28,7 @@
 }
 .qg-subtitle {
   font-size: 14px;
-  color: var(--gray-500);
+  color: var(--gray-600);
   margin: 0;
   line-height: 1.5;
 }
@@ -102,14 +102,14 @@
   border-radius: 10px;
   border: 1.5px solid var(--gray-100);
   background: var(--white);
-  color: var(--gray-500);
+  color: var(--gray-600);
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s;
 }
-.qg-opt:hover { border-color: var(--gray-300); }
+.qg-opt:hover { border-color: var(--gray-400); }
 .qg-opt.selected.yes {
   background: #E8F5EE;
   border-color: #1F9D57;
@@ -157,7 +157,7 @@
   border-radius: 10px;
   border: 1px solid var(--gray-100);
   background: var(--white);
-  color: var(--gray-500);
+  color: var(--gray-600);
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -191,7 +191,7 @@
 }
 .qg-result-meta {
   font-size: 13px;
-  color: var(--gray-500);
+  color: var(--gray-600);
 }
 .qg-result-hint {
   margin-top: 10px;
@@ -249,7 +249,7 @@
   gap: 6px;
   margin-top: 24px;
   font-size: 14px;
-  color: var(--gray-500);
+  color: var(--gray-600);
   text-decoration: none;
   font-weight: 600;
 }
@@ -287,7 +287,7 @@
 }
 .qg-notes-list li {
   font-size: 13.5px;
-  color: var(--gray-700);
+  color: var(--gray-600);
   line-height: 1.6;
 }
 .qg-last-result {
@@ -331,7 +331,7 @@
 .qg-history-title {
   font-size: 14px;
   font-weight: 700;
-  color: var(--gray-700);
+  color: var(--gray-600);
 }
 .qg-trend {
   font-size: 12.5px;
@@ -341,7 +341,7 @@
 }
 .qg-trend.up { background: #E8F5EE; color: #157A42; }
 .qg-trend.down { background: #FDECEC; color: #B42318; }
-.qg-trend.flat { background: var(--gray-50); color: var(--gray-500); }
+.qg-trend.flat { background: var(--gray-50); color: var(--gray-600); }
 
 .qg-chart {
   display: flex;

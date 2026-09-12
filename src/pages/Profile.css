@@ -330,7 +330,7 @@
   transition: all 0.2s ease;
 }
 .data-export-btn {
-  background: var(--purple-50, #EEEDFE);
+  background: var(--purple-light);
   color: var(--purple, var(--purple));
   border-color: var(--purple, var(--purple));
 }
@@ -368,14 +368,14 @@
 }
 .delete-modal p {
   font-size: 14px;
-  color: var(--gray-700, #444);
+  color: var(--gray-600);
   line-height: 1.6;
   margin: 0 0 10px;
 }
 .delete-confirm-hint {
   font-weight: 600;
-  color: var(--gray-800, #333) !important;
-}
+  color: var(--gray-900) !important;
+} 
 .delete-confirm-input {
   width: 100%;
   padding: 10px;
@@ -407,7 +407,7 @@
 }
 .delete-modal-cancel {
   background: var(--gray-100, #eee);
-  color: var(--gray-700, #444);
+  color: var(--gray-600);
 }
 .delete-modal-confirm {
   background: #B42318;
@@ -422,7 +422,7 @@
   text-align: center;
   margin-top: 12px;
   font-size: 13px;
-  color: var(--gray-500, #888);
+  color: var(--gray-600);
   text-decoration: underline;
 }
 .privacy-link:hover {
@@ -566,7 +566,7 @@
 .pj-progress-pct { font-weight: 700; color: var(--purple); }
 .pj-progress-track {
   height: 8px;
-  background: var(--gray-200);
+  background: var(--gray-50);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -665,7 +665,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 14px;
-  background: var(--bg, #f7f7fa);
+  background: var(--gray-50);
   border-radius: 10px;
 }
 .env-tool-name { font-weight: 600; font-family: monospace; }

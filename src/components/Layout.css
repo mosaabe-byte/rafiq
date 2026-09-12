@@ -170,7 +170,7 @@
   }
 
   .app-nav .nav-item.active {
-    background: var(--bg-soft, #eef2ff);
+    background: var(--purple-light);
   }
 
   html[dir="rtl"] #root {
