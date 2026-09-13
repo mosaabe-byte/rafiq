@@ -261,25 +261,24 @@ export default function Profile() {
   }
 
   // معلومات المنتج: الشارة، النصّ التحفيزيّ، الصنف
-  function productInfo(p) {
+    function productInfo(p) {
     if (p.phase_number === 7) {
-      return { cls: 'published', badge: 'مرحلة النشر 🚀', text: 'بلغتَ المرحلة الأخيرة — خطوة واحدة تفصل مشروعك عن العالم.' };
+      return { cls: 'published', badge: t('profile.product_deployBadge'), text: t('profile.product_deployText') };
     }
     if (p.status === 'done' || (p.progress || 0) >= 100) {
-      return { cls: 'completed', badge: 'مكتمل ✓', text: 'أتممتَه بالكامل — إنجازٌ تستحقّ أن تفخر به!' };
+      return { cls: 'completed', badge: t('profile.product_doneBadge'), text: t('profile.product_doneText') };
     }
     const pct = p.progress || 0;
-    let text;
-    if (pct === 0) {
-      text = 'رحلةُ الألف ميل تبدأ بخطوة — لنبدأ أولى خطوات هذا المنتج!';
-    } else if (pct <= 15) {
-      text = `${pct}% — انطلقتَ! البداية أصعب خطوة، وقد تجاوزتَها.`;
-    } else if (pct <= 50) {
-      text = `${pct}% — تتقدّم بثبات، والطريق يتّضح أمامك. واصِل!`;
-    } else {
-      text = `${pct}% — أوشكتَ! النهاية قريبة، لا تتوقّف الآن.`;
-    }
-    return { cls: 'ongoing', badge: 'قيد الإنجاز ⏳', text };
+    let key;
+    if (pct === 0) key = 'product_text0';
+    else if (pct <= 15) key = 'product_textLow';
+    else if (pct <= 50) key = 'product_textMid';
+    else key = 'product_textHigh';
+    return {
+      cls: 'ongoing',
+      badge: t('profile.product_ongoingBadge'),
+      text: t('profile.' + key).replace('{pct}', pct),
+    };
   }
 
     // تحديث حالة أداة في بيئة المستخدم وحفظها فوراً
