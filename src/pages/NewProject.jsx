@@ -23,11 +23,11 @@ const TECH_OPTIONS = [
 
 // خطوات المحادثة الموجّهة
 const steps = [
-  { key: 'name', bot: 'أهلاً بك! أنا رفيق. لنحوّل فكرتك إلى مشروع واضح. ما اسم الفكرة أو المشروع الذي يدور في ذهنك؟', type: 'text', placeholder: 'مثال: تطبيق لتنظيم وصفات الطبخ' },
-  { key: 'audience', bot: 'فكرة جميلة! ولمن هذا المشروع؟ من سيستخدمه؟', type: 'text', placeholder: 'مثال: ربات البيوت، الطلاب، أصحاب المتاجر...' },
-  { key: 'platform', bot: 'واضح. على أي منصة تتخيله؟', type: 'choice', options: ['web', 'mobile', 'both'] },
-  { key: 'tech_stack', bot: 'وبأي تقنية تبنيه؟ إن لم تكن متأكّداً بعد، اختر «لست متأكّداً» وسأساعدك على القرار لاحقاً.', type: 'choice', options: TECH_OPTIONS },
-  { key: 'level', bot: 'وأخيراً، كيف تقيّم مستواك في البرمجة حالياً؟ هذا يساعدني أرافقك بالشكل المناسب.', type: 'choice', options: ['beginner', 'intermediate', 'advanced'] },
+  { key: 'name', botKey: 'q_name', type: 'text', phKey: 'ph_name' },
+  { key: 'audience', botKey: 'q_audience', type: 'text', phKey: 'ph_audience' },
+  { key: 'platform', botKey: 'q_platform', type: 'choice', options: ['web', 'mobile', 'both'] },
+  { key: 'tech_stack', botKey: 'q_tech', type: 'choice', options: TECH_OPTIONS },
+  { key: 'level', botKey: 'q_level', type: 'choice', options: ['beginner', 'intermediate', 'advanced'] },
 ];
 
 const platformEmoji = { web: '🌐', mobile: '📱', both: '💻' };
@@ -55,11 +55,14 @@ export default function NewProject() {
   const [mode, setMode] = useState('chat'); // 'chat' أو 'paste'
 
   // حالة المحادثة
-  const [messages, setMessages] = useState([{ from: 'bot', text: steps[0].bot }]);
+  const [messages, setMessages] = useState([{ from: 'bot', text: '' }]);
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [input, setInput] = useState('');
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  useEffect(() => {
+    setMessages([{ from: 'bot', text: t('new.' + steps[0].botKey) }]);
+  }, [lang]);
   const optionLabel = (v) =>
     v === 'web' ? t('home.platformWeb')
     : v === 'mobile' ? t('home.platformMobile')
@@ -92,9 +95,9 @@ export default function NewProject() {
     setAnswers(newAnswers);
     setInput('');
     if (stepIndex < steps.length - 1) {
-      newMessages.push({ from: 'bot', text: steps[stepIndex + 1].bot });
+      newMessages.push({ from: 'bot', text: t('new.' + steps[stepIndex + 1].botKey) });
     } else {
-      newMessages.push({ from: 'bot', text: 'ممتاز! جهّزت لك المشروع. اضغط "أضف إلى مشاريعي" لحفظه في لوحتك.' });
+      newMessages.push({ from: 'bot', text: t('new.ready') });
     }
     setMessages(newMessages);
     setStepIndex(stepIndex + 1);
@@ -138,7 +141,7 @@ export default function NewProject() {
     if (!user) {
       setSaving(false);
       if (mode === 'chat') {
-        setMessages((prev) => [...prev, { from: 'bot', text: 'يجب تسجيل الدخول أولاً لحفظ المشروع.' }]);
+        setMessages((prev) => [...prev, { from: 'bot', text: t('new.needLogin') }]);
       }
       return;
     }
@@ -152,7 +155,7 @@ export default function NewProject() {
       setSaving(false);
       console.error('تعذّر حفظ المشروع:', error.message);
       if (mode === 'chat') {
-        setMessages((prev) => [...prev, { from: 'bot', text: 'حدث خطأ أثناء الحفظ. تأكد من اتصالك وحاول مرة أخرى.' }]);
+        setMessages((prev) => [...prev, { from: 'bot', text: t('new.saveError') }]);
       }
       return;
     }
@@ -185,7 +188,7 @@ export default function NewProject() {
   // شاشة النجاح المشتركة
   if (done) {
     return (
-      <div className="newproject">
+      <div className="new">
         <div className="chat-area" style={{ justifyContent: 'center' }}>
           <div className="success-card">
             <div className="success-icon"><IconCheck size={26} /></div>
@@ -200,7 +203,7 @@ export default function NewProject() {
   }
 
   return (
-    <div className="newproject">
+    <div className="new">
       <div className="np-header">
         <div className="np-title">
           <IconSparkles size={18} className="np-spark" />
@@ -236,7 +239,7 @@ export default function NewProject() {
                     type="text" value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && submitAnswer(input)}
-                    placeholder={current.placeholder} autoFocus
+                    placeholder={t('new.' + current.phKey)} autoFocus
                   />
                   <button className="send-btn" onClick={() => submitAnswer(input)} disabled={!input.trim()}>{t('new.send')}</button>
                 </div>
@@ -308,7 +311,7 @@ export default function NewProject() {
                   </select>
                 </label>
                 <button className="save-project-btn" onClick={() => saveProject(draft)} disabled={saving}>
-                  {saving ? (<><IconLoader2 size={18} className="spin" /> جارٍ الحفظ...</>) : (<><IconCheck size={18} /> أضف إلى مشاريعي</>)}
+                  {saving ? (<><IconLoader2 size={18} className="spin" /> {t('new.saving')} </>) : (<><IconCheck size={18} /> {t('newproject.addToProjects')} </>)}
                 </button>
               </div>
             )}
