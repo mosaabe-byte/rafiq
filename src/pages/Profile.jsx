@@ -145,7 +145,6 @@ export default function Profile() {
       setStats({ projects: projectCount, terms: termCount, conversations: conversationCount, avgProgress });
       setStatusCounts(sCounts);
       setCompletedStations((stationsRes.data || []).map((r) => r.station_number));
-      console.log('projectRows للمعرض:', projectRows.length, projectRows);
       setProjectList(projectRows);
       setPhaseCounts(counts);
       setBadges(computeBadges({
