@@ -488,6 +488,13 @@ export default function Chat() {
           input_tokens: data.usage?.input_tokens ?? null,
           output_tokens: data.usage?.output_tokens ?? null,
         });
+
+        await supabase.from("usage_log").insert({
+          user_id: user.id,
+          model: data.modelKey ?? null,
+          tokens_in: data.usage?.input_tokens ?? 0,
+          tokens_out: data.usage?.output_tokens ?? 0,
+        });
       } else {
         setMessages([
           ...newMessages,
