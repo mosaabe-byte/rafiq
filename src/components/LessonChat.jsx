@@ -5,6 +5,8 @@ import { IconMessageCircle, IconX, IconSend } from '@tabler/icons-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import './LessonChat.css';
 import DOMPurify from 'dompurify';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../auth/AuthContext';
 
 // نصوص النافذة بثلاث لغات
 const UI = {
