@@ -396,13 +396,18 @@ export default function Chat() {
     setAttachedImage(null);
     setLoading(true);
 
-    await supabase.from("messages").insert({
+    const { data: insertedUser } = await supabase.from("messages").insert({
       conversation_id: conversationId,
       user_id: user.id,
       role: "user",
       content: text,
       model_key: modelKey,
-    });
+    }).select().single();
+    if (insertedUser) {
+      setMessages((prev) => prev.map((m, i) =>
+        i === prev.length - 1 ? { ...m, id: insertedUser.id } : m
+      ));
+    }
 
     // عنوان المحادثة من أوّل رسالة فيها
     if (messages.length === 0) {
@@ -478,16 +483,16 @@ export default function Chat() {
         // نزع أيّ وسم نظام لم يُطابق الصيغتين المعروفتين
         replyText = replyText.replace(/\[\[(ENV|MEM)[^\]]*\]\]/g, "").trim();
 
-        setMessages([...newMessages, { role: "assistant", content: replyText }]);
-
-        await supabase.from("messages").insert({
+        const { data: insertedBot } = await supabase.from("messages").insert({
           conversation_id: conversationId,
           user_id: user.id,
           role: "assistant",
           content: replyText,
           input_tokens: data.usage?.input_tokens ?? null,
           output_tokens: data.usage?.output_tokens ?? null,
-        });
+        }).select().single();
+
+        setMessages([...newMessages, { role: "assistant", content: replyText, id: insertedBot?.id }]);
 
         setMessages([...newMessages, { role: 'assistant', content: data.reply }]);
         if (user) {
