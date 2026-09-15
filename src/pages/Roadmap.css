@@ -400,3 +400,8 @@
 .band-check:disabled { cursor: default; }
 .guide-band.done .band-text { color: #8b88a0; text-decoration: line-through; }
 .band-text { line-height: 1.7; }
+.band-env-note {
+  font-size: 0.75rem;
+  color: var(--gray-600);
+  margin-inline-start: 8px;
+}

@@ -13,6 +13,12 @@ function phaseNumber(project) {
 }
 
 export default function Roadmap() {
+// بنود البيئة: تعتمد على أدوات الجهاز لا على المشروع، فتُشطَب تلقائيًّا إن كانت الأداة مثبّتة.
+// المفاتيح: رقم المرحلة ثمّ رقم البند (يبدأ من 1 كما في العرض).
+// تنبيه: أيّ إعادة ترتيب للبنود في roadmap.guides تكسر هذا الربط صامتًا.
+const ENV_BANDS = {
+  3: { 1: ['node', 'vscode'] },
+};
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
@@ -23,6 +29,7 @@ export default function Roadmap() {
   const [celebration, setCelebration] = useState(null); // {type: 'phase'|'project', text}
   const [advancing, setAdvancing] = useState(false);
   const [completedBands, setCompletedBands] = useState([]); // ["phase-band"] مثل "1-2"
+  const [environment, setEnvironment] = useState({});
 
   async function completePhase() {
     if (!selected || advancing) return;
@@ -87,6 +94,12 @@ export default function Roadmap() {
     recalcProgress(selected.id, [...completedBands, key]);
   }
 
+  function envDone(phase, band) {
+    const tools = ENV_BANDS[phase]?.[band];
+    if (!tools) return false;
+    return tools.every((k) => environment[k] === 'installed');
+  }
+
   // يحسب التقدّم من البنود المُنجَزة (كلّي عبر 28 بنداً) ويحفظه
   async function recalcProgress(projectId, bandsList) {
     const totalBands = phases.length * 4;
@@ -133,6 +146,15 @@ export default function Roadmap() {
           setCompletedBands(
             bands.map((b) => `${b.project_id}-${b.phase_number}-${b.band_number}`)
           );
+        }
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: prof } = await supabase
+            .from('profiles')
+            .select('environment')
+            .eq('id', user.id)
+            .single();
+          if (prof?.environment) setEnvironment(prof.environment);
         }
       }
       setLoading(false);
@@ -248,7 +270,8 @@ export default function Roadmap() {
                           {(t('roadmap.guides')[ph.n]?.steps || []).map((step, i) => {
                             const bandNum = i + 1;
                             const key = selected ? `${selected.id}-${ph.n}-${bandNum}` : '';
-                            const bandDone = completedBands.includes(key);
+                            const envAuto = envDone(ph.n, bandNum);
+                            const bandDone = completedBands.includes(key) || envAuto;
                             return (
                               <li key={i} className={'guide-band' + (bandDone ? ' done' : '')}>
                                 <button
@@ -260,6 +283,7 @@ export default function Roadmap() {
                                   {bandDone && <IconCheck size={13} />}
                                 </button>
                                 <span className="band-text">{step}</span>
+                                {envAuto && <span className="band-env-note">{t('roadmap.fromEnv')}</span>}
                               </li>
                             );
                           })}

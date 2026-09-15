@@ -82,6 +82,7 @@ export const translations = {
       askRafiq:"اسأل رفيق عن هذه المرحلة",
       completePhase:"أكملتُ هذه المرحلة",
       finishProject:"أنهيتُ المشروع! 🚀",
+      fromEnv: "أخبرتني بذلك في بيئة عملك",
       guides: {
         1: { steps: [
           "اكتب فكرة مشروعك في جملة واحدة واضحة.",
@@ -437,6 +438,7 @@ export const translations = {
       askRafiq:"Demander a Rafiq sur cette etape",
       completePhase:"J ai termine cette etape",
       finishProject:"J ai fini le projet ! 🚀",
+      fromEnv: "Vous me l'avez indiqué dans votre environnement",
     guides: {
         1: { steps: [
           "Ecrivez l idee de votre projet en une phrase claire.",
@@ -789,6 +791,7 @@ export const translations = {
       askRafiq:"Ask Rafiq about this phase",
       completePhase:"I completed this phase",
       finishProject:"I finished the project! 🚀",
+      fromEnv: "You told me this in your work environment",
     guides: {
 1: { steps: [
           "Write your project idea in one clear sentence.",
