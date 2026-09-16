@@ -7,6 +7,7 @@ import {
 import { supabase } from '../lib/supabase';
 import { useLanguage } from '../i18n/LanguageContext';
 import './Roadmap.css';
+import { useSearchParams } from 'react-router-dom';
 
 function phaseNumber(project) {
   return project?.phase_number || 1;
@@ -30,6 +31,7 @@ const ENV_BANDS = {
   const [advancing, setAdvancing] = useState(false);
   const [completedBands, setCompletedBands] = useState([]); // ["phase-band"] مثل "1-2"
   const [environment, setEnvironment] = useState({});
+  const [searchParams] = useSearchParams();
 
   async function completePhase() {
     if (!selected || advancing) return;
@@ -136,7 +138,11 @@ const ENV_BANDS = {
       } else {
         setProjects(data || []);
         setCloudOk(true);
-        if (data && data.length > 0) setSelectedId(data[0].id);
+        if (data && data.length > 0) {
+          const fromUrl = searchParams.get('project');
+          const match = fromUrl && data.find((p) => String(p.id) === fromUrl);
+          setSelectedId(match ? match.id : data[0].id);
+        }
 
         // جلب البنود المُنجَزة لكل مشاريع المستخدم
         const { data: bands } = await supabase
@@ -164,6 +170,9 @@ const ENV_BANDS = {
 
   const selected = projects.find((p) => p.id === selectedId) || null;
   const currentPhase = selected ? phaseNumber(selected) : 0;
+    useEffect(() => {
+    if (currentPhase) setOpenGuide(currentPhase);
+  }, [currentPhase]);
 
   return (
     <div className="roadmap">

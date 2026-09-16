@@ -144,6 +144,10 @@ export default function Dashboard() {
     setShowModal(true);
   }
 
+  function openProject(p) {
+    navigate('/roadmap?project=' + p.id);
+  }
+
   async function saveProject() {
     if (!form.name.trim()) return;
 
@@ -282,7 +286,7 @@ export default function Dashboard() {
 
           {visible.map((p) => (
             <div key={p.id} className="project-card">
-              <div className="pc-top">
+              <div className="pc-top" onClick={() => openProject(p)}>
                 <div className="pc-emoji" style={{ background: statusBg[p.status] }}>{p.emoji}</div>
                 <div className="pc-info">
                   <div className="pc-name">{p.name}</div>
@@ -293,7 +297,7 @@ export default function Dashboard() {
                 </div>
                 <span className={'pc-badge badge-' + p.status}>{statusLabel[p.status]}</span>
               </div>
-              <div className="pc-prog">
+              <div className="pc-prog" onClick={() => openProject(p)}>
                 <div className="pc-prog-hdr">
                   <span>{cardPhaseLabel(p)}</span>
                   <span className="pct">{p.progress}%</span>
