@@ -289,12 +289,16 @@ export default function Dashboard() {
         <div className="projects-list">
           {visible.length === 0 && (
             <div className="empty-state">
-              <p>{projects.length === 0 ? t('home.empty') : t('home.emptyFilter')}</p>
-              {projects.length === 0 && (
-                <button className="new-project-btn" onClick={() => navigate('/new')}>
-                  {t('home.startFirst')}
-                </button>
-              )}
+              <div className="empty-card">
+                <p className="empty-text">
+                  {projects.length === 0 ? t('home.empty') : t('home.emptyFilter')}
+                </p>
+                {projects.length === 0 && (
+                  <button className="empty-cta" onClick={() => navigate('/new')}>
+                    {t('home.startFirst')}
+                  </button>
+                )}
+              </div>
             </div>
           )}
 

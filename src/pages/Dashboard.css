@@ -6,6 +6,40 @@
   gap: 8px;
   padding: 16px 18px 10px;
 }
+.empty-state .new-project-btn {
+  background: var(--purple);
+  color: var(--white);
+  border: none;
+  font-weight: 600;
+  padding: 12px 28px;
+}
+.empty-card {
+  max-width: 420px;
+  margin: 40px auto;
+  padding: 28px 24px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 16px;
+  text-align: center;
+}
+.empty-text {
+  font-size: 0.95rem;
+  color: var(--gray-600);
+  line-height: 1.7;
+  margin: 0 0 20px;
+}
+.empty-cta {
+  background: var(--purple);
+  color: var(--white);
+  border: none;
+  border-radius: 12px;
+  padding: 12px 28px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+}
+.empty-cta:hover { background: var(--purple-dark); }
 .stat-box {
   background: var(--gray-50);
   border-radius: 10px;
