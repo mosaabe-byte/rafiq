@@ -56,22 +56,26 @@ export default function Dashboard() {
   const [form, setForm] = useState(emptyForm);
   const [showWelcome, setShowWelcome] = useState(false);
 
-  useEffect(() => {
-    try {
-      const seen = localStorage.getItem('rafiq_welcome_seen');
-      if (!seen) setShowWelcome(true);
-    } catch (e) {
-      // بعض المتصفّحات تمنع localStorage — نتجاهل بهدوء
+    useEffect(() => {
+    async function checkWelcome() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase
+        .from('profiles')
+        .select('welcome_seen')
+        .eq('id', user.id)
+        .maybeSingle();
+      if (data && !data.welcome_seen) setShowWelcome(true);
     }
+    checkWelcome();
   }, []);
 
-  function dismissWelcome() {
-    try {
-      localStorage.setItem('rafiq_welcome_seen', '1');
-    } catch (e) {
-      // تجاهل بهدوء
-    }
+  async function dismissWelcome() {
     setShowWelcome(false);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      await supabase.from('profiles').update({ welcome_seen: true }).eq('id', user.id);
+    }
   }
 
     function startFirstProject() {
