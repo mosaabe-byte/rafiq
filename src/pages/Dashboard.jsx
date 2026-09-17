@@ -74,6 +74,11 @@ export default function Dashboard() {
     setShowWelcome(false);
   }
 
+    function startFirstProject() {
+    dismissWelcome();
+    navigate('/new');
+  }
+
   const statusLabel = {
     active: t('home.statusActive'),
     done: t('home.statusDone'),
@@ -226,7 +231,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <button className="welcome-btn" onClick={dismissWelcome}>
+            <button className="welcome-btn" onClick={startFirstProject}>
              {t('home.welcomeBtn')}
             </button>
           </div>
@@ -280,7 +285,12 @@ export default function Dashboard() {
         <div className="projects-list">
           {visible.length === 0 && (
             <div className="empty-state">
-              {projects.length === 0 ? t('home.empty') : t('home.emptyFilter')}
+              <p>{projects.length === 0 ? t('home.empty') : t('home.emptyFilter')}</p>
+              {projects.length === 0 && (
+                <button className="new-project-btn" onClick={() => navigate('/new')}>
+                  {t('home.startFirst')}
+                </button>
+              )}
             </div>
           )}
 

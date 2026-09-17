@@ -15,6 +15,7 @@ export const translations = {
       statusActive:"جارٍ", statusDone:"مكتمل", statusPaused:"متوقف",
       loading:"جارٍ تحميل مشاريعك...",
       empty:"لا توجد مشاريع بعد", emptyFilter:"لا توجد مشاريع في هذه الفئة",
+      empty:"لم تبدأ بعد — أخبر رفيق بفكرتك، ونحوّلها معاً إلى مشروع واضح.",
       newBtn:"مشروع جديد", edit:"تعديل", delete:"حذف",
       modalAddTitle:"مشروع جديد", modalEditTitle:"تعديل المشروع",
       fieldName:"اسم المشروع", fieldNamePlaceholder:"مثال: تطبيق إدارة المهام",
@@ -33,8 +34,9 @@ export const translations = {
       platformWeb: "ويب",
       platformMobile: "موبايل",
       platformBoth: "ويب + موبايل",
+      startFirst: "ابدأ مشروعك الأوّل",
     },
-        new: {
+    new: {
       title: "حوّل فكرتك إلى مشروع",
       tabChat: "محادثة موجّهة",
       tabPaste: "الصق فكرتك",
@@ -370,6 +372,7 @@ export const translations = {
       statusActive:"En cours", statusDone:"Terminé", statusPaused:"En pause",
       loading:"Chargement...",
       empty:"Aucun projet", emptyFilter:"Aucun projet dans cette catégorie",
+      empty:"Vous n'avez pas encore commencé — dites votre idée à Rafiq, et nous en ferons un projet clair ensemble.",
       newBtn:"Nouveau projet", edit:"Modifier", delete:"Supprimer",
       modalAddTitle:"Nouveau projet", modalEditTitle:"Modifier le projet",
       fieldName:"Nom du projet", fieldNamePlaceholder:"Ex: Application de taches",
@@ -388,6 +391,7 @@ export const translations = {
       platformWeb: "Web",
       platformMobile: "Mobile",
       platformBoth: "Web + Mobile",
+      startFirst: "Commencez votre premier projet",
     },
     new: {
       title: "Transformez votre idée en projet",
@@ -724,6 +728,7 @@ export const translations = {
       statusActive:"Active", statusDone:"Done", statusPaused:"Paused",
       loading:"Loading your projects...",
       empty:"No projects yet", emptyFilter:"No projects in this category",
+      empty:"You haven't started yet — tell Rafiq your idea, and we'll turn it into a clear project together.",
       newBtn:"New project", edit:"Edit", delete:"Delete",
       modalAddTitle:"New project", modalEditTitle:"Edit project",
       fieldName:"Project name", fieldNamePlaceholder:"e.g. Task management app",
@@ -742,6 +747,7 @@ export const translations = {
       platformWeb: "Web",
       platformMobile: "Mobile",
       platformBoth: "Web + Mobile",
+      startFirst: "Start your first project",
     },
     new: {
       title: "Turn your idea into a project",
