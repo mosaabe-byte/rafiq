@@ -335,9 +335,11 @@ export default function Dashboard() {
             </div>
           ))}
 
-          <button className="new-project-btn" onClick={() => navigate('/new')}>
-            <IconPlus size={18} /> {t('home.newBtn')}
-          </button>
+          {projects.length > 0 && (
+            <button className="new-project-btn" onClick={() => navigate('/new')}>
+              <IconPlus size={18} /> {t('home.newBtn')}
+            </button>
+          )}
         </div>
       )}
 
