@@ -214,6 +214,14 @@
   gap: 8px;
   margin-bottom: 10px;
 }
+.chat-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.chat-controls .chat-select { flex: 1; min-width: 0; }
 
 .chat-controls .chat-select {
   flex: 1 1 auto;

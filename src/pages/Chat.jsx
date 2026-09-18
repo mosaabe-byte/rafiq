@@ -808,22 +808,8 @@ export default function Chat() {
 
   return (
     <div className="chat-page">
-      <h2 className="chat-title">{t("chat.title")}</h2>
-
-            <div className="chat-controls">
-      <select
-        className="chat-select"
-        value={selectedProjectId}
-        onChange={(e) => setSelectedProjectId(e.target.value)}
-      >
-        <option value="">{t("chat.selectProject")}</option>
-        {projects.map((p) => (
-          <option key={p.id} value={p.id}>
-            {p.emoji} {p.name}
-          </option>
-        ))}
-      </select>
-
+      <div className="chat-head">
+        <h2 className="chat-title">{t("chat.title")}</h2>
         <div className="model-switch">
           <button
             className={"model-opt" + (modelKey === "fast" ? " active" : "")}
@@ -839,7 +825,24 @@ export default function Chat() {
           >
             {t("chat.modelDeep")}
           </button>
-                  {selectedProjectId && (
+        </div>
+      </div>
+
+          <div className="chat-controls">
+        <select
+          className="chat-select"
+          value={selectedProjectId}
+          onChange={(e) => setSelectedProjectId(e.target.value)}
+        >
+          <option value="">{t("chat.selectProject")}</option>
+          {projects.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.emoji} {p.name}
+            </option>
+          ))}
+        </select>
+
+        {selectedProjectId && (
           <div className="conv-switch">
             {conversations.length > 1 && (
               <select
@@ -863,8 +866,7 @@ export default function Chat() {
             </button>
           </div>
         )}
-        </div>
-        </div>
+      </div>
       {/* الجسم: محادثة + مساحة عمل (على الحاسوب جنباً إلى جنب) */}
       <div className={"chat-body" + (workspaceContent ? " has-workspace" : "")}>
         <ProjectContext />
