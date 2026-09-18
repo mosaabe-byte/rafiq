@@ -6,6 +6,7 @@ import { useAuth } from '../auth/AuthContext';
 import { useLanguage } from '../i18n/LanguageContext';
 import { t } from '../data/learningContent';
 import './LearningPath.css';
+import PageHint from '../components/PageHint';
 
 const PAGE = {
   title: { ar: 'رحلة التعلّم', fr: "Parcours d'apprentissage", en: 'Learning Path' },
@@ -13,6 +14,11 @@ const PAGE = {
     ar: 'من جهاز فارغ إلى تطبيق منشور — 13 محطة، خطوة فوق خطوة',
     fr: "D'une machine vide à une application publiée — 13 étapes, pas à pas",
     en: 'From an empty machine to a published app — 13 stations, step by step',
+  },
+    hint: {
+    ar: 'ثلاث عشرة محطة تأخذك من جهاز فارغ إلى تطبيق منشور. ليست شرطاً للبدء — ادخلها حين تحتاج أن تفهم شيئاً بعمق.',
+    fr: "Treize étapes qui vous mènent d'une machine vide à une application publiée. Rien d'obligatoire — venez-y quand vous voulez comprendre en profondeur.",
+    en: "Thirteen stations taking you from an empty machine to a published app. Not a prerequisite — come here when you want to understand something deeply.",
   },
   progressLabel: {
     ar: 'أكملت {done} من {total} محطة',
@@ -72,6 +78,7 @@ export default function LearningPath() {
         <h1>{t(PAGE.title, lang)}</h1>
         <p>{t(PAGE.subtitle, lang)}</p>
       </div>
+      <PageHint pageKey="learn" text={t(PAGE.hint, lang)} />
 
       <div className="learnpath-progress">
         <div className="lp-progress-bar">

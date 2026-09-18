@@ -8,6 +8,7 @@ import { supabase } from '../lib/supabase';
 import { useLanguage } from '../i18n/LanguageContext';
 import './Roadmap.css';
 import { useSearchParams } from 'react-router-dom';
+import PageHint from '../components/PageHint';
 
 function phaseNumber(project) {
   return project?.phase_number || 1;
@@ -208,6 +209,7 @@ const ENV_BANDS = {
         </div>
         <p>{t('roadmap.subtitle')}</p>
       </div>
+      <PageHint pageKey="roadmap" text={t('roadmap.hint')} />
 
       {loading ? (
         <div className="rm-loading">

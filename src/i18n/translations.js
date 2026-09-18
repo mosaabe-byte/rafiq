@@ -85,6 +85,7 @@ export const translations = {
       completePhase:"أكملتُ هذه المرحلة",
       finishProject:"أنهيتُ المشروع! 🚀",
       fromEnv: "أخبرتني بذلك في بيئة عملك",
+      hint: "كلّ مشروع يمرّ بسبع مراحل. اضغط على أيّ مرحلة لترى بنودها، وشطّب ما أنجزتَه — ورفيق يرافقك في كلّ بند تتعثّر فيه.",
       guides: {
         1: { steps: [
           "اكتب فكرة مشروعك في جملة واحدة واضحة.",
@@ -309,6 +310,7 @@ export const translations = {
       cancel: "إلغاء",
       deleting: "جارٍ الحذف...",
       deleteConfirm: "نعم، احذف",
+      hint: "ارفع هنا ملفّاتك ومراجعك، وسيقرؤها رفيق حين تسأله عن مشروعك — فيجيبك من مصدرك أنت لا من عندياته.",
     },
 
     privacy: { back: 'رجوع للملف الشخصي', version: 'النسخة' },
@@ -444,6 +446,7 @@ export const translations = {
       completePhase:"J ai termine cette etape",
       finishProject:"J ai fini le projet ! 🚀",
       fromEnv: "Vous me l'avez indiqué dans votre environnement",
+      hint: "Chaque projet passe par sept phases. Cliquez sur une phase pour voir ses étapes et cochez ce que vous avez accompli — Rafiq vous accompagne à chaque blocage.",
     guides: {
         1: { steps: [
           "Ecrivez l idee de votre projet en une phrase claire.",
@@ -616,6 +619,7 @@ export const translations = {
       cancel: "Annuler",
       deleting: "Suppression...",
       deleteConfirm: "Oui, supprimer",
+      hint: "Téléversez ici vos fichiers et références. Rafiq les lira quand vous l'interrogerez sur votre projet — il répondra depuis vos sources, pas les siennes.",
     },
 
     privacy: { back: 'Retour au profil', version: 'Version' },
@@ -800,6 +804,7 @@ export const translations = {
       completePhase:"I completed this phase",
       finishProject:"I finished the project! 🚀",
       fromEnv: "You told me this in your work environment",
+      hint: "Every project moves through seven phases. Tap a phase to see its steps and check off what you've done — Rafiq is there whenever you get stuck.",
     guides: {
 1: { steps: [
           "Write your project idea in one clear sentence.",
@@ -1022,6 +1027,7 @@ export const translations = {
       cancel: "Cancel",
       deleting: "Deleting...",
       deleteConfirm: "Yes, delete",
+      hint: "Upload your files and references here. Rafiq reads them when you ask about your project — so answers come from your sources, not his.",
     },
 
     privacy: { back: 'Back to profile', version: 'Version' },

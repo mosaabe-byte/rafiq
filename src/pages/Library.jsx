@@ -7,6 +7,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 import './Library.css';
 import * as pdfjsLib from "pdfjs-dist";
 import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+import PageHint from '../components/PageHint';
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 const MAX_SIZE = 10 * 1024 * 1024; // 10 ميغابايت
@@ -240,6 +241,7 @@ export default function Library() {
         <h1>{t('library.title')}</h1>
         <p className="lib-sub">{t('library.sub')}</p>
       </div>
+     <PageHint pageKey="library" text={t('library.hint')} />
 
       <div className="lib-upload-card">
         <label className="lib-dropzone">
