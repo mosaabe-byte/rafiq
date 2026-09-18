@@ -164,6 +164,7 @@ export const translations = {
       errExistsBase: "المصطلح «{term}» موجود مسبقاً في المعجم.",
       errExistsPersonal: "المصطلح «{term}» موجود مسبقاً في معجمك.",
       errSaveFailed: "تعذّر الحفظ. حاول مرة أخرى.",
+      hint: "هنا تجمع المصطلحات التي تلتبس عليك. أضف أيّ كلمة تقابلها ولا تفهمها، وسأشرحها لك بلغتك.",
     },
     chat: {
       title: "محادثة رفيق",
@@ -522,6 +523,7 @@ export const translations = {
       errExistsBase: "Le terme « {term} » existe deja dans le glossaire.",
       errExistsPersonal: "Le terme « {term} » existe deja dans votre glossaire.",
       errSaveFailed: "Impossible d'enregistrer. Reessayez.",
+      hint: "Ici vous rassemblez les termes qui vous échappent. Ajoutez tout mot que vous ne comprenez pas, et je vous l'expliquerai.",
     },
     profile: {
       editName: "Modifier le nom",
@@ -877,6 +879,7 @@ export const translations = {
       errExistsBase: "The term \"{term}\" already exists in the glossary.",
       errExistsPersonal: "The term \"{term}\" already exists in your glossary.",
       errSaveFailed: "Could not save. Try again.",
+      hint: "This is where you collect terms that confuse you. Add any word you don't understand, and I'll explain it in your own words.",
     },
     chat: {
       title: "Chat with Rafiq",

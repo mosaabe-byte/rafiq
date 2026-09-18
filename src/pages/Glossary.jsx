@@ -5,6 +5,7 @@ import { useAuth } from '../auth/AuthContext';
 import { useLanguage } from '../i18n/LanguageContext';
 import { t as tf } from '../data/learningContent';
 import './Glossary.css';
+import PageHint from '../components/PageHint';
 
 // المصطلحات الأساسية (معجم رفيق المشترك للجميع) — ثلاثية اللغة
 // ph: نطق بحروف عربية، يُعرض فقط حين تكون لغة الواجهة عربية
@@ -291,6 +292,8 @@ export default function Glossary() {
             : tt('glossary.countBase', { n: baseTerms.length })}
         </p> 
       </div>
+
+      <PageHint pageKey="glossary" text={t('glossary.hint')} />
 
       <div className="search-wrap">
         <IconSearch size={17} className="search-icon" />
