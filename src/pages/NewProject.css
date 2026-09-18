@@ -9,10 +9,6 @@
   padding: 16px 18px 12px;
   border-bottom: 1px solid var(--gray-100);
   flex-shrink: 0;
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  background: var(--white);
 }
 .np-title {
   display: flex;
