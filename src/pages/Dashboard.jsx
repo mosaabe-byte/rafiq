@@ -154,7 +154,7 @@ export default function Dashboard() {
   }
 
   function openProject(p) {
-    navigate('/roadmap?project=' + p.id);
+    navigate('/chat?project=' + p.id);
   }
 
   async function saveProject() {

@@ -175,6 +175,12 @@ const ENV_BANDS = {
     if (currentPhase) setOpenGuide(currentPhase);
   }, [currentPhase]);
 
+  useEffect(() => {
+    if (!selectedId) return;
+    const el = document.querySelector('.picker-chip.active');
+    if (el) el.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+  }, [selectedId]);
+      
   return (
     <div className="roadmap">
       {/* شريط تهنئة المرحلة */}
