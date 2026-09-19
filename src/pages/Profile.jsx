@@ -11,6 +11,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 import './Profile.css';
 import { useNavigate } from 'react-router-dom';
 import { sessions } from './LearningPath';
+import PageHint from '../components/PageHint';
 
 const LOCALES = { ar: 'ar', fr: 'fr-FR', en: 'en-US' };
 const PHASE_NUMBERS = [1, 2, 3, 4, 5, 6, 7];
@@ -303,6 +304,7 @@ export default function Profile() {
 
   return (
     <div className="profile">
+      <PageHint pageKey="profile" text={t('profile.hint')} />
       <div className="profile-hero">
         <div className="big-avatar">{initial}</div>
         <div className="hero-info">

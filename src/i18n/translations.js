@@ -290,6 +290,7 @@ export const translations = {
       product_textLow: "{pct}% — انطلقتَ! البداية أصعب خطوة، وقد تجاوزتَها.",
       product_textMid: "{pct}% — تتقدّم بثبات، والطريق يتّضح أمامك. واصِل!",
       product_textHigh: "{pct}% — أوشكتَ! النهاية قريبة، لا تتوقّف الآن.",
+      hint: "هنا ترى أثرك: مشاريعك، وما أنجزتَه، والأدوات التي أخبرتني أنّها على جهازك — فلا أسألك عنها مرّتين. وهنا أيضاً تتحكّم في بياناتك كلّها.",
     },
     library: {
       title: "مكتبتي",
@@ -599,6 +600,7 @@ export const translations = {
       product_textLow: "{pct}% — C'est parti ! Le début est le plus dur, et vous l'avez franchi.",
       product_textMid: "{pct}% — Vous avancez régulièrement, le chemin s'éclaircit. Continuez !",
       product_textHigh: "{pct}% — Vous y êtes presque ! Ne vous arrêtez pas maintenant.",
+      hint: "Ici vous voyez votre trace : vos projets, ce que vous avez accompli, et les outils que vous m'avez indiqués — je ne vous les redemande pas. C'est aussi ici que vous contrôlez toutes vos données.",
     },
     library: {
       title: "Ma bibliothèque",
@@ -1007,6 +1009,7 @@ export const translations = {
       product_textLow: "{pct}% — You're off! The start is the hardest part, and you're past it.",
       product_textMid: "{pct}% — Steady progress, and the path is clearing. Keep going!",
       product_textHigh: "{pct}% — Almost there! The finish is close, don't stop now.",
+      hint: "Here you see your trace: your projects, what you've accomplished, and the tools you told me you have — so I never ask twice. This is also where you control all your data.",
     },
     library: {
       title: "My Library",
