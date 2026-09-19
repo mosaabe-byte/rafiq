@@ -447,7 +447,7 @@
 }
 .journey-total {
   font-size: 0.9rem;
-  color: #6b7280;
+  color: var(--gray-600);
 }
 .journey-bar {
   flex: 1;
@@ -499,7 +499,7 @@
 }
 .station-chip-name {
   font-size: 0.82rem;
-  color: #374151;
+  color: var(--gray-900);
   line-height: 1.3;
 }
 .projects-card {
@@ -522,7 +522,7 @@
 }
 .pj-total-label {
   font-size: 0.95rem;
-  color: #6b7280;
+  color: var(--gray-600);
 }
 .pj-statuses {
   display: grid;
@@ -539,8 +539,8 @@
   border-radius: 10px;
   font-size: 0.85rem;
 }
-.pj-status-label { color: #6b7280; flex: 1; }
-.pj-status-num { font-weight: 700; color: #374151; }
+.pj-status-label { color: var(--gray-600); flex: 1; }
+.pj-status-num { font-weight: 700; color: var(--gray-900); }
 .status-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 .status-dot.active { background: var(--purple); }
 .status-dot.done { background: var(--teal); }
@@ -549,7 +549,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.85rem;
-  color: #6b7280;
+  color: var(--gray-600);
   margin-bottom: 6px;
 }
 .pj-progress-pct { font-weight: 700; color: var(--purple); }
@@ -579,11 +579,11 @@
 .ls-n {
   font-size: 1.6rem;
   font-weight: 800;
-  color: #374151;
+  color: var(--gray-900);
 }
 .ls-l {
   font-size: 0.85rem;
-  color: #6b7280;
+  color: var(--gray-600);
   margin-top: 4px;
 }
 .products-list {
@@ -617,7 +617,7 @@
 .product-body { flex: 1; }
 .product-name {
   font-weight: 700;
-  color: #374151;
+  color: var(--gray-900);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -635,7 +635,7 @@
 .product-badge.ongoing { color: var(--purple); }
 .product-motiv {
   font-size: 0.85rem;
-  color: #6b7280;
+  color: var(--gray-600);
   margin-top: 4px;
 }
 /* ── بيئة العمل ── */
