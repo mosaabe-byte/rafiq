@@ -869,10 +869,16 @@ export default function Chat() {
       </div>
       {/* الجسم: محادثة + مساحة عمل (على الحاسوب جنباً إلى جنب) */}
       <div className={"chat-body" + (workspaceContent ? " has-workspace" : "")}>
-        <ProjectContext />
+        {selectedProjectId && <ProjectContext />}
         {/* منطقة الرسائل: تتمدّد وتتمرّر وحدها */}
         <div className="chat-messages">
-
+        {!selectedProjectId && (
+          <div className="chat-empty-state">
+            <h3>{t('chat.pickProjectTitle')}</h3>
+            <p>{t('chat.pickProjectText')}</p>
+          </div>
+        )}
+        
         {selectedProjectId && loadingHistory && (
           <p className="chat-hint">{t("chat.loadingHistory")}</p>
         )}
