@@ -222,9 +222,9 @@
   flex-shrink: 0;
 }
 .signout-btn:hover {
-  background: #FEEAEA;
-  color: #C0392B;
-  border-color: #FEEAEA;
+  background: var(--red-light);
+  color: var(--red);
+  border-color: var(--red-light);
 }
 /* ===== أضف هذا المقطع إلى نهاية Profile.css ===== */
 
@@ -305,8 +305,8 @@
   color: var(--gray-400);
 }
 .name-edit-btn.cancel:hover {
-  background: #FEEAEA;
-  color: #C0392B;
+  background: var(--red-light);
+  color: var(--red);
 }
 /* قسم بياناتك وخصوصيتك */
 .data-rights-intro {
@@ -340,12 +340,12 @@
 }
 .data-delete-btn {
   background: var(--white);
-  color: #B42318;
-  border-color: #F0C4C0;
+  color: var(--red);
+  border-color: var(--red-light);
 }
 .data-delete-btn:hover {
-  background: #FDECEC;
-  border-color: #E06055;
+  background: var(--red-light);
+  border-color: var(--red);
 }
 .data-export-btn:disabled {
   opacity: 0.6;
@@ -362,7 +362,7 @@
   box-shadow: 0 20px 50px rgba(0,0,0,0.2);
 }
 .delete-modal h3 {
-  color: #B42318;
+  color: var(--red);
   font-size: 18px;
   margin: 0 0 12px;
 }
@@ -410,7 +410,7 @@
   color: var(--gray-600);
 }
 .delete-modal-confirm {
-  background: #B42318;
+  background: var(--red);
   color: var(--white);
 }
 .delete-modal-confirm:disabled {
@@ -600,8 +600,8 @@
   background: var(--gray-50);
   border-right: 4px solid var(--gray-200);
 }
-.product-card.published { background: color-mix(in srgb, #3b82f6 8%, white); border-right-color: #3b82f6; }
-.product-card.completed { background: color-mix(in srgb, #10b981 8%, white); border-right-color: #10b981; }
+.product-card.published { background: color-mix(in srgb, var(--purple) 8%, white); border-right-color: var(--purple); }
+.product-card.completed { background: color-mix(in srgb, var(--teal) 8%, white); border-right-color: var(--teal); }
 .product-card.ongoing { background: var(--gray-50); border-right-color: var(--purple); }
 .product-emoji {
   font-size: 1.8rem;
@@ -630,8 +630,8 @@
   border-radius: 999px;
   background: var(--white);
 }
-.product-badge.published { color: #3b82f6; }
-.product-badge.completed { color: #10b981; }
+.product-badge.published { color: var(--purple); }
+.product-badge.completed { color: var(--teal); }
 .product-badge.ongoing { color: var(--purple); }
 .product-motiv {
   font-size: 0.85rem;
