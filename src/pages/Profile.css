@@ -647,7 +647,7 @@
   border-radius: 14px;
 }
 .env-title { margin: 0 0 4px; font-size: 1.1rem; font-weight: 700; }
-.env-hint { margin: 0 0 14px; font-size: 0.85rem; color: #777; }
+.env-hint { margin: 0 0 14px; font-size: 0.85rem; color: var(--gray-600); }
 .env-tools { display: flex; flex-direction: column; gap: 10px; }
 .env-tool {
   display: flex;
@@ -668,16 +668,16 @@
   font-size: 0.85rem;
   transition: all 0.15s;
 }
-.env-tool-btn:hover { background: #eee; }
+.env-tool-btn:hover { background: var(--gray-100); }
 .env-tool-btn.active-installed {
-  background: #1e7e34;
+  background: var(--teal-dark);
   color: var(--white);
-  border-color: #1e7e34;
+  border-color: var(--teal-dark);
 }
 .env-tool-btn.active-deferred {
-  background: #b8860b;
+  background: var(--amber-dark);
   color: var(--white);
-  border-color: #b8860b;
+  border-color: var(--amber-dark);
 }
 @media (min-width: 960px) {
   .env-tools {
