@@ -388,7 +388,7 @@
 }
 .delete-confirm-input:focus {
   outline: none;
-  border-color: #E06055;
+  border-color: var(--red);
 }
 .delete-modal-actions {
   display: flex;
