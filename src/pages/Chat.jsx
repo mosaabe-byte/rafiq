@@ -495,7 +495,6 @@ export default function Chat() {
 
         setMessages([...newMessages, { role: "assistant", content: replyText, id: insertedBot?.id }]);
 
-        setMessages([...newMessages, { role: 'assistant', content: data.reply }]);
         if (user) {
           await supabase.from("usage_log").insert({
             user_id: user.id,
