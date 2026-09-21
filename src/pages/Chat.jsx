@@ -493,7 +493,7 @@ export default function Chat() {
           output_tokens: data.usage?.output_tokens ?? null,
         }).select().single();
 
-        setMessages([...newMessages, { role: "assistant", content: replyText, id: insertedBot?.id }]);
+        setMessages((prev) => [...prev, { role: "assistant", content: replyText, id: insertedBot?.id }]);
 
         if (user) {
           await supabase.from("usage_log").insert({
