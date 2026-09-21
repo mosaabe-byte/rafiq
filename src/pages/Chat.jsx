@@ -10,10 +10,11 @@ import { useLanguage } from "../i18n/LanguageContext";
 import "./Chat.css";
 import DOMPurify from "dompurify";
 
-// الحدود اليومية لكل نموذج (مطابقة لسجلّ النماذج api/models.js)
-const DAILY_LIMITS = { fast: 20, deep: 5 };
+// الحدود اليومية لكل نموذج — مكرَّرة في api/models.js (dailyLimit)، فعدّل الموضعين معاً.
+// العميق هو النموذج الوحيد في الواجهة منذ ٢١ سبتمبر ٢٠٢٦، فحدّه ٢٠ لا ٥.
+const DAILY_LIMITS = { fast: 20, deep: 20 };
 function getLimit(key) {
-  return DAILY_LIMITS[key] ?? DAILY_LIMITS.fast;
+  return DAILY_LIMITS[key] ?? DAILY_LIMITS.deep;
 }
 
 // نصوص بنود المراحل (لرسالة الاستقبال الذكية)
@@ -38,7 +39,7 @@ export default function Chat() {
 
   const [projects, setProjects] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState("");
-  const [modelKey, setModelKey] = useState("fast");
+  const [modelKey, setModelKey] = useState("deep");
   const [completedStations, setCompletedStations] = useState([]);
   const [completedBands, setCompletedBands] = useState([]); // [{phase, band}] للمشروع المختار
   const [entryPhase, setEntryPhase] = useState(null); // المرحلة التي دخل منها المستخدم من «الطريق»
@@ -810,22 +811,6 @@ export default function Chat() {
     <div className="chat-page">
       <div className="chat-head">
         <h2 className="chat-title">{t("chat.title")}</h2>
-        <div className="model-switch">
-          <button
-            className={"model-opt" + (modelKey === "fast" ? " active" : "")}
-            onClick={() => setModelKey("fast")}
-            disabled={!selectedProjectId}
-          >
-            {t("chat.modelFast")}
-          </button>
-          <button
-            className={"model-opt" + (modelKey === "deep" ? " active" : "")}
-            onClick={() => setModelKey("deep")}
-            disabled={!selectedProjectId}
-          >
-            {t("chat.modelDeep")}
-          </button>
-        </div>
       </div>
 
           <div className="chat-controls">

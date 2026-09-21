@@ -42,14 +42,15 @@ export const MODELS = {
       fr: "Plus puissant et profond — pour les tâches difficiles : correction d'erreurs complexes, révision précise, décisions complexes",
       en: "Stronger and deeper — for hard tasks: untangling complex errors, precise review, complex decisions",
     },
-    dailyLimit: 5,
+    dailyLimit: 20,
     maxTokens: 4096,
   },
 };
 
-// النموذج الافتراضي (يُستعمل حين لا يختار المستخدم شيئاً).
-// نُبقيه «السريع» للحفاظ على السلوك الحالي والتكلفة المتوازنة.
-export const DEFAULT_MODEL_KEY = "fast";
+// النموذج الافتراضي والوحيد في الواجهة (قرار ٢١ سبتمبر ٢٠٢٦).
+// الجودة أولى: المبتدئ لا يستطيع أن يميّز بين النموذجين، فلا يُترك له الاختيار.
+// «السريع» يبقى في السجلّ احتياطاً، ويعود إن أظهرت بيانات usage_log حاجة إليه.
+export const DEFAULT_MODEL_KEY = "deep";
 
 // جلب نموذج بمفتاحه، مع الرجوع للافتراضي إن كان المفتاح غير صالح.
 // هذا يحمي الخادم من أي مفتاح خاطئ أو قديم قادم من الواجهة.
