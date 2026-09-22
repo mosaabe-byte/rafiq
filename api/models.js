@@ -43,7 +43,7 @@ export const MODELS = {
       en: "Stronger and deeper — for hard tasks: untangling complex errors, precise review, complex decisions",
     },
     dailyLimit: 20,
-    maxTokens: 4096,
+    maxTokens: 8192,
   },
 };
 

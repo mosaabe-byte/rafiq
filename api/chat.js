@@ -580,8 +580,6 @@ ${workspaceEdit.current}
 
     const data = await response.json();
 
-    console.log("[RAFIQ_BLOCKS]", data.content.map((b) => b.type).join(","));
-
     const reply = data.content
       .map((block) => (block.type === "text" ? block.text : ""))
       .join("");
