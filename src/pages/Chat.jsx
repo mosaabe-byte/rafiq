@@ -315,12 +315,13 @@ export default function Chat() {
     setConversationId(convId);
     setMessages([]);
 
-    const { data: msgs } = await supabase
+    const { data: msgs, error } = await supabase
       .from("messages")
       .select("id, role, content")
       .eq("conversation_id", convId)
       .order("created_at", { ascending: true });
 
+    if (error) console.error("[SWITCH_ERROR]", error.message);
     if (msgs) setMessages(msgs);
     setLoadingHistory(false);
   }
