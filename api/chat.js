@@ -372,6 +372,23 @@ function memoryInstruction() {
 وميّز بين الوسمين تمييزاً حاسماً: [[ENV:...]] لحالة أدوات الجهاز وحدها، وصيغته الوحيدة [[ENV:اسم_الأداة=installed]] أو =deferred بالأسماء الأربعة المحدّدة لا غيرها. وذاكرة المشروع وسمها [[MEM:...]] لا غير. لا تضع محتوى ذاكرة في وسم بيئة ولا العكس، ولا تخترع صيغة ثالثة.`;
 }
 
+// تعليمة حالة المشروع — ما هو قائم فعلاً، لا ما قُرّر
+function stateInstruction() {
+  return `
+
+حالة المشروع — وسم الحالة: في سياق المشروع أعلاه قسمٌ اسمه «حالة المشروع» يسجّل ما صار قائماً فعلاً في مشروع المستخدم: جداوله وأعمدتها، وما فُعّل من حماية، وما أُنشئ ونُشر. اقرأه قبل أن تسأل المستخدم عن شيء: إن كان ما تحتاجه مسجّلاً فيه، فلا تطلبه منه مرّة أخرى — فهو يتوقّع منك أن تعرف مشروعه لأنّك رافقته في بنائه. وإن ناقض ما فيه شيئاً يقوله المستخدم الآن، فكلامه الآن أصدق: صحّح الحالة ولا تجادله فيها.
+
+متى تكتب الوسم: حين يؤكّد لك المستخدم نجاح خطوة عمليّة («ظهرت Success»، «اشتغل»، «أنشأتُه»)، أو حين يلصق لك ناتجاً يُظهر ما هو قائم (ناتج استعلام، قائمة ملفّات، رقم إصدار). ولا تكتبه أبداً على ما اقترحتَه أنت ولم يؤكّده هو، ولا على نيّة أو خطّة — الحالة سجلّ ما وقع لا ما سيقع.
+
+صيغته الحرفيّة: [[STATE:مفتاح=قيمة]] على سطر مستقلّ. المفتاح اسم قصير ثابت للشيء نفسه (مثل «جدول users» أو «الحماية» أو «النشر»)، والقيمة وصف موجز في سطر. وإذا كتبتَ مفتاحاً موجوداً، حلّت قيمته الجديدة محلّ القديمة تلقائيّاً — فحين يتغيّر جدول، أعد كتابة مفتاحه كاملاً بصيغته الجديدة ولا تكتب مفتاحاً ثانياً. وإذا زال الشيء (حُذف جدول مثلاً)، اكتب مفتاحه بقيمة فارغة: [[STATE:جدول users=]] فيُحذف من الحالة.
+
+ويجوز أن تضع أكثر من وسم حالة في الردّ الواحد — بخلاف وسم الذاكرة الذي يُكتب بنداً واحداً في الردّ.
+
+والفرق بين الوسمين حاسم: [[MEM:...]] لما قرّره المستخدم («سنستعمل Supabase Auth»)، و[[STATE:...]] لما صار قائماً («جدول users: id، name، email»). القرار نيّة، والحالة واقع — ولا تخلط بينهما ولا تكتب أحدهما بصيغة الآخر.
+
+ولا تشرح الوسم للمستخدم؛ هو إشارة نظام.`;
+}
+
   const context = `
 
 سياق المستخدم الحالي (استخدمه لتُخصّص ردودك، ورحّب به بوعي بمكانه دون أن تُكرر كل هذه المعلومات حرفياً في كل رد):
@@ -388,7 +405,10 @@ function memoryInstruction() {
   }${project.project_memory ? `
 
 - ذاكرة المشروع (قرارات وخلاصات موثّقة من محادثات سابقة — اعتمِدها ولا تقل إنّك تتذكّرها، بل انسبها إلى ملفّ المشروع):
-${project.project_memory}` : ""}`;
+${project.project_memory}` : ""}${project.project_state && Object.keys(project.project_state).length > 0 ? `
+
+- حالة المشروع (ما هو قائم فعلاً الآن — أُثبِت بتأكيد المستخدم أو بناتج لصقه، فهو أوثق ممّا تستنتجه من الحديث):
+${Object.entries(project.project_state).map(([k, v]) => `- ${k}: ${v}`).join("\n")}` : ""}`;
 
 // البنود التي أنجزها المستخدم فعلاً في هذا المشروع (بوصلة التقدّم)
   let bandsProgress = "";
@@ -487,7 +507,7 @@ ${parts.join("\n")}
 
   const environmentSection = environmentBlock(userEnv);
 
-return base + language + tools + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + context + environmentSection + memoryInstruction() + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
+return base + language + tools + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + context + environmentSection + memoryInstruction() + stateInstruction() + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
 }
 
 export default async function handler(req, res) {

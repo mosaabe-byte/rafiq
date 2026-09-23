@@ -189,7 +189,7 @@ export default function Chat() {
     async function loadProjects() {
       const { data, error } = await supabase
         .from("projects")
-        .select("id, name, emoji, level, phase_number, progress, platform, tech_stack, audience, project_memory")
+        .select("id, name, emoji, level, phase_number, progress, platform, tech_stack, audience, project_memory, project_state")
         .order("created_at", { ascending: false });
 
       if (!error && data) {
@@ -362,6 +362,21 @@ export default function Chat() {
     ));
   }
 
+    async function deleteStateItem(key) {
+    const proj = projects.find((p) => p.id === Number(selectedProjectId));
+    const next = { ...(proj?.project_state || {}) };
+    delete next[key];
+
+    await supabase
+      .from("projects")
+      .update({ project_state: next })
+      .eq("id", selectedProjectId);
+
+    setProjects(projects.map((p) =>
+      p.id === Number(selectedProjectId) ? { ...p, project_state: next } : p
+    ));
+  }
+
   async function sendMessage() {
     const text = input.trim();
     if (!text || loading || !conversationId) return;
@@ -482,8 +497,28 @@ export default function Chat() {
           ));
         }
 
+        // استخراج وسوم حالة المشروع [[STATE:مفتاح=قيمة]] — قد تتعدّد في الردّ الواحد
+        const stateMatches = [...replyText.matchAll(/\[\[STATE:([^=\]]+)=([^\]]*)\]\]/g)];
+        if (stateMatches.length > 0) {
+          const proj = projects.find((p) => p.id === Number(selectedProjectId));
+          const nextState = { ...(proj?.project_state || {}) };
+          for (const m of stateMatches) {
+            const key = m[1].trim();
+            const value = m[2].trim();
+            if (value) nextState[key] = value;
+            else delete nextState[key];
+          }
+          await supabase
+            .from("projects")
+            .update({ project_state: nextState })
+            .eq("id", selectedProjectId);
+          setProjects((prev) => prev.map((p) =>
+            p.id === Number(selectedProjectId) ? { ...p, project_state: nextState } : p
+          ));
+        }
+
         // نزع أيّ وسم نظام لم يُطابق الصيغتين المعروفتين
-        replyText = replyText.replace(/\[\[(ENV|MEM)[^\]]*\]\]/g, "").trim();
+        replyText = replyText.replace(/\[\[(ENV|MEM|STATE|BAND)[^\]]*\]\]/g, "").trim();
 
         const { data: insertedBot } = await supabase.from("messages").insert({
           conversation_id: conversationId,
@@ -781,6 +816,25 @@ export default function Chat() {
                   </li>
                 );
               })}
+            </ul>
+          </div>
+        )}
+        {p.project_state && Object.keys(p.project_state).length > 0 && (
+          <div className="context-block">
+            <div className="context-label">{t("chat.ctxState")}</div>
+            <ul className="context-memory">
+              {Object.entries(p.project_state).map(([key, value]) => (
+                <li key={key} className="context-memory-item">
+                  <span className="context-memory-text">{key}: {value}</span>
+                  <button
+                    className="context-memory-del"
+                    onClick={() => deleteStateItem(key)}
+                    title={t("chat.ctxStateDel")}
+                  >
+                    ✕
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
         )}

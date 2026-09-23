@@ -220,6 +220,7 @@ export const translations = {
       ctxMemory: "ذاكرة المشروع",
       pickProjectTitle: "اختر مشروعاً من الأعلى لنبدأ",
       pickProjectText: "رفيق يتحدّث معك عن مشروع بعينه — يعرف مرحلته وقراراتك فيه، ويتذكّر ما اتّفقنا عليه. اختر واحداً، وستجدني أعرف أين وصلت.",
+      ctxState: "حالة المشروع",
     },
     profile: {
       editName: "تعديل الاسم",
@@ -690,6 +691,7 @@ export const translations = {
       ctxMemory: "Mémoire du projet",
       pickProjectTitle: "Choisissez un projet en haut pour commencer",
       pickProjectText: "Rafiq parle avec vous d'un projet précis — il en connaît la phase et vos décisions, et se souvient de ce que nous avons convenu. Choisissez-en un, et vous me trouverez au courant.",
+      ctxState: "État du projet",
     },
     auth: {
       signinTitle:"Connexion", signupTitle:"Créer un compte",
@@ -943,6 +945,7 @@ export const translations = {
       ctxMemory: "Project memory",
       pickProjectTitle: "Pick a project above to begin",
       pickProjectText: "Rafiq talks with you about one specific project — he knows its phase and your decisions, and remembers what you agreed on. Pick one, and you'll find I know where you left off.",
+      ctxState: "Project state",
     },
     profile: {
       editName: "Edit name",
