@@ -42,7 +42,7 @@ export const MODELS = {
       fr: "Plus puissant et profond — pour les tâches difficiles : correction d'erreurs complexes, révision précise, décisions complexes",
       en: "Stronger and deeper — for hard tasks: untangling complex errors, precise review, complex decisions",
     },
-    dailyLimit: 20,
+    dailyLimit: 50,
     maxTokens: 8192,
   },
 };

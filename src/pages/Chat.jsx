@@ -12,7 +12,7 @@ import DOMPurify from "dompurify";
 
 // الحدود اليومية لكل نموذج — مكرَّرة في api/models.js (dailyLimit)، فعدّل الموضعين معاً.
 // العميق هو النموذج الوحيد في الواجهة منذ ٢١ سبتمبر ٢٠٢٦، فحدّه ٢٠ لا ٥.
-const DAILY_LIMITS = { fast: 20, deep: 20 };
+const DAILY_LIMITS = { fast: 20, deep: 50 };
 function getLimit(key) {
   return DAILY_LIMITS[key] ?? DAILY_LIMITS.deep;
 }
@@ -478,8 +478,7 @@ export default function Chat() {
         }
 
         // استخراج وسم ذاكرة المشروع [[MEM:...]] إن وُجد
-        const memMatch = replyText.match(/\[\[MEM:([\s\S]+?)\]\]/);
-        if (memMatch) {
+          const memMatch = replyText.match(/\[\[MEM:([\s\S]+?)\]{1,2}/);        if (memMatch) {
           const note = memMatch[1].trim();
           replyText = replyText.replace(memMatch[0], "").trim();
 
@@ -498,8 +497,7 @@ export default function Chat() {
         }
 
         // استخراج وسوم حالة المشروع [[STATE:مفتاح=قيمة]] — قد تتعدّد في الردّ الواحد
-        const stateMatches = [...replyText.matchAll(/\[\[STATE:([^=\]]+)=([^\]]*)\]\]/g)];
-        if (stateMatches.length > 0) {
+        const stateMatches = [...replyText.matchAll(/\[\[STATE:([^=\]]+)=([^\]]*)\]{1,2}/g)];        if (stateMatches.length > 0) {
           const proj = projects.find((p) => p.id === Number(selectedProjectId));
           const nextState = { ...(proj?.project_state || {}) };
           for (const m of stateMatches) {
@@ -518,8 +516,7 @@ export default function Chat() {
         }
 
         // نزع أيّ وسم نظام لم يُطابق الصيغتين المعروفتين
-        replyText = replyText.replace(/\[\[(ENV|MEM|STATE|BAND)[^\]]*\]\]/g, "").trim();
-
+        replyText = replyText.replace(/\[\[(ENV|MEM|STATE|BAND):[\s\S]*?\]{1,2}/g, "").trim();
         const { data: insertedBot } = await supabase.from("messages").insert({
           conversation_id: conversationId,
           user_id: user.id,
