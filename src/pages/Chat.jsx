@@ -377,6 +377,15 @@ export default function Chat() {
     ));
   }
 
+    // يعيد حساب تقدّم المشروع من البنود المُنجَزة (28 بنداً: 7 مراحل × 4)
+  async function recalcProgressFromBands(projectId, bandsList) {
+    const newProgress = Math.round((bandsList.length / 28) * 100);
+    setProjects((prev) =>
+      prev.map((p) => (p.id === projectId ? { ...p, progress: newProgress } : p))
+    );
+    await supabase.from("projects").update({ progress: newProgress }).eq("id", projectId);
+  }
+
   async function sendMessage() {
     const text = input.trim();
     if (!text || loading || !conversationId) return;
@@ -497,7 +506,8 @@ export default function Chat() {
         }
 
         // استخراج وسوم حالة المشروع [[STATE:مفتاح=قيمة]] — قد تتعدّد في الردّ الواحد
-        const stateMatches = [...replyText.matchAll(/\[\[STATE:([^=\]]+)=([^\]]*)\]{1,2}/g)];        if (stateMatches.length > 0) {
+        const stateMatches = [...replyText.matchAll(/\[\[STATE:([^=\]]+)=([^\]]*)\]{1,2}/g)];        
+        if (stateMatches.length > 0) {
           const proj = projects.find((p) => p.id === Number(selectedProjectId));
           const nextState = { ...(proj?.project_state || {}) };
           for (const m of stateMatches) {
@@ -513,6 +523,32 @@ export default function Chat() {
           setProjects((prev) => prev.map((p) =>
             p.id === Number(selectedProjectId) ? { ...p, project_state: nextState } : p
           ));
+        }
+
+        // استخراج وسوم تثبيت البنود [[BAND:مرحلة-بند]]
+        const bandMatches = [...replyText.matchAll(/\[\[BAND:(\d+)-(\d+)\]{1,2}/g)];
+        if (bandMatches.length > 0 && user) {
+          const added = [];
+          for (const m of bandMatches) {
+            const phase = Number(m[1]);
+            const band = Number(m[2]);
+            if (!phase || !band) continue;
+            if (completedBands.some((b) => b.phase === phase && b.band === band)) continue;
+            const { error } = await supabase.from("band_completions").insert({
+              user_id: user.id,
+              project_id: selectedProjectId,
+              phase_number: phase,
+              band_number: band,
+            });
+            if (!error) added.push({ phase, band });
+          }
+          if (added.length > 0) {
+                      if (added.length > 0) {
+            const nextBands = [...completedBands, ...added];
+            setCompletedBands(nextBands);
+            await recalcProgressFromBands(Number(selectedProjectId), nextBands);
+          }
+          }
         }
 
         // نزع أيّ وسم نظام لم يُطابق الصيغتين المعروفتين
