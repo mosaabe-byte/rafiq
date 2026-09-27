@@ -611,21 +611,52 @@ export default function Chat() {
     setShowFilePicker(false);
   }
 
-// اختيار صورة وتحويلها إلى base64 لعرضها ولإرسالها لرفيق
-  function pickImage(e) {
-    const f = e.target.files?.[0];
-    if (!f) return;
-    if (!f.type.startsWith("image/")) return;
-    if (f.size > 5 * 1024 * 1024) {
-      setMessage?.({ type: "error", text: "الصورة كبيرة (الحدّ 5 ميغابايت)." });
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-      setAttachedImage({ dataUrl: reader.result, mediaType: f.type });
-    };
-    reader.readAsDataURL(f);
+    // حدود الصورة: تتبع درجة النموذج في توثيق Anthropic (تُضبَط بعد القياس)
+  const IMG_MAX_EDGE = 2576;
+  const IMG_MAX_TOKENS = 4784;
+  const IMG_MAX_RAW = 20 * 1024 * 1024;
+
+  // أكبر مقاس يحفظ النسبة ولا يتجاوز الضلع ولا ميزانيّة الرموز (مربّعات 28×28)
+  function fitImageSize(w, h) {
+    let s = Math.min(1, IMG_MAX_EDGE / Math.max(w, h));
+    while (Math.ceil((w * s) / 28) * Math.ceil((h * s) / 28) > IMG_MAX_TOKENS) s *= 0.98;
+    return [Math.round(w * s), Math.round(h * s)];
   }
+
+  // قراءة صورة من أيّ مصدر (الاختيار أو اللصق)، وتصغيرها قبل الإرسال
+  async function readImage(f) {
+    if (!f || !f.type.startsWith("image/")) return;
+    if (f.size > IMG_MAX_RAW) return;
+    try {
+      const bmp = await createImageBitmap(f);
+      const [w, h] = fitImageSize(bmp.width, bmp.height);
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(bmp, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+      bmp.close?.();
+      setAttachedImage({ dataUrl, mediaType: "image/jpeg" });
+    } catch (err) {
+      console.error("[RAFIQ_IMG]", err);
+    }
+  }
+
+  function pickImage(e) {
+    readImage(e.target.files?.[0]);
+  }
+
+  // اللصق من الحافظة: يلتقط الصورة وحدها، والنصّ يُترك للّصق العاديّ
+  function pasteImage(e) {
+    const item = [...(e.clipboardData?.items || [])].find((i) => i.type.startsWith("image/"));
+    if (!item) return;
+    e.preventDefault();
+    readImage(item.getAsFile());
+  }
+
   function removeImage() {
     setAttachedImage(null);
   }
@@ -1359,6 +1390,7 @@ export default function Chat() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          onPaste={pasteImage}
           placeholder={
             limitReached
               ? t("chat.inputLimitReached")
