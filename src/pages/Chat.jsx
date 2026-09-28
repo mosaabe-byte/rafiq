@@ -615,6 +615,9 @@ export default function Chat() {
   const IMG_MAX_RAW = 20 * 1024 * 1024;
   const IMG_MAX_COUNT = 3;
 
+  // الكاميرا للأجهزة اللمسيّة وحدها: الحاسوب يتجاهل capture فيصير الزرّ تكراراً للإرفاق
+  const isTouch = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
+
   // أكبر مقاس يحفظ النسبة ولا يتجاوز الضلع ولا ميزانيّة الرموز (مربّعات 28×28)
   function fitImageSize(w, h) {
     let s = Math.min(1, IMG_MAX_EDGE / Math.max(w, h));
@@ -1391,6 +1394,28 @@ export default function Chat() {
             >
               🖼️
             </button>
+            {isTouch && (
+              <>
+                <input
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  id="rafiq-camera-input"
+                  style={{ display: "none" }}
+                  onChange={pickImage}
+                />
+                <button
+                  type="button"
+                  className="chat-image-btn"
+                  onClick={() => document.getElementById("rafiq-camera-input").click()}
+                  disabled={attachedImages.length >= IMG_MAX_COUNT}
+                  aria-label={t("chat.takePhoto")}
+                  title={t("chat.takePhoto")}
+                >
+                  📷
+                </button>
+              </>
+            )}
           </>
         )}
         <input
