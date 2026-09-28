@@ -60,7 +60,7 @@ export default function Chat() {
   const [libraryFiles, setLibraryFiles] = useState([]);
   const [showFilePicker, setShowFilePicker] = useState(false);
   const [attachedFile, setAttachedFile] = useState(null); // { id, name, content }
-  const [attachedImage, setAttachedImage] = useState(null); // { dataUrl, mediaType }
+  const [attachedImages, setAttachedImages] = useState([]); // [{ dataUrl, mediaType }] — ثلاث على الأكثر  
   const [userEnv, setUserEnv] = useState(null);
   const [workspaceContent, setWorkspaceContent] = useState(null); // { type, content } — المُنتَج المعروض
   const [workspaceEditInput, setWorkspaceEditInput] = useState("");
@@ -419,7 +419,7 @@ export default function Chat() {
     const newMessages = [...messages, { role: "user", content: text }];
     setMessages(newMessages);
     setInput("");
-    setAttachedImage(null);
+    setAttachedImages([]);
     setLoading(true);
 
     const { data: insertedUser } = await supabase.from("messages").insert({
@@ -464,9 +464,7 @@ export default function Chat() {
             : null,
           libraryContext,
           userEnv,
-          attachedImage: attachedImage
-            ? { dataUrl: attachedImage.dataUrl, mediaType: attachedImage.mediaType }
-            : null,
+          attachedImages: attachedImages.map(({ dataUrl, mediaType }) => ({ dataUrl, mediaType })),
         }),
       });
 
@@ -615,6 +613,7 @@ export default function Chat() {
   const IMG_MAX_EDGE = 2576;
   const IMG_MAX_TOKENS = 4784;
   const IMG_MAX_RAW = 20 * 1024 * 1024;
+  const IMG_MAX_COUNT = 3;
 
   // أكبر مقاس يحفظ النسبة ولا يتجاوز الضلع ولا ميزانيّة الرموز (مربّعات 28×28)
   function fitImageSize(w, h) {
@@ -639,26 +638,29 @@ export default function Chat() {
       ctx.drawImage(bmp, 0, 0, w, h);
       const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
       bmp.close?.();
-      setAttachedImage({ dataUrl, mediaType: "image/jpeg" });
+      setAttachedImages((prev) => (prev.length >= IMG_MAX_COUNT ? prev : [...prev, { dataUrl, mediaType: "image/jpeg" }]));    
     } catch (err) {
       console.error("[RAFIQ_IMG]", err);
     }
   }
 
   function pickImage(e) {
-    readImage(e.target.files?.[0]);
+    [...(e.target.files || [])].forEach(readImage);
+    e.target.value = "";
   }
 
-  // اللصق من الحافظة: يلتقط الصورة وحدها، والنصّ يُترك للّصق العاديّ
+  // اللصق من الحافظة: يلتقط الصور وحدها، والنصّ يُترك للّصق العاديّ
   function pasteImage(e) {
-    const item = [...(e.clipboardData?.items || [])].find((i) => i.type.startsWith("image/"));
-    if (!item) return;
+    const files = [...(e.clipboardData?.items || [])]
+      .filter((i) => i.type.startsWith("image/"))
+      .map((i) => i.getAsFile());
+    if (files.length === 0) return;
     e.preventDefault();
-    readImage(item.getAsFile());
+    files.forEach(readImage);
   }
 
-  function removeImage() {
-    setAttachedImage(null);
+  function removeImage(index) {
+    setAttachedImages((prev) => prev.filter((_, i) => i !== index));
   }
 
   function removeAttached() {
@@ -1283,22 +1285,26 @@ export default function Chat() {
         </div>
       )}
     
-      {/* معاينة الصورة المرفقة قبل الإرسال */}
-      {selectedProjectId && !limitReached && attachedImage && (
-        <div className="image-preview">
-          <img src={attachedImage.dataUrl} alt={t('chat.imageAlt')} className="image-preview-img" />
-          <button
-            type="button"
-            className="image-preview-x"
-            onClick={removeImage}
-            aria-label={t("chat.remove")}
-          >
-            ✕
-          </button>
+      {/* معاينة الصور المرفقة قبل الإرسال */}
+      {selectedProjectId && !limitReached && attachedImages.length > 0 && (
+        <div className="image-previews">
+          {attachedImages.map((img, i) => (
+            <div className="image-preview" key={i}>
+              <img src={img.dataUrl} alt={t('chat.imageAlt')} className="image-preview-img" />
+              <button
+                type="button"
+                className="image-preview-x"
+                onClick={() => removeImage(i)}
+                aria-label={t("chat.remove")}
+              >
+                ✕
+              </button>
+            </div>
+          ))}
         </div>
       )}
 
-            {/* اقتراح توثيق حالة أداة في البيئة */}
+      {/* اقتراح توثيق حالة أداة في البيئة */}
       {envSuggestion && (
         <div className="env-suggestion">
           <span className="env-suggestion-text">
@@ -1370,6 +1376,7 @@ export default function Chat() {
             <input
               type="file"
               accept="image/*"
+              multiple
               id="rafiq-image-input"
               style={{ display: "none" }}
               onChange={pickImage}
@@ -1377,6 +1384,7 @@ export default function Chat() {
             <button
               type="button"
               className="chat-image-btn"
+              disabled={attachedImages.length >= IMG_MAX_COUNT}
               onClick={() => document.getElementById("rafiq-image-input").click()}
               aria-label={t("chat.attachImage")}
               title={t("chat.attachImage")}

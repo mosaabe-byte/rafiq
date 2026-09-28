@@ -531,7 +531,7 @@ export default async function handler(req, res) {
   let modelKeyForLog = "unknown";
 
   try {
-  const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile, libraryContext, attachedImage, userEnv, workspaceEdit } = req.body;
+  const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile, libraryContext, attachedImage, attachedImages, userEnv, workspaceEdit } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "messages مطلوبة" });
@@ -541,29 +541,22 @@ export default async function handler(req, res) {
     const model = getModel(modelKey);
     modelKeyForLog = model.key;
 
-    // إن أرفق المستخدم صورة، ندمجها في آخر رسالة له بصيغة Claude
+        // صور المستخدم (ثلاث على الأكثر) تُدمَج في آخر رسالة له بصيغة Claude.
+    // attachedImage المفرد يُقبَل مؤقّتاً لمن بقيت عنده نافذة على النسخة القديمة.
+    const images = (Array.isArray(attachedImages) ? attachedImages : attachedImage ? [attachedImage] : []).slice(0, 3);
+    const imageBlocks = images
+      .map((img) => img?.dataUrl?.match(/^data:(.+);base64,(.*)$/))
+      .filter(Boolean)
+      .map((m) => ({ type: "image", source: { type: "base64", media_type: m[1], data: m[2] } }));
+
     let finalMessages = messages;
-    if (attachedImage && attachedImage.dataUrl) {
-      // dataUrl شكله: data:image/png;base64,XXXX — نستخرج النوع والبيانات
-      const match = attachedImage.dataUrl.match(/^data:(.+);base64,(.*)$/);
-      if (match) {
-        const mediaType = match[1];
-        const base64Data = match[2];
-        const lastIdx = messages.length - 1;
-        const lastMsg = messages[lastIdx];
-        // نبني محتوى مزيجاً: صورة + نصّ المستخدم
-        const newContent = [
-          {
-            type: "image",
-            source: { type: "base64", media_type: mediaType, data: base64Data },
-          },
-          { type: "text", text: lastMsg.content || "" },
-        ];
-        finalMessages = [
-          ...messages.slice(0, lastIdx),
-          { role: "user", content: newContent },
-        ];
-      }
+    if (imageBlocks.length > 0) {
+      const lastIdx = messages.length - 1;
+      const lastMsg = messages[lastIdx];
+      finalMessages = [
+        ...messages.slice(0, lastIdx),
+        { role: "user", content: [...imageBlocks, { type: "text", text: lastMsg.content || "" }] },
+      ];
     }
 
         // تعديل حيّ لمُنتَج في مساحة العمل
