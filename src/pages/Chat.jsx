@@ -189,7 +189,7 @@ export default function Chat() {
     async function loadProjects() {
       const { data, error } = await supabase
         .from("projects")
-        .select("id, name, emoji, level, phase_number, progress, platform, tech_stack, audience, project_memory, project_state")
+        .select("id, name, emoji, level, phase_number, progress, platform, tech_stack, audience, project_memory, project_state, project_decisions")
         .order("created_at", { ascending: false });
 
       if (!error && data) {
@@ -377,6 +377,21 @@ export default function Chat() {
     ));
   }
 
+    async function deleteDecision(key) {
+    const proj = projects.find((p) => p.id === Number(selectedProjectId));
+    const next = { ...(proj?.project_decisions || {}) };
+    delete next[key];
+
+    await supabase
+      .from("projects")
+      .update({ project_decisions: next })
+      .eq("id", selectedProjectId);
+
+    setProjects((prev) => prev.map((p) =>
+      p.id === Number(selectedProjectId) ? { ...p, project_decisions: next } : p
+    ));
+  }
+
     // يعيد حساب تقدّم المشروع من البنود المُنجَزة (28 بنداً: 7 مراحل × 4)
   async function recalcProgressFromBands(projectId, bandsList) {
     const newProgress = Math.round((bandsList.length / 28) * 100);
@@ -484,22 +499,38 @@ export default function Chat() {
           replyText = replyText.replace(envMatch[0], "").trim(); // نخفي الوسم من العرض
         }
 
-        // استخراج وسم ذاكرة المشروع [[MEM:...]] إن وُجد
-          const memMatch = replyText.match(/\[\[MEM:([\s\S]+?)\]{1,2}/);        if (memMatch) {
-          const note = memMatch[1].trim();
-          replyText = replyText.replace(memMatch[0], "").trim();
-
+        // استخراج وسوم القرارات [[MEM:موضوع=قرار]] — الموضوع يستبدل قراره، والقرار الفارغ يحذفه.
+        // والصيغة القديمة [[MEM:موضوع: قرار]] من محادثات سابقة تُقسَم عند أوّل نقطتين.
+        const memMatches = [...replyText.matchAll(/\[\[MEM:([\s\S]+?)\]{1,2}/g)];
+        if (memMatches.length > 0) {
           const proj = projects.find((p) => p.id === Number(selectedProjectId));
-          const prev = proj?.project_memory || "";
-          const next = prev ? `${prev}\n- ${note}` : `- ${note}`;
+          const nextDecisions = { ...(proj?.project_decisions || {}) };
+          for (const m of memMatches) {
+            const body = m[1].trim();
+            const eq = body.indexOf("=");
+            const colon = body.indexOf(":");
+            let key = body;
+            let value = body;
+            if (eq > 0) {
+              key = body.slice(0, eq).trim();
+              value = body.slice(eq + 1).trim();
+            } else if (colon > 0) {
+              key = body.slice(0, colon).trim();
+              value = body.slice(colon + 1).trim();
+            }
+            if (!key) continue;
+            if (value) nextDecisions[key] = value;
+            else delete nextDecisions[key];
+          }
+          replyText = replyText.replace(/\[\[MEM:[\s\S]+?\]{1,2}/g, "").trim();
 
           await supabase
             .from("projects")
-            .update({ project_memory: next })
+            .update({ project_decisions: nextDecisions })
             .eq("id", selectedProjectId);
 
-          setProjects(projects.map((p) =>
-            p.id === Number(selectedProjectId) ? { ...p, project_memory: next } : p
+          setProjects((prev) => prev.map((p) =>
+            p.id === Number(selectedProjectId) ? { ...p, project_decisions: nextDecisions } : p
           ));
         }
 
@@ -907,12 +938,24 @@ export default function Chat() {
             </ul>
           </div>
         )}
-        {p.project_memory && (
+                {((p.project_decisions && Object.keys(p.project_decisions).length > 0) || p.project_memory) && (
           <div className="context-block">
             <div className="context-label">{t("chat.ctxMemory")}</div>
             <ul className="context-memory">
-              {p.project_memory.split("\n").filter((l) => l.trim()).map((line, idx) => (
-                <li key={idx} className="context-memory-item">
+              {Object.entries(p.project_decisions || {}).map(([key, value]) => (
+                <li key={"d-" + key} className="context-memory-item">
+                  <span className="context-memory-text">{key === value ? value : `${key}: ${value}`}</span>
+                  <button
+                    className="context-memory-del"
+                    onClick={() => deleteDecision(key)}
+                    title={t("chat.deleteMessage")}
+                  >
+                    ✕
+                  </button>
+                </li>
+              ))}
+              {(p.project_memory || "").split("\n").filter((l) => l.trim()).map((line, idx) => (
+                <li key={"m-" + idx} className="context-memory-item">
                   <span className="context-memory-text">{line.replace(/^-\s*/, "")}</span>
                   <button
                     className="context-memory-del"
