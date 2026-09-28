@@ -593,7 +593,8 @@ ${workspaceEdit.current}
       body: JSON.stringify({
         model: model.id,
         max_tokens: model.maxTokens,
-                system: editSystem ? editSystem : (lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile, libraryContext, userEnv)),
+        ...(model.effort ? { output_config: { effort: model.effort } } : {}),
+        system: editSystem ? editSystem : (lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile, libraryContext, userEnv)),
         messages: finalMessages,
       }),
     });

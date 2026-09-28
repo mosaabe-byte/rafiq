@@ -32,6 +32,7 @@ export const MODELS = {
   deep: {
     key: "deep",
     id: "claude-sonnet-5",
+    effort: "medium",
     name: {
       ar: "رفيق العميق",
       fr: "Rafiq Profond",
