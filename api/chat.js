@@ -537,7 +537,7 @@ export default async function handler(req, res) {
   let modelKeyForLog = "unknown";
 
   try {
-  const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile, libraryContext, attachedImage, attachedImages, userEnv, workspaceEdit } = req.body;
+  const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile, libraryContext, attachedImages, userEnv, workspaceEdit } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "messages مطلوبة" });
@@ -547,9 +547,8 @@ export default async function handler(req, res) {
     const model = getModel(modelKey);
     modelKeyForLog = model.key;
 
-        // صور المستخدم (ثلاث على الأكثر) تُدمَج في آخر رسالة له بصيغة Claude.
-    // attachedImage المفرد يُقبَل مؤقّتاً لمن بقيت عنده نافذة على النسخة القديمة.
-    const images = (Array.isArray(attachedImages) ? attachedImages : attachedImage ? [attachedImage] : []).slice(0, 3);
+    // صور المستخدم (ثلاث على الأكثر) تُدمَج في آخر رسالة له بصيغة Claude.
+    const images = (Array.isArray(attachedImages) ? attachedImages : []).slice(0, 3);
     const imageBlocks = images
       .map((img) => img?.dataUrl?.match(/^data:(.+);base64,(.*)$/))
       .filter(Boolean)
