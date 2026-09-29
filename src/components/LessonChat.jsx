@@ -42,6 +42,7 @@ const UI = {
 export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) {
   const { lang } = useLanguage();
   const t = UI[lang] || UI.ar;
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -74,6 +75,15 @@ export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) 
       const data = await res.json();
       if (data.reply) {
         setMessages([...newMessages, { role: 'assistant', content: data.reply }]);
+        if (user) {
+          await supabase.from('usage_log').insert({
+            user_id: user.id,
+            model: data.modelKey ?? null,
+            tokens_in: data.usage?.input_tokens ?? 0,
+            tokens_out: data.usage?.output_tokens ?? 0,
+            latency_ms: data.latencyMs ?? null,
+          });
+        }
       } else {
         setMessages([...newMessages, { role: 'assistant', content: t.errServer + (data.error || t.unknown) }]);
       }
