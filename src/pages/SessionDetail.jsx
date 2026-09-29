@@ -209,6 +209,7 @@ export default function SessionDetail() {
         </button>
       )}
       <LessonChat
+        lessonKey={`station-${id}`}
         lessonTitle={t(session.title, lang)}
         lessonIntro={t(session.intro, lang)}
         lessonContent={session.sections.map((sec) =>

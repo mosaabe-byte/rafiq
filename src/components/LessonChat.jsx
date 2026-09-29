@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { IconMessageCircle, IconX, IconSend } from '@tabler/icons-react';
@@ -39,7 +39,7 @@ const UI = {
   },
 };
 
-export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) {
+export default function LessonChat({ lessonKey, lessonTitle, lessonIntro, lessonContent }) {
   const { lang } = useLanguage();
   const t = UI[lang] || UI.ar;
   const { user } = useAuth();
@@ -47,6 +47,64 @@ export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) 
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [conversationId, setConversationId] = useState(null);
+
+  // محادثة الدرس محفوظة: واحدة لكلّ مستخدم ودرس، تُجلَب حين يُفتح الدرس
+  useEffect(() => {
+    if (!user || !lessonKey) return;
+    let cancelled = false;
+    (async () => {
+      const { data: conv } = await supabase
+        .from('conversations')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('lesson_key', lessonKey)
+        .maybeSingle();
+      if (cancelled || !conv) return;
+      setConversationId(conv.id);
+      const { data: msgs } = await supabase
+        .from('messages')
+        .select('role, content')
+        .eq('conversation_id', conv.id)
+        .order('created_at', { ascending: true });
+      if (!cancelled && msgs) setMessages(msgs);
+    })();
+    return () => { cancelled = true; };
+  }, [user, lessonKey]);
+
+  // يحفظ رسالتَي الجولة، وينشئ محادثة الدرس عند أوّل رسالة لا عند الفتح
+  async function persistExchange(userText, replyText, modelKey, usage) {
+    if (!user || !lessonKey) return;
+    let convId = conversationId;
+    if (!convId) {
+      const { data: created, error } = await supabase
+        .from('conversations')
+        .insert({ user_id: user.id, lesson_key: lessonKey })
+        .select('id')
+        .single();
+      if (error) {
+        // أُنشئت في نافذة أخرى (الفهرس الفريد يرفض الثانية): نجلبها بدل أن نفقد الرسالتين
+        const { data: existing } = await supabase
+          .from('conversations')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('lesson_key', lessonKey)
+          .maybeSingle();
+        convId = existing?.id;
+      } else {
+        convId = created.id;
+      }
+      if (!convId) return;
+      setConversationId(convId);
+    }
+    await supabase.from('messages').insert({
+      conversation_id: convId, user_id: user.id, role: 'user', content: userText, model_key: modelKey,
+    });
+    await supabase.from('messages').insert({
+      conversation_id: convId, user_id: user.id, role: 'assistant', content: replyText,
+      input_tokens: usage?.input_tokens ?? null, output_tokens: usage?.output_tokens ?? null,
+    });
+  }
 
   async function send() {
     const text = input.trim();
@@ -62,7 +120,7 @@ export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
+          messages: newMessages.slice(-20).map((m) => ({ role: m.role, content: m.content })),
           lesson: {
             title: lessonTitle,
             intro: lessonIntro,
@@ -84,6 +142,7 @@ export default function LessonChat({ lessonTitle, lessonIntro, lessonContent }) 
             latency_ms: data.latencyMs ?? null,
           });
         }
+        await persistExchange(text, data.reply, data.modelKey ?? null, data.usage);
       } else {
         setMessages([...newMessages, { role: 'assistant', content: t.errServer + (data.error || t.unknown) }]);
       }
