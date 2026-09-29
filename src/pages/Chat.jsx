@@ -599,6 +599,7 @@ export default function Chat() {
             model: data.modelKey ?? null,
             tokens_in: data.usage?.input_tokens ?? 0,
             tokens_out: data.usage?.output_tokens ?? 0,
+            latency_ms: data.latencyMs ?? null,
           });
         }
       } else {

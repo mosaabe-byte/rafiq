@@ -624,7 +624,7 @@ ${workspaceEdit.current}
       `[RAFIQ_USAGE] model=${modelKeyForLog} mode=${lesson ? "lesson" : "chat"} phase=${project?.phase_number ?? "-"} level=${project?.level ?? "-"} turns=${messages.length} ms=${Date.now() - startedAt}`
     );
 
-    return res.status(200).json({ reply, truncated, usage: data.usage, modelKey: model.key });
+    return res.status(200).json({ reply, truncated, usage: data.usage, modelKey: model.key, latencyMs: Date.now() - startedAt });
   } catch (error) {
     // مراقبة: يُسجَّل الخطأ الداخلي على الخادم، ويُرَدّ للمستخدم رسالة عامّة (لا تفاصيل داخلية).
     console.error(
