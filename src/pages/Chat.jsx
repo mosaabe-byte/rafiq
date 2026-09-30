@@ -574,11 +574,9 @@ export default function Chat() {
             if (!error) added.push({ phase, band });
           }
           if (added.length > 0) {
-                      if (added.length > 0) {
             const nextBands = [...completedBands, ...added];
             setCompletedBands(nextBands);
             await recalcProgressFromBands(Number(selectedProjectId), nextBands);
-          }
           }
         }
 
