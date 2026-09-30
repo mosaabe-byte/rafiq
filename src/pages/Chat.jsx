@@ -702,6 +702,7 @@ export default function Chat() {
 
   function removeImage(index) {
     setAttachedImages((prev) => prev.filter((_, i) => i !== index));
+    setImageError("");
   }
 
   function removeAttached() {
