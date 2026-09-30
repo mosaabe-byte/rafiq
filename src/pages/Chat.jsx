@@ -60,7 +60,8 @@ export default function Chat() {
   const [libraryFiles, setLibraryFiles] = useState([]);
   const [showFilePicker, setShowFilePicker] = useState(false);
   const [attachedFile, setAttachedFile] = useState(null); // { id, name, content }
-  const [attachedImages, setAttachedImages] = useState([]); // [{ dataUrl, mediaType }] — ثلاث على الأكثر  
+  const [attachedImages, setAttachedImages] = useState([]); // [{ dataUrl, mediaType }] — ثلاث على الأكثر 
+  const [imageError, setImageError] = useState("");
   const [userEnv, setUserEnv] = useState(null);
   const [workspaceContent, setWorkspaceContent] = useState(null); // { type, content } — المُنتَج المعروض
   const [workspaceEditInput, setWorkspaceEditInput] = useState("");
@@ -435,6 +436,7 @@ export default function Chat() {
     setMessages(newMessages);
     setInput("");
     setAttachedImages([]);
+    setImageError("");
     setLoading(true);
 
     const { data: insertedUser } = await supabase.from("messages").insert({
@@ -660,7 +662,7 @@ export default function Chat() {
   // قراءة صورة من أيّ مصدر (الاختيار أو اللصق)، وتصغيرها قبل الإرسال
   async function readImage(f) {
     if (!f || !f.type.startsWith("image/")) return;
-    if (f.size > IMG_MAX_RAW) return;
+    if (f.size > IMG_MAX_RAW) { setImageError("chat.imageTooLarge"); return; }
     try {
       const bmp = await createImageBitmap(f);
       const [w, h] = fitImageSize(bmp.width, bmp.height);
@@ -676,12 +678,15 @@ export default function Chat() {
       setAttachedImages((prev) => (prev.length >= IMG_MAX_COUNT ? prev : [...prev, { dataUrl, mediaType: "image/jpeg" }]));    
     } catch (err) {
       console.error("[RAFIQ_IMG]", err);
+      setImageError("chat.imageUnreadable");
     }
   }
 
   function pickImage(e) {
-    [...(e.target.files || [])].forEach(readImage);
+    const files = [...(e.target.files || [])];
     e.target.value = "";
+    setImageError(attachedImages.length + files.length > IMG_MAX_COUNT ? "chat.imageLimit" : "");
+    files.forEach(readImage);
   }
 
   // اللصق من الحافظة: يلتقط الصور وحدها، والنصّ يُترك للّصق العاديّ
@@ -691,6 +696,7 @@ export default function Chat() {
       .map((i) => i.getAsFile());
     if (files.length === 0) return;
     e.preventDefault();
+    setImageError(attachedImages.length + files.length > IMG_MAX_COUNT ? "chat.imageLimit" : "");
     files.forEach(readImage);
   }
 
@@ -1332,6 +1338,10 @@ export default function Chat() {
         </div>
       )}
     
+      {selectedProjectId && !limitReached && imageError && (
+        <div className="image-error" role="alert">{t(imageError)}</div>
+      )}
+
       {/* معاينة الصور المرفقة قبل الإرسال */}
       {selectedProjectId && !limitReached && attachedImages.length > 0 && (
         <div className="image-previews">

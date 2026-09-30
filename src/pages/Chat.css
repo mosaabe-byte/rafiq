@@ -413,6 +413,11 @@
   font-size: 0.8rem;
   line-height: 1;
 }
+.image-error {
+  color: var(--red);
+  font-size: 0.85rem;
+  margin: 0 0 8px;
+}
 /* ── الجسم: محادثة + مساحة عمل ── */
 .chat-body {
   display: flex;
