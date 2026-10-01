@@ -62,6 +62,14 @@ export default function Chat() {
   const [attachedFile, setAttachedFile] = useState(null); // { id, name, content }
   const [attachedImages, setAttachedImages] = useState([]); // [{ dataUrl, mediaType }] — ثلاث على الأكثر 
   const [imageError, setImageError] = useState("");
+  // حقل الرسالة متعدّد الأسطر: يكبر مع ما يُكتب حتّى حدّ، ثمّ يُمرَّر
+  const inputRef = useRef(null);
+  useEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 200) + "px";
+  }, [input]);
   const [userEnv, setUserEnv] = useState(null);
   const [workspaceContent, setWorkspaceContent] = useState(null); // { type, content } — المُنتَج المعروض
   const [workspaceEditInput, setWorkspaceEditInput] = useState("");
@@ -1471,11 +1479,18 @@ export default function Chat() {
             )}
           </>
         )}
-        <input
+        <textarea
+          ref={inputRef}
+          rows={1}
           className="chat-input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey && !isTouch && !e.nativeEvent.isComposing) {
+              e.preventDefault();
+              sendMessage();
+            }
+          }}
           onPaste={pasteImage}
           placeholder={
             limitReached

@@ -162,11 +162,11 @@
 
 .chat-input-row {
   display: flex;
-  gap: 8px;
+  align-items: flex-end;
+  gap: 6px;
   padding-bottom: 12px;
   flex-shrink: 0;
   flex-wrap: nowrap;
-  gap: 6px;
 }
 
 .chat-input-row .chat-input {
@@ -187,7 +187,11 @@
   border: 1px solid var(--gray-200, #ccc);
   font-family: inherit;
   font-size: 14px;
+  line-height: 1.5;
   direction: inherit;
+  resize: none;
+  overflow-y: auto;
+  max-height: 200px;
 }
 .chat-send {
   padding: 10px 20px;
