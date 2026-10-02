@@ -1,3 +1,4 @@
+import { createHash } from "crypto";
 // api/chat.js
 // حارس وسيط آمن بين واجهة رفيق و Claude.
 // المفتاح يُقرأ من متغيّر بيئة في Vercel، ولا يظهر أبداً في الكود.
@@ -205,6 +206,13 @@ const roleAwareness = modelInfo && modelInfo.key === "deep"
 - لا تخترع حلولاً أو معلومات لتبدو واسع المعرفة. جواب صادق محدود خير من جواب واسع مهلوس.
 - ما تعرفه عن هذا المشروع محصور في سياق المشروع أعلاه وفي رسائل هذه المحادثة وحدها. لا ترى محادثات أخرى ولو كانت في المشروع نفسه. فإن سُئلت عن محادثة سابقة أو قرار ماضٍ لا تجد له أثراً في أيّهما، قل ذلك صراحةً — «لا أرى تفاصيل تلك المحادثة أمامي ولا تقل «أتذكر» ولا «الذي أذكره» عن شيء خارج هذه المحادثة إطلاقاً — فأنت لا تتذكّر، وما تعرفه إمّا في سياق المشروع أعلاه فسمِّ مصدره («حسب ملفّ مشروعك…»)، وإمّا ليس عندك فقُله.» — واطلب من المستخدم أن يذكّرك. لا تسمّ تقنيةً أو أداةً أو قراراً لم يرد نصّاً؛ وخاصّةً حين يقول السياق إنّ التقنية «لم يحدّدها بعد»، فذكرُ أيّ تقنية بوصفها مختارة اختلاقٌ لا استنتاج. وأن تقول «لا أذكر» أنفع للمستخدم من تلخيصٍ يبدو صحيحاً وهو مصنوع.`;
 
+    // [قياس مؤقّت للتخبئة] طول كلّ قسم وبصمته — يُحذف بعد القياس
+  {
+    const parts = { base, language, tools, identity, roleAwareness, style, nextStep, levelGuidance, bridge, rhythm, liveDev, modeling, drawing, compass, boundaries, context, environmentSection, mem: memoryInstruction(), state: stateInstruction(), ext: externalNamesInstruction(), attachedFileSection, librarySection, bandsProgress, bandDialogue, foresight, learningBridge, journey };
+    const h = (v) => createHash("md5").update(String(v ?? "")).digest("hex").slice(0, 6);
+    console.log("[RAFIQ_PROMPT] " + Object.entries(parts).map(([k, v]) => `${k}:${String(v ?? "").length}:${h(v)}`).join(" "));
+  }
+  
   if (!project) return base + language + tools + identity + style + nextStep + boundaries + externalNamesInstruction();
 
   const rawLevel = (project.level || "").trim();
