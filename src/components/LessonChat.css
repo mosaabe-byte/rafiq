@@ -93,10 +93,25 @@
 
 .lc-input-row {
   display: flex;
+  align-items: flex-end;
   gap: 8px;
   padding: 10px;
   border-top: 1px solid #eee;
   flex-shrink: 0;
+}
+.lc-input-row textarea {
+  flex: 1;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  font-size: 13.5px;
+  line-height: 1.5;
+  resize: none;
+  overflow-y: auto;
+  max-height: 160px;
+  unicode-bidi: plaintext;
+  text-align: start;
 }
 .lc-input-row input {
   flex: 1;
@@ -115,5 +130,6 @@
   cursor: pointer;
   display: flex;
   align-items: center;
+  min-height: 40px;
 }
 .lc-input-row button:disabled { background: #9ca3af; cursor: not-allowed; }

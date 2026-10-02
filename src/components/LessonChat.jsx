@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { IconMessageCircle, IconX, IconSend } from '@tabler/icons-react';
@@ -48,6 +48,15 @@ export default function LessonChat({ lessonKey, lessonTitle, lessonIntro, lesson
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [conversationId, setConversationId] = useState(null);
+  // حقل السؤال متعدّد الأسطر — كحقل المحادثة
+  const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
+  const inputRef = useRef(null);
+  useEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+  }, [input, open]);
 
   // محادثة الدرس محفوظة: واحدة لكلّ مستخدم ودرس، تُجلَب حين يُفتح الدرس
   useEffect(() => {
@@ -223,10 +232,17 @@ export default function LessonChat({ lessonKey, lessonTitle, lessonIntro, lesson
           </div>
 
           <div className="lc-input-row">
-            <input
+            <textarea
+              ref={inputRef}
+              rows={1}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && send()}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey && !isTouch && !e.nativeEvent.isComposing) {
+                  e.preventDefault();
+                  send();
+                }
+              }}
               placeholder={t.placeholder}
             />
             <button onClick={send} disabled={loading}>
