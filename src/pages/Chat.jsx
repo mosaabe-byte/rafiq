@@ -608,6 +608,8 @@ export default function Chat() {
             tokens_in: data.usage?.input_tokens ?? 0,
             tokens_out: data.usage?.output_tokens ?? 0,
             latency_ms: data.latencyMs ?? null,
+            cache_write_tokens: data.usage?.cache_creation_input_tokens ?? null,
+            cache_read_tokens: data.usage?.cache_read_input_tokens ?? null,
           });
         }
       } else {

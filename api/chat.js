@@ -23,6 +23,17 @@ const STATION_TITLES = {
   13: "رحلتك القادمة (مراجعة ما تعلّمته، وكيف تواصل النموّ بنفسك)",
 };
 
+// فاصل التخبئة: ما قبله تعليمات عامّة ثابتة، وما بعده سياق المشروع (يتغيّر أحياناً)
+const CACHE_SPLIT = "\n<<<RAFIQ_CACHE_SPLIT>>>\n";
+
+// يحوّل نصّ التعليمات إلى كتل لكلٍّ منها علامة تخبئة — النصّ العاديّ لا يُخبَّأ، والفاصل يُحذف
+function toSystemBlocks(systemText) {
+  return systemText
+    .split(CACHE_SPLIT)
+    .filter((part) => part.trim())
+    .map((part) => ({ type: "text", text: part, cache_control: { type: "ephemeral" } }));
+}
+
 // الأسماء الخارجيّة تتقادم — تُستدعى في برومبتَي المحادثة والدرس معاً
 function externalNamesInstruction() {
   return `
@@ -544,7 +555,7 @@ ${parts.join("\n")}
     const h = (v) => createHash("md5").update(String(v ?? "")).digest("hex").slice(0, 6);
     console.log("[RAFIQ_PROMPT] " + Object.entries(parts).map(([k, v]) => `${k}:${String(v ?? "").length}:${h(v)}`).join(" "));
   }
-  return base + language + tools + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + context + environmentSection + memoryInstruction() + stateInstruction() + externalNamesInstruction() + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
+  return base + language + tools + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + CACHE_SPLIT + context + environmentSection + memoryInstruction() + stateInstruction() + externalNamesInstruction() + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
 }
 
 export default async function handler(req, res) {
@@ -612,8 +623,9 @@ ${workspaceEdit.current}
         model: model.id,
         max_tokens: model.maxTokens,
         ...(model.effort ? { output_config: { effort: model.effort } } : {}),
-        system: editSystem ? editSystem : (lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile, libraryContext, userEnv)),
+        system: toSystemBlocks(editSystem ? editSystem : (lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile, libraryContext, userEnv))),
         messages: finalMessages,
+        cache_control: { type: "ephemeral" },
       }),
     });
 
@@ -639,7 +651,7 @@ ${workspaceEdit.current}
 
     // إشارة استخدام خفيفة: بيانات مجرّدة فقط (لا محتوى محادثة، لا اسم مشروع) — تطبيقاً لتقليل البيانات.
     console.log(
-      `[RAFIQ_USAGE] model=${modelKeyForLog} mode=${lesson ? "lesson" : "chat"} phase=${project?.phase_number ?? "-"} level=${project?.level ?? "-"} turns=${messages.length} ms=${Date.now() - startedAt}`
+      `[RAFIQ_USAGE] model=${modelKeyForLog} mode=${lesson ? "lesson" : "chat"} phase=${project?.phase_number ?? "-"} level=${project?.level ?? "-"} turns=${messages.length} ms=${Date.now() - startedAt} in=${data.usage?.input_tokens ?? 0} cw=${data.usage?.cache_creation_input_tokens ?? 0} cr=${data.usage?.cache_read_input_tokens ?? 0}`
     );
 
     return res.status(200).json({ reply, truncated, usage: data.usage, modelKey: model.key, latencyMs: Date.now() - startedAt });

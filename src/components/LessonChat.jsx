@@ -149,6 +149,8 @@ export default function LessonChat({ lessonKey, lessonTitle, lessonIntro, lesson
             tokens_in: data.usage?.input_tokens ?? 0,
             tokens_out: data.usage?.output_tokens ?? 0,
             latency_ms: data.latencyMs ?? null,
+            cache_write_tokens: data.usage?.cache_creation_input_tokens ?? null,
+            cache_read_tokens: data.usage?.cache_read_input_tokens ?? null,
           });
         }
         await persistExchange(text, data.reply, data.modelKey ?? null, data.usage);
