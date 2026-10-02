@@ -1,4 +1,3 @@
-import { createHash } from "crypto";
 // api/chat.js
 // حارس وسيط آمن بين واجهة رفيق و Claude.
 // المفتاح يُقرأ من متغيّر بيئة في Vercel، ولا يظهر أبداً في الكود.
@@ -549,12 +548,6 @@ ${parts.join("\n")}
 
   const environmentSection = environmentBlock(userEnv);
 
-  // [قياس مؤقّت للتخبئة] طول كلّ قسم وبصمته — يُحذف بعد القياس
-  {
-    const parts = { base, language, tools, identity, roleAwareness, style, nextStep, levelGuidance, bridge, rhythm, liveDev, modeling, drawing, compass, boundaries, context, environmentSection, mem: memoryInstruction(), state: stateInstruction(), ext: externalNamesInstruction(), attachedFileSection, librarySection, bandsProgress, bandDialogue, foresight, learningBridge, journey };
-    const h = (v) => createHash("md5").update(String(v ?? "")).digest("hex").slice(0, 6);
-    console.log("[RAFIQ_PROMPT] " + Object.entries(parts).map(([k, v]) => `${k}:${String(v ?? "").length}:${h(v)}`).join(" "));
-  }
   return base + language + tools + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + CACHE_SPLIT + context + environmentSection + memoryInstruction() + stateInstruction() + externalNamesInstruction() + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
 }
 
