@@ -189,6 +189,8 @@
   font-size: 14px;
   line-height: 1.5;
   direction: inherit;
+  unicode-bidi: plaintext;
+  text-align: start;
   resize: none;
   overflow-y: auto;
   max-height: 200px;
