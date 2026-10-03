@@ -566,6 +566,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "messages مطلوبة" });
     }
 
+    // [اختبار مؤقّت] رسالة خاصّة تحاكي كلّ رمز خطأ — يُحذف بعد الاختبار
+    const testCode = String(messages?.[messages.length - 1]?.content || "").match(/^__RAFIQ_TEST_ERROR__:(\w+)$/)?.[1];
+    if (testCode) return res.status(400).json({ error: "تعذّر الوصول إلى رفيق الآن. حاول بعد لحظات.", errorCode: testCode });
+    
     // اختيار النموذج من السجلّ المركزي (getModel يحمي تلقائياً بالرجوع للافتراضي).
     const model = getModel(modelKey);
     modelKeyForLog = model.key;
@@ -624,12 +628,22 @@ ${workspaceEdit.current}
 
     if (!response.ok) {
       const errText = await response.text();
+      // تصنيف السبب: رمز تترجمه الواجهة بلغة المستخدم، والجملة العربيّة تبقى للواجهات القديمة المخبّأة
+      const st = response.status;
+      const errorCode =
+        st === 401 || st === 403 || errText.includes("credit balance") ? "service_paused"
+        : st === 429 || st === 529 || st >= 500 ? "overloaded"
+        : "bad_request";
       // مراقبة: يُسجَّل الخطأ كاملاً على الخادم (يظهر في سجلّات Vercel)، ولا يُرسَل نصّه الخام للمستخدم.
       console.error(
-        `[RAFIQ_ERROR] upstream status=${response.status} model=${modelKeyForLog} ms=${Date.now() - startedAt} detail=${errText.slice(0, 500)}`
+        `[RAFIQ_ERROR] upstream status=${st} code=${errorCode} model=${modelKeyForLog} ms=${Date.now() - startedAt} detail=${errText.slice(0, 500)}`
       );
-      return res.status(response.status).json({
+      if (errorCode === "service_paused") {
+        console.error(`[RAFIQ_BILLING] status=${st} — الخدمة متوقّفة من جهتنا: رصيد Anthropic أو مفتاحها`);
+      }
+      return res.status(st).json({
         error: "تعذّر الوصول إلى رفيق الآن. حاول بعد لحظات.",
+        errorCode,
       });
     }
 
@@ -655,6 +669,7 @@ ${workspaceEdit.current}
     );
     return res.status(500).json({
       error: "حدث خطأ غير متوقّع. حاول مرّة أخرى.",
+      errorCode: "server_error",
     });
   }
 }

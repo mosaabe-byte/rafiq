@@ -615,7 +615,7 @@ export default function Chat() {
       } else {
         setMessages([
           ...newMessages,
-          { role: "assistant", content: t("chat.errorPrefix") + (data.error || t("chat.errorUnknown")) },
+          { role: "assistant", content: ["service_paused", "overloaded", "bad_request", "server_error"].includes(data.errorCode) ? t(`chat.err_${data.errorCode}`) : t("chat.errorPrefix") + (data.error || t("chat.errorUnknown")) },
         ]);
       }
     } catch (err) {

@@ -17,6 +17,10 @@ const UI = {
     typing: 'رفيق يكتب…',
     errServer: 'حدث خطأ: ',
     errConn: 'تعذّر الاتصال بالخادم.',
+    err_service_paused: "رفيق متوقّف مؤقّتًا من جهتنا، لا من جهتك. محادثتك ومشروعك محفوظان، ونعمل على إعادته.",
+    err_overloaded: "رفيق مشغول جدًّا في هذه اللحظة. انتظر قليلًا ثمّ أعد الإرسال.",
+    err_bad_request: "تعذّرت معالجة هذه الرسالة. أعد صياغتها أو أرسلها من جديد، وإن تكرّر هذا فأبلغنا.",
+    err_server_error: "حدث خلل عندنا أثناء تحضير الردّ. أعد الإرسال، وإن تكرّر فأبلغنا.",
     unknown: 'غير معروف',
   },
   fr: {
@@ -26,6 +30,10 @@ const UI = {
     typing: 'Rafiq écrit…',
     errServer: 'Erreur : ',
     errConn: 'Impossible de se connecter au serveur.',
+    err_service_paused: "Rafiq est temporairement indisponible de notre côté, pas du vôtre. Votre conversation et votre projet sont sauvegardés ; nous travaillons à le rétablir.",
+    err_overloaded: "Rafiq est très sollicité en ce moment. Patientez un peu, puis renvoyez votre message.",
+    err_bad_request: "Ce message n'a pas pu être traité. Reformulez-le ou renvoyez-le ; si cela se répète, signalez-le-nous.",
+    err_server_error: "Un problème est survenu de notre côté en préparant la réponse. Renvoyez votre message ; si cela se répète, signalez-le-nous.",
     unknown: 'inconnu',
   },
   en: {
@@ -35,6 +43,10 @@ const UI = {
     typing: 'Rafiq is typing…',
     errServer: 'Error: ',
     errConn: 'Could not connect to the server.',
+    err_service_paused: "Rafiq is temporarily unavailable on our side, not yours. Your conversation and project are saved, and we're working to bring it back.",
+    err_overloaded: "Rafiq is very busy right now. Wait a moment, then send your message again.",
+    err_bad_request: "This message couldn't be processed. Rephrase it or send it again; if this keeps happening, let us know.",
+    err_server_error: "Something went wrong on our side while preparing the reply. Send your message again; if it keeps happening, let us know.",
     unknown: 'unknown',
   },
 };
@@ -155,7 +167,7 @@ export default function LessonChat({ lessonKey, lessonTitle, lessonIntro, lesson
         }
         await persistExchange(text, data.reply, data.modelKey ?? null, data.usage);
       } else {
-        setMessages([...newMessages, { role: 'assistant', content: t.errServer + (data.error || t.unknown) }]);
+        setMessages([...newMessages, { role: 'assistant', content: (data.errorCode && t['err_' + data.errorCode]) || (t.errServer + (data.error || t.unknown)) }]);
       }
     } catch (err) {
       setMessages([...newMessages, { role: 'assistant', content: t.errConn }]);
