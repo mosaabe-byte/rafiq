@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm';
 import { IconMessageCircle, IconX, IconSend } from '@tabler/icons-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import './LessonChat.css';
+import CollapsibleText from './CollapsibleText';
 import DOMPurify from 'dompurify';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
@@ -21,6 +22,8 @@ const UI = {
     err_overloaded: "رفيق مشغول جدًّا في هذه اللحظة. انتظر قليلًا ثمّ أعد الإرسال.",
     err_bad_request: "تعذّرت معالجة هذه الرسالة. أعد صياغتها أو أرسلها من جديد، وإن تكرّر هذا فأبلغنا.",
     err_server_error: "حدث خلل عندنا أثناء تحضير الردّ. أعد الإرسال، وإن تكرّر فأبلغنا.",
+    showMore: "عرض الكلّ",
+    showLess: "طيّ",
     unknown: 'غير معروف',
   },
   fr: {
@@ -34,6 +37,8 @@ const UI = {
     err_overloaded: "Rafiq est très sollicité en ce moment. Patientez un peu, puis renvoyez votre message.",
     err_bad_request: "Ce message n'a pas pu être traité. Reformulez-le ou renvoyez-le ; si cela se répète, signalez-le-nous.",
     err_server_error: "Un problème est survenu de notre côté en préparant la réponse. Renvoyez votre message ; si cela se répète, signalez-le-nous.",
+    showMore: "Afficher tout",
+    showLess: "Réduire",
     unknown: 'inconnu',
   },
   en: {
@@ -47,6 +52,8 @@ const UI = {
     err_overloaded: "Rafiq is very busy right now. Wait a moment, then send your message again.",
     err_bad_request: "This message couldn't be processed. Rephrase it or send it again; if this keeps happening, let us know.",
     err_server_error: "Something went wrong on our side while preparing the reply. Send your message again; if it keeps happening, let us know.",
+    showMore: "Show all",
+    showLess: "Show less",
     unknown: 'unknown',
   },
 };
@@ -238,7 +245,7 @@ export default function LessonChat({ lessonKey, lessonTitle, lessonIntro, lesson
                 >
                   {m.content}
                 </ReactMarkdown>
-                    : m.content}
+                    : <CollapsibleText text={m.content} maxLines={8} moreLabel={t.showMore} lessLabel={t.showLess} />}
                 </div>
               </div>
             ))}

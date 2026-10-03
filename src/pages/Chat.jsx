@@ -8,6 +8,7 @@ import { searchLibrary } from "../lib/embedding";
 import { useAuth } from "../auth/AuthContext";
 import { useLanguage } from "../i18n/LanguageContext";
 import "./Chat.css";
+import CollapsibleText from "../components/CollapsibleText";
 import DOMPurify from "dompurify";
 
 // الحدود اليومية لكل نموذج — مكرَّرة في api/models.js (dailyLimit)، فعدّل الموضعين معاً.
@@ -1220,7 +1221,7 @@ export default function Chat() {
   {m.content}
 </ReactMarkdown>
               ) : (
-                m.content
+                <CollapsibleText text={m.content} moreLabel={t("chat.showMore")} lessLabel={t("chat.showLess")} />
               )}
             </div>
 

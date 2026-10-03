@@ -1,0 +1,11 @@
+.collapsible-toggle {
+  display: block;
+  margin-top: 6px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--purple);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
