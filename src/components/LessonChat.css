@@ -88,7 +88,13 @@
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
-.lc-user .lc-bubble { background: #d4eaff; }
+.lc-user .lc-bubble {
+  background: #d4eaff;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  unicode-bidi: plaintext;
+  text-align: start;
+}
 .lc-bot .lc-bubble { background: #fff; border: 1px solid #e5e5e5; }
 
 .lc-input-row {

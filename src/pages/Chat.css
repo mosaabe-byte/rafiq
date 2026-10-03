@@ -62,6 +62,10 @@
   /* لا text-align ثابت — يرث اتجاه الصفحة */
 }
 .chat-row.user .rafiq-bubble {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  unicode-bidi: plaintext;
+  text-align: start;
   background: #d4eaff;
   border: none;
 }
