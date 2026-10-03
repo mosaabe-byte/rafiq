@@ -566,10 +566,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "messages مطلوبة" });
     }
 
-    // [اختبار مؤقّت] رسالة خاصّة تحاكي كلّ رمز خطأ — يُحذف بعد الاختبار
-    const testCode = String(messages?.[messages.length - 1]?.content || "").match(/^__RAFIQ_TEST_ERROR__:(\w+)$/)?.[1];
-    if (testCode) return res.status(400).json({ error: "تعذّر الوصول إلى رفيق الآن. حاول بعد لحظات.", errorCode: testCode });
-    
     // اختيار النموذج من السجلّ المركزي (getModel يحمي تلقائياً بالرجوع للافتراضي).
     const model = getModel(modelKey);
     modelKeyForLog = model.key;
