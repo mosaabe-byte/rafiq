@@ -11,6 +11,9 @@ import "./Chat.css";
 import CollapsibleText from "../components/CollapsibleText";
 import DOMPurify from "dompurify";
 
+// المؤجَّل: مواضيع في ذاكرة المشروع تبدأ بـ«مؤجَّل —» — تُعرض في كتلة مستقلّة
+const DEFER_RE = /^مؤج[َّ]*ل\s*[—–-]\s*/;
+
 // الحدود اليومية لكل نموذج — مكرَّرة في api/models.js (dailyLimit)، فعدّل الموضعين معاً.
 // العميق هو النموذج الوحيد في الواجهة منذ ٢١ سبتمبر ٢٠٢٦، فحدّه ٢٠ لا ٥.
 const DAILY_LIMITS = { fast: 20, deep: 50 };
@@ -955,11 +958,11 @@ export default function Chat() {
             </ul>
           </div>
         )}
-                {((p.project_decisions && Object.keys(p.project_decisions).length > 0) || p.project_memory) && (
+              {(Object.keys(p.project_decisions || {}).some((k) => !DEFER_RE.test(k)) || p.project_memory) && (
           <div className="context-block">
             <div className="context-label">{t("chat.ctxMemory")}</div>
             <ul className="context-memory">
-              {Object.entries(p.project_decisions || {}).map(([key, value]) => (
+              {Object.entries(p.project_decisions || {}).filter(([key]) => !DEFER_RE.test(key)).map(([key, value]) => (
                 <li key={"d-" + key} className="context-memory-item">
                   <span className="context-memory-text">{key === value ? value : `${key}: ${value}`}</span>
                   <button
@@ -977,6 +980,25 @@ export default function Chat() {
                   <button
                     className="context-memory-del"
                     onClick={() => deleteMemoryNote(idx)}
+                    title={t("chat.deleteMessage")}
+                  >
+                    ✕
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {Object.keys(p.project_decisions || {}).some((k) => DEFER_RE.test(k)) && (
+          <div className="context-block">
+            <div className="context-label">{t("chat.ctxDeferred")}</div>
+            <ul className="context-memory">
+              {Object.entries(p.project_decisions).filter(([key]) => DEFER_RE.test(key)).map(([key, value]) => (
+                <li key={"f-" + key} className="context-memory-item">
+                  <span className="context-memory-text">{key.replace(DEFER_RE, "")}: {value}</span>
+                  <button
+                    className="context-memory-del"
+                    onClick={() => deleteDecision(key)}
                     title={t("chat.deleteMessage")}
                   >
                     ✕
