@@ -36,6 +36,25 @@ function toSystemBlocks(systemText) {
     .map((part) => ({ type: "text", text: part, cache_control: { type: "ephemeral" } }));
 }
 
+// مكتبة الكتل — كتل تتكرّر في أغلب التطبيقات، لكلٍّ منها قائمة اكتمال (تُخبَّأ مع التعليمات الثابتة)
+function blocksInstruction() {
+  return `
+
+مكتبة الكتل: بعض الميزات تتكرّر في أغلب التطبيقات، ولكلّ منها أجزاء يسهل نسيان بعضها. حين يقرّر المستخدم ميزة تنتمي إلى كتلة (في التخطيط حين يكتب وظائفه، أو حين يختار تقنيّة)، اعرض عليه الكتلة كاملة في رسالة واحدة: أجزاءها مرقّمة، وأيّها ضروريّ قبل أوّل مستخدم حقيقيّ، واقترح أن يُدوَّن ما لن يُبنى الآن في «مؤجَّل». ولا تقدّم كودها جداراً واحداً: كلّ جزء يُبنى في مرحلته، خطوة خطوة كالعادة. وأسماء الدوالّ أدناه محقَّقة من توثيق supabase-js v2 الحاليّ؛ وشروحات قديمة كثيرة تستعمل أسماء الإصدار الأوّل (\`auth.api.resetPasswordForEmail\` و\`auth.update\`) فلا تعتمدها، ونبّه المستخدم إن جاء بها.
+
+كتلة المصادقة الكاملة (Supabase Auth مع React):
+1. التسجيل: \`supabase.auth.signUp({ email, password, options: { data: { full_name } } })\`. وتأكيد البريد مفعَّل افتراضيّاً، فلا جلسة قبل التأكيد: اعرض بعد التسجيل رسالة «أرسلنا إليك رسالة تأكيد — افتح بريدك، وتفقّد مجلّد الرسائل غير المرغوب فيها».
+2. إعادة إرسال التأكيد: زرّ يستدعي \`supabase.auth.resend({ type: 'signup', email })\`.
+3. الدخول: \`supabase.auth.signInWithPassword({ email, password })\`. وخطأ «Invalid login credentials» قد يعني كلمة خاطئة أو بريداً غير مؤكَّد: اعرض الاحتمالين للمستخدم، ومعهما زرّ إعادة الإرسال.
+4. الجلسة: \`getSession()\` عند الفتح، و\`onAuthStateChange\` للتغيّرات، وحماية الصفحات التي تحتاج دخولاً.
+5. الخروج: \`supabase.auth.signOut()\`.
+6. نسيت كلمة المرور: \`supabase.auth.resetPasswordForEmail(email, { redirectTo })\` يرسل الرابط؛ وحين يعود المستخدم منه يطلق \`onAuthStateChange\` الحدث \`PASSWORD_RECOVERY\`، فتُعرض صفحة كلمة جديدة تستدعي \`supabase.auth.updateUser({ password })\`. وعنوان العودة يُضاف إلى عناوين إعادة التوجيه المسموحة في إعدادات المصادقة في Supabase.
+7. الاسم والملفّ الشخصيّ: في \`user_metadata\` عند التسجيل، أو جدول \`profiles\` مرتبط بالمستخدم.
+8. حماية البيانات: كلّ جدول فيه بيانات مستخدم يُفعَّل فيه RLS بسياسة \`auth.uid() = user_id\`.
+9. البريد: بريد Supabase المدمَج محدود للتجربة؛ رسائل التأكيد والاستعادة تحتاج خادم SMTP قبل الإطلاق.
+الضروريّ قبل أوّل مستخدم حقيقيّ: كلّها، إلّا السابع إن لم يكن للتطبيق ملفّ شخصيّ.`;
+}
+
 // الأسماء الخارجيّة تتقادم — تُستدعى في برومبتَي المحادثة والدرس معاً
 function externalNamesInstruction() {
   return `
@@ -560,7 +579,7 @@ ${parts.join("\n")}
 
   const environmentSection = environmentBlock(userEnv);
 
-  return base + language + tools + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + CACHE_SPLIT + context + environmentSection + memoryInstruction() + stateInstruction() + externalNamesInstruction() + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
+  return base + language + tools + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + blocksInstruction() + CACHE_SPLIT + context + environmentSection + memoryInstruction() + stateInstruction() + externalNamesInstruction() + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
 }
 
 export default async function handler(req, res) {
