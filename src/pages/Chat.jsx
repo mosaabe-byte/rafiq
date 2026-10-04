@@ -16,7 +16,7 @@ const DEFER_RE = /^مؤج[َّ]*ل\s*[—–-]\s*/;
 
 // الحدود اليومية لكل نموذج — مكرَّرة في api/models.js (dailyLimit)، فعدّل الموضعين معاً.
 // العميق هو النموذج الوحيد في الواجهة منذ ٢١ سبتمبر ٢٠٢٦، فحدّه ٢٠ لا ٥.
-const DAILY_LIMITS = { fast: 20, deep: 50 };
+const DAILY_LIMITS = { fast: 20, deep: 150 };
 function getLimit(key) {
   return DAILY_LIMITS[key] ?? DAILY_LIMITS.deep;
 }
