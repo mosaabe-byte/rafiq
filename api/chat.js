@@ -151,7 +151,7 @@ const PHASE_STATION_MAP = {
   6: [4, 5, 7],   // البيانات ↔ محطات 4، 5، 7
   7: [8, 11, 12], // السحابة والنشر ↔ محطات 8، 11، 12
 };
-function buildSystemPrompt(project, lang, modelInfo, completedStations, completedBands, attachedFile, libraryContext, userEnv) {
+function buildSystemPrompt(project, lang, modelInfo, completedStations, completedBands, attachedFile, libraryContext, userEnv, folderLinked) {
   const langMap = {
     ar: "العربية",
     fr: "الفرنسية (Français)",
@@ -579,7 +579,11 @@ ${parts.join("\n")}
 
   const environmentSection = environmentBlock(userEnv);
 
-  return base + language + tools + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + blocksInstruction() + CACHE_SPLIT + context + environmentSection + memoryInstruction() + stateInstruction() + externalNamesInstruction() + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
+    // المجلّد المربوط: رفيق يطلب الملفّات بوسم، والمستخدم يسمح ببطاقة
+  const folderSection = folderLinked ? `
+
+مجلّد المشروع مربوط: يستطيع المستخدم أن يسمح لك بقراءة ملفّات مشروعه مباشرةً. فحين تحتاج محتوى ملفّ لتشخّص أو تبني، لا تطلب منه نسخه ولصقه، بل ضع في آخر ردّك على سطر مستقلّ وسماً بهذه الصيغة: [[READ:src/App.jsx|package.json]] — مسارات نسبيّة من جذر المشروع، خمسة على الأكثر، مفصولة بـ|. فتظهر له بطاقة إذن، وإن سمح وصلتك الملفّات في رسالته التالية. ولا تطلب ملفّ .env ولا أيّ سرّ، فالواجهة ترفضها وتحجب المفاتيح. وإن لم تعرف المسار بدقّة، فاسأله عنه أوّلاً بدل أن تخمّن.` : "";
+  return base + language + tools + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + blocksInstruction() + CACHE_SPLIT + context + environmentSection + folderSection + memoryInstruction() + stateInstruction() + externalNamesInstruction() + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
 }
 
 export default async function handler(req, res) {
@@ -591,7 +595,7 @@ export default async function handler(req, res) {
   let modelKeyForLog = "unknown";
 
   try {
-  const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile, libraryContext, attachedImages, userEnv, workspaceEdit } = req.body;
+  const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile, libraryContext, attachedImages, userEnv, workspaceEdit, folderLinked } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "messages مطلوبة" });
@@ -647,7 +651,7 @@ ${workspaceEdit.current}
         model: model.id,
         max_tokens: model.maxTokens,
         ...(model.effort ? { output_config: { effort: model.effort } } : {}),
-        system: toSystemBlocks(editSystem ? editSystem : (lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile, libraryContext, userEnv))),
+        system: toSystemBlocks(editSystem ? editSystem : (lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile, libraryContext, userEnv, folderLinked))),
         messages: finalMessages,
         cache_control: { type: "ephemeral" },
       }),

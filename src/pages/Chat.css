@@ -688,3 +688,26 @@
   color: var(--gray-600);
   margin: 0;
 }
+.read-request {
+  margin: 0 0 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--purple-mid);
+  border-radius: 8px;
+  background: var(--purple-light);
+  font-size: 13px;
+}
+.read-request-title { color: var(--gray-900); margin-bottom: 6px; }
+.read-request-paths { margin: 0 0 6px; padding-inline-start: 18px; }
+.read-request-paths code { direction: ltr; unicode-bidi: isolate; }
+.read-request-note { color: var(--gray-600); margin-bottom: 8px; }
+.read-request-actions { display: flex; gap: 8px; }
+.read-request-allow,
+.read-request-deny {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.read-request-allow { background: var(--purple); color: var(--white); border: none; }
+.read-request-deny { background: var(--white); color: var(--gray-600); border: 1px solid var(--gray-200); }

@@ -10,6 +10,7 @@ import { useLanguage } from "../i18n/LanguageContext";
 import "./Chat.css";
 import CollapsibleText from "../components/CollapsibleText";
 import ProjectFolderLink from "../components/ProjectFolderLink";
+import { folderSupported, getFolder, ensureReadPermission, readProjectFile } from "../lib/projectFolder";
 import DOMPurify from "dompurify";
 
 // المؤجَّل: مواضيع في ذاكرة المشروع تبدأ بـ«مؤجَّل —» — تُعرض في كتلة مستقلّة
@@ -67,6 +68,7 @@ export default function Chat() {
   const [attachedFile, setAttachedFile] = useState(null); // { id, name, content }
   const [attachedImages, setAttachedImages] = useState([]); // [{ dataUrl, mediaType }] — ثلاث على الأكثر 
   const [imageError, setImageError] = useState("");
+  const [pendingRead, setPendingRead] = useState(null); // { paths } — طلب قراءة ينتظر إذن المستخدم
   // حقل الرسالة متعدّد الأسطر: يكبر مع ما يُكتب حتّى حدّ، ثمّ يُمرَّر
   const inputRef = useRef(null);
   useEffect(() => {
@@ -415,8 +417,9 @@ export default function Chat() {
     await supabase.from("projects").update({ progress: newProgress }).eq("id", projectId);
   }
 
-  async function sendMessage() {
-    const text = input.trim();
+  async function sendMessage(overrideText) {
+    const fromOutside = typeof overrideText === "string";
+    const text = (fromOutside ? overrideText : input).trim();
     if (!text || loading || !conversationId) return;
 
     const limit = getLimit(modelKey);
@@ -426,6 +429,7 @@ export default function Chat() {
     }
 
     const selectedProject = projects.find((p) => p.id === Number(selectedProjectId));
+    const folderLinked = folderSupported && !!(await getFolder(selectedProjectId).catch(() => null));
 
     // بحث دلاليّ صامت في المكتبة (RAG) — فقط إن لم يُرفق ملفّ صراحةً
     let libraryContext = null;
@@ -447,7 +451,7 @@ export default function Chat() {
 
     const newMessages = [...messages, { role: "user", content: text }];
     setMessages(newMessages);
-    setInput("");
+    if (!fromOutside) setInput("");
     setAttachedImages([]);
     setImageError("");
     setLoading(true);
@@ -494,6 +498,7 @@ export default function Chat() {
             : null,
           libraryContext,
           userEnv,
+          folderLinked,
           attachedImages: attachedImages.map(({ dataUrl, mediaType }) => ({ dataUrl, mediaType })),
         }),
       });
@@ -593,8 +598,15 @@ export default function Chat() {
           }
         }
 
+        // طلب قراءة ملفّات [[READ:مسار|مسار]] — يصير بطاقة إذن، ولا يُقرأ شيء قبل موافقة المستخدم
+        const readMatch = replyText.match(/\[\[READ:([^\]]+)\]{1,2}/);
+        if (readMatch) {
+          const paths = readMatch[1].split("|").map((s) => s.trim()).filter(Boolean).slice(0, 5);
+          if (paths.length > 0) setPendingRead({ paths });
+        }
+        
         // نزع أيّ وسم نظام لم يُطابق الصيغتين المعروفتين
-        replyText = replyText.replace(/\[\[(ENV|MEM|STATE|BAND):[\s\S]*?\]{1,2}/g, "").trim();
+        replyText = replyText.replace(/\[\[(ENV|MEM|STATE|BAND|READ):[\s\S]*?\]{1,2}/g, "").trim();
         const { data: insertedBot } = await supabase.from("messages").insert({
           conversation_id: conversationId,
           user_id: user.id,
@@ -716,6 +728,23 @@ export default function Chat() {
   function removeImage(index) {
     setAttachedImages((prev) => prev.filter((_, i) => i !== index));
     setImageError("");
+  }
+
+    // يقرأ الملفّات المطلوبة بعد موافقة المستخدم، ويرسلها رسالةً منه
+  async function allowRead() {
+    const req = pendingRead;
+    setPendingRead(null);
+    if (!req) return;
+    const handle = await getFolder(selectedProjectId).catch(() => null);
+    if (!handle) { setImageError("chat.readNoFolder"); return; }
+    if (!(await ensureReadPermission(handle))) { setImageError("chat.readNoPermission"); return; }
+    const results = await Promise.all(req.paths.map((p) => readProjectFile(handle, p)));
+    const parts = results.map((r) =>
+      r.error
+        ? `${r.path}: ${t("chat.readErr_" + r.error)}`
+        : "```\n// " + r.path + "\n" + r.text + "\n```" + (r.masked ? `\n(${t("chat.readMasked")})` : "")
+    );
+    sendMessage(parts.join("\n\n"));
   }
 
   function removeAttached() {
@@ -1375,6 +1404,20 @@ export default function Chat() {
         </div>
       )}
     
+            {selectedProjectId && pendingRead && (
+        <div className="read-request" role="alert">
+          <div className="read-request-title">{t("chat.readTitle")}</div>
+          <ul className="read-request-paths">
+            {pendingRead.paths.map((p) => <li key={p}><code>{p}</code></li>)}
+          </ul>
+          <div className="read-request-note">{t("chat.readNote")}</div>
+          <div className="read-request-actions">
+            <button type="button" className="read-request-allow" onClick={allowRead}>{t("chat.readAllow")}</button>
+            <button type="button" className="read-request-deny" onClick={() => setPendingRead(null)}>{t("chat.readDeny")}</button>
+          </div>
+        </div>
+      )}
+      
       {selectedProjectId && !limitReached && imageError && (
         <div className="image-error" role="alert">{t(imageError)}</div>
       )}
