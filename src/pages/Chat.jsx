@@ -9,6 +9,7 @@ import { useAuth } from "../auth/AuthContext";
 import { useLanguage } from "../i18n/LanguageContext";
 import "./Chat.css";
 import CollapsibleText from "../components/CollapsibleText";
+import ProjectFolderLink from "../components/ProjectFolderLink";
 import DOMPurify from "dompurify";
 
 // المؤجَّل: مواضيع في ذاكرة المشروع تبدأ بـ«مؤجَّل —» — تُعرض في كتلة مستقلّة
@@ -907,6 +908,10 @@ export default function Chat() {
           <span className="context-emoji">{p.emoji || "📦"}</span>
           <span className="context-name">{p.name}</span>
         </div>
+        <ProjectFolderLink
+          projectId={p.id}
+          labels={{ title: t("chat.folderTitle"), link: t("chat.folderLink"), unlink: t("chat.folderUnlink") }}
+        />
 
         <div className="context-block">
           <div className="context-label">{t("chat.ctxPhase")}</div>

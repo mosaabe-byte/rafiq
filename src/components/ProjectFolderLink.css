@@ -1,0 +1,25 @@
+.project-folder {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 4px;
+  font-size: 13px;
+}
+.project-folder-label {
+  color: var(--gray-600);
+}
+.project-folder-name {
+  color: var(--gray-900);
+  overflow-wrap: anywhere;
+}
+.project-folder-btn {
+  padding: 2px 8px;
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  background: var(--white);
+  color: var(--purple);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
