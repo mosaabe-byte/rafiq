@@ -69,6 +69,7 @@ export default function Chat() {
   const [attachedImages, setAttachedImages] = useState([]); // [{ dataUrl, mediaType }] — ثلاث على الأكثر 
   const [imageError, setImageError] = useState("");
   const [pendingRead, setPendingRead] = useState(null); // { paths } — طلب قراءة ينتظر إذن المستخدم
+  const sendingRef = useRef(false); // قفل فوريّ ضدّ الإرسال المزدوج — يُضبط قبل أيّ انتظار
   // حقل الرسالة متعدّد الأسطر: يكبر مع ما يُكتب حتّى حدّ، ثمّ يُمرَّر
   const inputRef = useRef(null);
   useEffect(() => {
@@ -428,6 +429,9 @@ export default function Chat() {
       return;
     }
 
+    if (sendingRef.current) return;
+    sendingRef.current = true;
+
     const selectedProject = projects.find((p) => p.id === Number(selectedProjectId));
     const folderLinked = folderSupported && !!(await getFolder(selectedProjectId).catch(() => null));
 
@@ -642,6 +646,7 @@ export default function Chat() {
       ]);
     } finally {
       setLoading(false);
+      sendingRef.current = false;
     }
   }
 
@@ -742,7 +747,7 @@ export default function Chat() {
     const parts = results.map((r) =>
       r.error
         ? `${r.path}: ${t("chat.readErr_" + r.error)}`
-        : "```\n// " + r.path + "\n" + r.text + "\n```" + (r.masked ? `\n(${t("chat.readMasked")})` : "")
+        : "```\n// " + r.path + "\n" + r.text + "\n```" + (r.masked ? `\n${t("chat.readMasked")}.` : "")
     );
     sendMessage(t("chat.readSentHeader") + "\n\n" + parts.join("\n\n"));
   }
