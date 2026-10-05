@@ -744,7 +744,7 @@ export default function Chat() {
         ? `${r.path}: ${t("chat.readErr_" + r.error)}`
         : "```\n// " + r.path + "\n" + r.text + "\n```" + (r.masked ? `\n(${t("chat.readMasked")})` : "")
     );
-    sendMessage(parts.join("\n\n"));
+    sendMessage(t("chat.readSentHeader") + "\n\n" + parts.join("\n\n"));
   }
 
   function removeAttached() {
@@ -1417,7 +1417,7 @@ export default function Chat() {
           </div>
         </div>
       )}
-      
+
       {selectedProjectId && !limitReached && imageError && (
         <div className="image-error" role="alert">{t(imageError)}</div>
       )}
