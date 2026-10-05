@@ -10,6 +10,7 @@ import { useLanguage } from "../i18n/LanguageContext";
 import "./Chat.css";
 import CollapsibleText from "../components/CollapsibleText";
 import ProjectFolderLink from "../components/ProjectFolderLink";
+import { historyWindow } from "../lib/historyWindow";
 import { folderSupported, getFolder, ensureReadPermission, readProjectFile } from "../lib/projectFolder";
 import DOMPurify from "dompurify";
 
@@ -491,7 +492,7 @@ export default function Chat() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: newMessages.slice(-20).map((m) => ({ role: m.role, content: m.content })),
+          messages: historyWindow(newMessages).map((m) => ({ role: m.role, content: m.content })),
           project: selectedProject,
           lang,
           modelKey,

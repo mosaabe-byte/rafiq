@@ -5,6 +5,7 @@ import { IconMessageCircle, IconX, IconSend } from '@tabler/icons-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import './LessonChat.css';
 import CollapsibleText from './CollapsibleText';
+import { historyWindow } from '../lib/historyWindow';
 import DOMPurify from 'dompurify';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
@@ -148,7 +149,7 @@ export default function LessonChat({ lessonKey, lessonTitle, lessonIntro, lesson
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: newMessages.slice(-20).map((m) => ({ role: m.role, content: m.content })),
+          messages: historyWindow(newMessages).map((m) => ({ role: m.role, content: m.content })),
           lesson: {
             title: lessonTitle,
             intro: lessonIntro,
