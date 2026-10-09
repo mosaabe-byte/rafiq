@@ -33,7 +33,7 @@ function toSystemBlocks(systemText) {
   return systemText
     .split(CACHE_SPLIT)
     .filter((part) => part.trim())
-    .map((part) => ({ type: "text", text: part, cache_control: { type: "ephemeral" } }));
+    .map((part) => ({ type: "text", text: part, cache_control: { type: "ephemeral", ttl: "1h" } }));
 }
 
 // مكتبة الكتل — كتل تتكرّر في أغلب التطبيقات، لكلٍّ منها قائمة اكتمال (تُخبَّأ مع التعليمات الثابتة)
@@ -656,7 +656,7 @@ ${workspaceEdit.current}
         ...(model.effort ? { output_config: { effort: model.effort } } : {}),
         system: toSystemBlocks(editSystem ? editSystem : (lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile, libraryContext, userEnv, folderLinked))),
         messages: finalMessages,
-        cache_control: { type: "ephemeral" },
+        cache_control: { type: "ephemeral", ttl: "1h" },
       }),
     });
 
