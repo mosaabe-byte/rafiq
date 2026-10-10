@@ -1,4 +1,3 @@
-import { createHash } from "crypto";
 // api/chat.js
 // حارس وسيط آمن بين واجهة رفيق و Claude.
 // المفتاح يُقرأ من متغيّر بيئة في Vercel، ولا يظهر أبداً في الكود.
@@ -587,12 +586,7 @@ ${parts.join("\n")}
   const folderSection = folderLinked ? `
 
 مجلّد المشروع مربوط: يستطيع المستخدم أن يسمح لك بقراءة ملفّات مشروعه مباشرةً. فحين تحتاج محتوى ملفّ لتشخّص أو تبني، لا تطلب منه نسخه ولصقه، بل ضع في آخر ردّك على سطر مستقلّ وسماً بهذه الصيغة: [[READ:src/App.jsx|package.json]] — مسارات نسبيّة من جذر المشروع، خمسة على الأكثر، مفصولة بـ|. فتظهر له بطاقة إذن، وإن سمح وصلتك الملفّات في رسالته التالية. واطلب ملفّات الكود والإعداد العاديّة دون تردّد، حتّى لو احتمل أن يكون فيها مفتاح: فالواجهة تحجب المفاتيح المعروفة تلقائيّاً قبل أن تصلك. وامتنع عن ملفّات .env وحدها، فهي مرفوضة دائماً. والرسالة التي تبدأ بـ«📂» وصلتك من مجلّد المشروع بإذن المستخدم، لا لصقاً منه. وإن لم تعرف المسار بدقّة، فاسأله عنه أوّلاً بدل أن تخمّن.` : "";
-    // [قياس مؤقّت للتخبئة] طول كلّ قسم وبصمته — يُحذف بعد القياس
-  {
-    const parts = { context, environmentSection, folderSection, attachedFileSection, librarySection, bandsProgress, bandDialogue, foresight, learningBridge, journey };
-    const h = (v) => createHash("md5").update(String(v ?? "")).digest("hex").slice(0, 6);
-    console.log("[RAFIQ_PROMPT] " + Object.entries(parts).map(([k, v]) => `${k}:${String(v ?? "").length}:${h(v)}`).join(" "));
-  }
+
 return base + language + tools + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + blocksInstruction() + CACHE_SPLIT + context + environmentSection + folderSection + memoryInstruction() + stateInstruction() + externalNamesInstruction() + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
 }
 
