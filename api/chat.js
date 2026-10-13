@@ -28,14 +28,6 @@ const DEFER_RE = /^مؤج[َّ]*ل\s*[—–-]\s*/;
 // فاصل التخبئة: ما قبله تعليمات عامّة ثابتة، وما بعده سياق المشروع (يتغيّر أحياناً)
 const CACHE_SPLIT = "\n<<<RAFIQ_CACHE_SPLIT>>>\n";
 
-// يحوّل نصّ التعليمات إلى كتل لكلٍّ منها علامة تخبئة — النصّ العاديّ لا يُخبَّأ، والفاصل يُحذف
-function toSystemBlocks(systemText) {
-  return systemText
-    .split(CACHE_SPLIT)
-    .filter((part) => part.trim())
-    .map((part) => ({ type: "text", text: part, cache_control: { type: "ephemeral", ttl: "1h" } }));
-}
-
 // مكتبة الكتل — كتل تتكرّر في أغلب التطبيقات، لكلٍّ منها قائمة اكتمال (تُخبَّأ مع التعليمات الثابتة)
 function blocksInstruction() {
   return `
@@ -53,6 +45,24 @@ function blocksInstruction() {
 8. حماية البيانات: كلّ جدول فيه بيانات مستخدم يُفعَّل فيه RLS بسياسة \`auth.uid() = user_id\`.
 9. البريد: بريد Supabase المدمَج محدود للتجربة؛ رسائل التأكيد والاستعادة تحتاج خادم SMTP قبل الإطلاق.
 الضروريّ قبل أوّل مستخدم حقيقيّ: كلّها، إلّا السابع إن لم يكن للتطبيق ملفّ شخصيّ.`;
+}
+
+// قواعد الحساب: تعليمة ثابتة (تُخبَّأ مع التعليمات العامّة)
+function rulesInstruction() {
+  return `
+
+قواعد الحساب: في سياق المشروع قسم «قواعدي» فيه قواعد وضعها المستخدم لكلّ مشاريعه. طبّقها في كلّ مشروع ما لم تقرّر ذاكرة هذا المشروع غيرها صراحةً، فإن خالفها المشروع فاذكر ذلك في جملة. ولا تكتب قاعدة جديدة إلّا حين يطلب المستخدم صراحةً أن يجعل أمراً قاعدةً في كلّ مشاريعه («اجعلها قاعدة»، «في كلّ مشاريعي»)، فضع حينها في آخر ردّك على سطر مستقلّ وسماً بهذه الصيغة: [[RULE:موضوع=القاعدة]]. والموضوع قصير ثابت؛ وإن وُجد في «قواعدي» موضوع بالمعنى نفسه فاستعمله بحرفه، فتحلّ القاعدة الجديدة محلّ القديمة؛ والقيمة الفارغة تحذفها. ولا تحوّل قرار مشروع إلى قاعدة من تلقاء نفسك، بل اقترح ذلك واسأل.`;
+}
+
+// يحوّل التعليمات إلى كتل: كلّ كتلة مخبّأة إلّا الأخيرة (سياق المشروع يتغيّر كثيراً)،
+// والنصّ ذو الكتلة الواحدة (الدرس وتعديل مساحة العمل) يُخبَّأ كلّه
+function toSystemBlocks(systemText) {
+  const parts = systemText.split(CACHE_SPLIT).filter((part) => part.trim());
+  return parts.map((part, i) =>
+    i < parts.length - 1 || parts.length === 1
+      ? { type: "text", text: part, cache_control: { type: "ephemeral", ttl: "1h" } }
+      : { type: "text", text: part }
+  );
 }
 
 // الأسماء الخارجيّة تتقادم — تُستدعى في برومبتَي المحادثة والدرس معاً
@@ -151,7 +161,7 @@ const PHASE_STATION_MAP = {
   6: [4, 5, 7],   // البيانات ↔ محطات 4، 5، 7
   7: [8, 11, 12], // السحابة والنشر ↔ محطات 8، 11، 12
 };
-function buildSystemPrompt(project, lang, modelInfo, completedStations, completedBands, attachedFile, libraryContext, userEnv, folderLinked) {
+function buildSystemPrompt(project, lang, modelInfo, completedStations, completedBands, attachedFile, libraryContext, userEnv, folderLinked, accountRules) {
   const langMap = {
     ar: "العربية",
     fr: "الفرنسية (Français)",
@@ -582,12 +592,19 @@ ${parts.join("\n")}
 
   const environmentSection = environmentBlock(userEnv);
 
-    // المجلّد المربوط: رفيق يطلب الملفّات بوسم، والمستخدم يسمح ببطاقة
+  // قواعدي: ثابتة لأشهر، فتأخذ كتلة مخبّأة مستقلّة بين التعليمات العامّة وسياق المشروع
+  const rulesEntries = Object.entries(accountRules || {});
+  const rulesSection = rulesEntries.length > 0 ? `
+
+قواعدي (وضعها المستخدم لكلّ مشاريعه — طبّقها ما لم تقرّر ذاكرة هذا المشروع غيرها صراحةً):
+${rulesEntries.map(([k, v]) => `- ${k}: ${v}`).join("\n")}` : "";
+  
+  // المجلّد المربوط: رفيق يطلب الملفّات بوسم، والمستخدم يسمح ببطاقة
   const folderSection = folderLinked ? `
 
 مجلّد المشروع مربوط: يستطيع المستخدم أن يسمح لك بقراءة ملفّات مشروعه مباشرةً. فحين تحتاج محتوى ملفّ لتشخّص أو تبني، لا تطلب منه نسخه ولصقه، بل ضع في آخر ردّك على سطر مستقلّ وسماً بهذه الصيغة: [[READ:src/App.jsx|package.json]] — مسارات نسبيّة من جذر المشروع، خمسة على الأكثر، مفصولة بـ|. فتظهر له بطاقة إذن، وإن سمح وصلتك الملفّات في رسالته التالية. واطلب ملفّات الكود والإعداد العاديّة دون تردّد، حتّى لو احتمل أن يكون فيها مفتاح: فالواجهة تحجب المفاتيح المعروفة تلقائيّاً قبل أن تصلك. وامتنع عن ملفّات .env وحدها، فهي مرفوضة دائماً. والرسالة التي تبدأ بـ«📂» وصلتك من مجلّد المشروع بإذن المستخدم، لا لصقاً منه. وإن لم تعرف المسار بدقّة، فاسأله عنه أوّلاً بدل أن تخمّن.` : "";
 
-return base + language + tools + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + blocksInstruction() + CACHE_SPLIT + context + environmentSection + folderSection + memoryInstruction() + stateInstruction() + externalNamesInstruction() + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
+return base + language + tools + identity + roleAwareness + style + nextStep + levelGuidance + bridge + rhythm + liveDev + modeling + drawing + compass + boundaries + blocksInstruction() + rulesInstruction() + CACHE_SPLIT + rulesSection + CACHE_SPLIT + context + environmentSection + folderSection + memoryInstruction() + stateInstruction() + externalNamesInstruction() + attachedFileSection + librarySection + bandsProgress + bandDialogue + foresight + learningBridge + journey;
 }
 
 export default async function handler(req, res) {
@@ -599,7 +616,7 @@ export default async function handler(req, res) {
   let modelKeyForLog = "unknown";
 
   try {
-  const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile, libraryContext, attachedImages, userEnv, workspaceEdit, folderLinked } = req.body;
+  const { messages, project, lesson, lang, modelKey, completedStations, completedBands, attachedFile, libraryContext, attachedImages, userEnv, workspaceEdit, folderLinked, accountRules,  } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "messages مطلوبة" });
@@ -655,7 +672,7 @@ ${workspaceEdit.current}
         model: model.id,
         max_tokens: model.maxTokens,
         ...(model.effort ? { output_config: { effort: model.effort } } : {}),
-        system: toSystemBlocks(editSystem ? editSystem : (lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile, libraryContext, userEnv, folderLinked))),
+        system: toSystemBlocks(editSystem ? editSystem : (lesson ? buildLessonPrompt(lesson) : buildSystemPrompt(project, lang, model, completedStations, completedBands, attachedFile, libraryContext, userEnv, folderLinked, accountRules))),
         messages: finalMessages,
         cache_control: { type: "ephemeral", ttl: "1h" },
       }),

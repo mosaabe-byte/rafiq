@@ -71,6 +71,7 @@ export default function Chat() {
   const [imageError, setImageError] = useState("");
   const [pendingRead, setPendingRead] = useState(null); // { paths } — طلب قراءة ينتظر إذن المستخدم
   const sendingRef = useRef(false); // قفل فوريّ ضدّ الإرسال المزدوج — يُضبط قبل أيّ انتظار
+  const [accountRules, setAccountRules] = useState({}); // قواعدي: تسري على كلّ المشاريع
   // حقل الرسالة متعدّد الأسطر: يكبر مع ما يُكتب حتّى حدّ، ثمّ يُمرَّر
   const inputRef = useRef(null);
   useEffect(() => {
@@ -185,16 +186,14 @@ export default function Chat() {
 
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("full_name, environment")
+        .select("full_name, environment, account_rules")
         .eq("id", user.id)
         .maybeSingle();
 
-      if (!cancelled && !profileError && profile?.full_name) {
-        setUserName(profile.full_name);
-        if (!cancelled && !profileError && profile) {
+      if (!cancelled && !profileError && profile) {
         if (profile.full_name) setUserName(profile.full_name);
         if (profile.environment) setUserEnv(profile.environment);
-      }
+        if (profile.account_rules) setAccountRules(profile.account_rules);
       }
     }
 
@@ -504,6 +503,7 @@ export default function Chat() {
           libraryContext,
           userEnv,
           folderLinked,
+          accountRules,
           attachedImages: attachedImages.map(({ dataUrl, mediaType }) => ({ dataUrl, mediaType })),
         }),
       });
@@ -603,6 +603,21 @@ export default function Chat() {
           }
         }
 
+                // قاعدة حساب [[RULE:موضوع=قاعدة]] — لا يكتبها رفيق إلّا بطلب صريح، وتسري على كلّ المشاريع
+        const ruleMatches = [...replyText.matchAll(/\[\[RULE:([^=\]]+)=([^\]]*)\]{1,2}/g)];
+        if (ruleMatches.length > 0 && user) {
+          const nextRules = { ...accountRules };
+          for (const m of ruleMatches) {
+            const key = m[1].trim();
+            const value = m[2].trim();
+            if (!key) continue;
+            if (value) nextRules[key] = value;
+            else delete nextRules[key];
+          }
+          await supabase.from("profiles").update({ account_rules: nextRules }).eq("id", user.id);
+          setAccountRules(nextRules);
+        }
+        
         // طلب قراءة ملفّات [[READ:مسار|مسار]] — يصير بطاقة إذن، ولا يُقرأ شيء قبل موافقة المستخدم
         const readMatch = replyText.match(/\[\[READ:([^\]]+)\]{1,2}/);
         if (readMatch) {
@@ -611,7 +626,7 @@ export default function Chat() {
         }
         
         // نزع أيّ وسم نظام لم يُطابق الصيغتين المعروفتين
-        replyText = replyText.replace(/\[\[(ENV|MEM|STATE|BAND|READ):[\s\S]*?\]{1,2}/g, "").trim();
+        replyText = replyText.replace(/\[\[(ENV|MEM|STATE|BAND|READ|RULE):[\s\S]*?\]{1,2}/g, "").trim();
         const { data: insertedBot } = await supabase.from("messages").insert({
           conversation_id: conversationId,
           user_id: user.id,
