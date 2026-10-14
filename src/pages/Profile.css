@@ -693,3 +693,34 @@
     align-items: start;
   }
 }
+.profile-rules-intro { color: var(--gray-600); font-size: 13px; margin: 0 0 10px; }
+.profile-rules { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.profile-rule {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  background: var(--white);
+}
+.profile-rule-text {
+  flex: 1;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--gray-900);
+  unicode-bidi: plaintext;
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+.profile-rule-key { font-weight: 600; }
+.profile-rule-del {
+  flex-shrink: 0;
+  padding: 0 4px;
+  background: none;
+  border: none;
+  color: var(--gray-400);
+  font-size: 14px;
+  cursor: pointer;
+}
+.profile-rule-del:hover { color: var(--red); }

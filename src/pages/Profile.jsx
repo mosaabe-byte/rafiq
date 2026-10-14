@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   IconChartBar, IconArrowLeft, IconLogout, IconLoader2, IconTrophy,
   IconRoute2, IconHistory, IconFolderPlus, IconVocabulary, IconMessage,
-  IconPencil, IconCheck, IconX, IconShieldLock
+  IconPencil, IconCheck, IconX, IconShieldLock, IconListCheck,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
@@ -51,6 +51,7 @@ export default function Profile() {
   const [nextStep, setNextStep] = useState({ key: 'addProject', to: '/' });
   const [loading, setLoading] = useState(true);
   const [environment, setEnvironment] = useState({});
+  const [accountRules, setAccountRules] = useState({}); // قواعدي: تسري على كلّ المشاريع
   const [savingTool, setSavingTool] = useState(null);
 
   // حالة تعديل الاسم
@@ -94,7 +95,7 @@ export default function Profile() {
 
       const profileRes = await supabase
         .from('profiles')
-        .select('environment')
+        .select('environment, account_rules')
         .eq('id', user.id)
         .maybeSingle();
 
@@ -102,6 +103,10 @@ export default function Profile() {
 
       if (profileRes.data?.environment) {
         setEnvironment(profileRes.data.environment);
+      }
+
+      if (profileRes.data?.account_rules) {
+        setAccountRules(profileRes.data.account_rules);
       }
 
       const projectRows = projectsRes.data || [];
@@ -300,6 +305,15 @@ export default function Profile() {
       setEnvironment(newEnv);
     }
     setSavingTool(null);
+  }
+
+    // حذف قاعدة من «قواعدي» — تمسّ كلّ المشاريع، فتُسأل قبل الحذف
+  async function deleteRule(key) {
+    if (!window.confirm(t('profile.ruleDeleteConfirm'))) return;
+    const next = { ...accountRules };
+    delete next[key];
+    const { error } = await supabase.from('profiles').update({ account_rules: next }).eq('id', user.id);
+    if (!error) setAccountRules(next);
   }
 
   return (
@@ -526,6 +540,22 @@ export default function Profile() {
           <div className="ns-sub">{t('profile.next_' + nextStep.key)}</div>
         </div>
       </Link>
+        <div className="profile-section">
+        <h2><IconListCheck size={16} /> {t('profile.rulesTitle')}</h2>
+        <p className="profile-rules-intro">{t('profile.rulesIntro')}</p>
+        {Object.keys(accountRules).length === 0 ? (
+          <p className="profile-empty">{t('profile.rulesEmpty')}</p>
+        ) : (
+          <ul className="profile-rules">
+            {Object.entries(accountRules).map(([key, value]) => (
+              <li key={key} className="profile-rule">
+                <span className="profile-rule-text"><span className="profile-rule-key">{key}:</span> {value}</span>
+                <button type="button" className="profile-rule-del" onClick={() => deleteRule(key)} title={t('profile.ruleDelete')}>✕</button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
       <div className="profile-section data-rights">
         <h2><IconShieldLock size={16} /> {t('profile.dataRightsTitle')}</h2>
         <p className="data-rights-intro">{t('profile.dataRightsIntro')}</p>
