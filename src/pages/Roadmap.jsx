@@ -9,6 +9,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 import './Roadmap.css';
 import { useSearchParams } from 'react-router-dom';
 import PageHint from '../components/PageHint';
+import PhaseForm from '../components/PhaseForm';
 
 function phaseNumber(project) {
   return project?.phase_number || 1;
@@ -21,7 +22,7 @@ export default function Roadmap() {
 const ENV_BANDS = {
   3: { 1: ['node', 'vscode'] },
 };
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
@@ -266,7 +267,7 @@ const ENV_BANDS = {
                     </div>
                     {ph.n < phases.length && <div className={'phase-line ' + (isDone ? 'done' : '')} />}
                   </div>
-<div className="phase-content">
+                  <div className="phase-content">
                     <button
                       className="phase-head phase-toggle"
                       onClick={() => setOpenGuide(openGuide === ph.n ? null : ph.n)}
@@ -305,6 +306,13 @@ const ENV_BANDS = {
                             );
                           })}
                         </ol>
+                                                {selected && ph.n === 1 && (
+                          <PhaseForm
+                            projectId={selected.id}
+                            lang={lang}
+                            onSend={() => navigate(`/chat?project=${selected.id}&form=planning`)}
+                          />
+                        )}
                         {selected && (
                           <button
                             className="ask-rafiq-btn"
