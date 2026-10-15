@@ -32,19 +32,25 @@ const steps = [
 
 const platformEmoji = { web: '🌐', mobile: '📱', both: '💻' };
 
-// تحليل نص حر لاستخراج اسم/منصة/مستوى — يفيد عند لصق فكرة أو خلاصة محادثة
+// كلمة لاتينيّة كاملة: لا تطابق «app» داخل «application» ولا «apprendre».
+// (لا \b: فهو يعدّ é و à و ç فواصل، فيفشل في «avancé». والعربيّة تُطابَق بلا حدود.)
+const latinWord = (words) => new RegExp('(^|[^a-zà-ÿ])(' + words + ')(?![a-zà-ÿ])', 'i');
+
+// تحليل نص حر لاستخراج اسم/منصة/مستوى — يفيد عند لصق فكرة أو خلاصة محادثة (اللغات الثلاث)
 function analyzeIdea(text) {
-  const hasWeb = /(ويب|موقع|web|site)/i.test(text);
-  const hasMobile = /(موبايل|جوال|هاتف|mobile|app|android|ios|ايفون|اندرويد)/i.test(text);
+  const hasWeb = /(ويب|موقع)/.test(text)
+    || latinWord('web|website|site|navigateur|browser').test(text);
+  const hasMobile = /(موبايل|جوال|هاتف|محمول|ايفون|آيفون|اندرويد|أندرويد)/.test(text)
+    || latinWord('mobile|smartphone|phone|téléphone|telephone|android|ios|iphone|ipad|tablet|tablette').test(text);
   let platform = 'web';
   if (hasWeb && hasMobile) platform = 'both';
   else if (hasMobile) platform = 'mobile';
 
-    let level = 'beginner';
-  if (/(متقدم|محترف|خبير|expert|advanced)/i.test(text)) level = 'advanced';
-  else if (/(متوسط|intermediate)/i.test(text)) level = 'intermediate';
+  let level = 'beginner';
+  if (/(متقد[ّ]?م|محترف|خبير)/.test(text) || latinWord('advanced|expert|avancé|avancée|confirmé').test(text)) level = 'advanced';
+  else if (/متوس[ّ]?ط/.test(text) || latinWord('intermediate|intermédiaire|intermediaire').test(text)) level = 'intermediate';
 
-  let name = (text.trim().split(/[.\n،]/)[0] || '').trim();
+  let name = (text.trim().split(/[.\n،,؛;!?؟]/)[0] || '').trim();
   if (name.length > 60) name = name.slice(0, 57) + '...';
   if (!name) name = 'مشروع جديد';
   return { name, platform, level };
