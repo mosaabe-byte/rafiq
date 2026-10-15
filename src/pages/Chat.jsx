@@ -1161,7 +1161,8 @@ export default function Chat() {
           <div className="chat-welcome">
             {(() => {
               const p = projects.find((pr) => pr.id === Number(selectedProjectId));
-              const greeting = "مرحباً بك صديقي 🌱";
+              const greeting = t("chat.welcomeGreeting");
+              const name = p?.name || "";
               const phase = p?.phase_number || 1;
 
               // بنود المرحلة الحالية المُنجَزة
@@ -1175,7 +1176,7 @@ export default function Chat() {
               const phaseComplete = doneInPhase.length >= 4;
               // حالة 0: دخل من مدخل مرحلة محدّدة في «الطريق» — نخصّ تلك المرحلة
               if (entryPhase) {
-                // نجد رقم المرحلة من اسمها (entryPhase نصّ مثل «التخطيط»)
+                // نجد رقم المرحلة من اسمها (entryPhase عنوان المرحلة بلغة الواجهة)
                 let entryNum = null;
                 for (let n = 1; n <= 7; n++) {
                   if (t('roadmap.phase' + n + 'title') === entryPhase) { entryNum = n; break; }
@@ -1191,23 +1192,14 @@ export default function Chat() {
                   <>
                     <p className="chat-welcome-title">{greeting}</p>
                     {entryComplete ? (
-                      <p>
-                        بخصوص مرحلة «{entryPhase}» — ما الذي يشغل بالك فيها؟
-                        تريد تعديلاً، أم إضافةً، أم فهمَ تفصيلٍ معيّن؟ أنا معك، اسألني.
-                      </p>
+                      <p>{tt("chat.welcomeEntryComplete", { phase: entryPhase })}</p>
                     ) : entryLastText ? (
                       <>
-                        <p>
-                          بخصوص مرحلة «{entryPhase}» — أراك أنجزتَ حتى: «{entryLastText}».
-                          ما الذي يشغل بالك فيها؟ تعديلٌ، أم إضافةٌ، أم فهمُ تفصيل؟
-                        </p>
-                        <p>أم تريد أن نكمل بقيّة بنود هذه المرحلة؟</p>
+                        <p>{tt("chat.welcomeEntryProgress", { phase: entryPhase, last: entryLastText })}</p>
+                        <p>{t("chat.welcomeEntryContinue")}</p>
                       </>
                     ) : (
-                      <p>
-                        بخصوص مرحلة «{entryPhase}» — بمَ أساعدك فيها؟ نبدأ خطواتها،
-                        أم تريد فهمَ تفصيلٍ معيّن أولاً؟ أنا معك، اسألني.
-                      </p>
+                      <p>{tt("chat.welcomeEntryStart", { phase: entryPhase })}</p>
                     )}
                     <p className="chat-welcome-hint">{t('chat.welcomeHint')}</p>
                   </>
@@ -1222,12 +1214,9 @@ export default function Chat() {
                 return (
                   <>
                     <p className="chat-welcome-title">{greeting}</p>
-                    <p>
-                      أهلاً بعودتك إلى «{p?.name}». أرانا توقّفنا عند: «{lastText}»
-                      — أنجزتَ {doneInPhase.length} من 4 بنود في هذه المرحلة.
-                    </p>
-                    <p>نكمل من حيث توقّفنا؟ أم تريد أن نراجع ما بنيناه أولاً؟</p>
-                    <p className="chat-welcome-hint">اكتب في الأسفل، وأنا معك.</p>
+                    <p>{tt("chat.welcomeResume", { name, last: lastText, done: doneInPhase.length })}</p>
+                    <p>{t("chat.welcomeResumeAsk")}</p>
+                    <p className="chat-welcome-hint">{t("chat.welcomeHint")}</p>
                   </>
                 );
               }
@@ -1237,11 +1226,8 @@ export default function Chat() {
                 return (
                   <>
                     <p className="chat-welcome-title">{greeting}</p>
-                    <p>
-                      أهلاً بعودتك إلى «{p?.name}». أتممتَ كل بنود هذه المرحلة —
-                      عملٌ رائع. جاهز أن ننتقل للمرحلة التالية، أم نراجع ما أنجزت؟
-                    </p>
-                    <p className="chat-welcome-hint">اكتب في الأسفل، وأنا معك.</p>
+                    <p>{tt("chat.welcomePhaseDone", { name })}</p>
+                    <p className="chat-welcome-hint">{t("chat.welcomeHint")}</p>
                   </>
                 );
               }
@@ -1251,12 +1237,8 @@ export default function Chat() {
                 return (
                   <>
                     <p className="chat-welcome-title">{greeting}</p>
-                    <p>
-                      أهلاً بعودتك إلى «{p?.name}». بيئتك جاهزة من قبل، فلنبدأ
-                      التخطيط لمشروعك مباشرةً — أول خطوة أن نحدّد بوضوح مَن
-                      سيستخدمه وما أهمّ ما يفعله. جاهز نبدأ؟
-                    </p>
-                    <p className="chat-welcome-hint">اكتب في الأسفل، وأنا معك خطوة خطوة.</p>
+                    <p>{tt("chat.welcomeReturning", { name })}</p>
+                    <p className="chat-welcome-hint">{t("chat.welcomeHintStep")}</p>
                   </>
                 );
               }
@@ -1267,12 +1249,8 @@ export default function Chat() {
                 return (
                   <>
                     <p className="chat-welcome-title">{greeting}</p>
-                    <p>
-                      أهلاً بعودتك إلى «{p?.name}». أنجزتَ ما قبل هذه المرحلة،
-                      وأنت الآن في «{phaseName}». لنبدأ خطواتها — رافقني بحسب
-                      ما وصلت إليه.
-                    </p>
-                    <p className="chat-welcome-hint">اكتب في الأسفل، وأنا معك خطوة خطوة.</p>
+                    <p>{tt("chat.welcomeNewPhase", { name, phase: phaseName })}</p>
+                    <p className="chat-welcome-hint">{t("chat.welcomeHintStep")}</p>
                   </>
                 );
               }
@@ -1281,15 +1259,9 @@ export default function Chat() {
               return (
                 <>
                   <p className="chat-welcome-title">{greeting}</p>
-                  <p>
-                    أنا رفيقك في رحلة بناء مشروع «{p?.name}». لعلّك تسأل: من أين أبدأ؟
-                    هذا طبيعيّ لكل مبتدئ — ولا تقلق، فأنا هنا لآخذ بيدك خطوة خطوة.
-                  </p>
-                  <p>
-                    أخبرني أولاً: هل أعددت بيئة التطوير (Node و VS Code)، أم نُعدّها معاً؟
-                    إن كانت جاهزة، نبدأ من التخطيط؛ وإن لم تكن، فمحطتنا الأولى إعدادها.
-                  </p>
-                  <p className="chat-welcome-hint">أخبرني في الأسفل، وأنا معك.</p>
+                  <p>{tt("chat.welcomeFirst", { name })}</p>
+                  <p>{t("chat.welcomeFirstEnv")}</p>
+                  <p className="chat-welcome-hint">{t("chat.welcomeHintTell")}</p>
                 </>
               );
             })()}
