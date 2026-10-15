@@ -7,6 +7,7 @@ import { supabase } from "../lib/supabase";
 import { searchLibrary } from "../lib/embedding";
 import { useAuth } from "../auth/AuthContext";
 import { useLanguage } from "../i18n/LanguageContext";
+import { mergeWithProject, formatPlanningForm } from "../lib/phaseForms";
 import "./Chat.css";
 import CollapsibleText from "../components/CollapsibleText";
 import ProjectFolderLink from "../components/ProjectFolderLink";
@@ -39,7 +40,7 @@ export default function Chat() {
   const { user } = useAuth();
   const { lang, t } = useLanguage();
   const bandsOf = (phase) => t('roadmap.guides')?.[phase]?.steps || PHASE_BANDS[phase] || [];
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [todayCount, setTodayCount] = useState(0);
   const [limitReached, setLimitReached] = useState(false);
@@ -71,6 +72,8 @@ export default function Chat() {
   const [imageError, setImageError] = useState("");
   const [pendingRead, setPendingRead] = useState(null); // { paths } — طلب قراءة ينتظر إذن المستخدم
   const sendingRef = useRef(false); // قفل فوريّ ضدّ الإرسال المزدوج — يُضبط قبل أيّ انتظار
+  const formSentRef = useRef(false); // الاستمارة تُرسَل مرّة واحدة في عمر الصفحة
+  const historyProjectRef = useRef(null); // المشروع الذي حُمّلت رسائله فعلًا — لا المختار فقط
   const [accountRules, setAccountRules] = useState({}); // قواعدي: تسري على كلّ المشاريع
   // حقل الرسالة متعدّد الأسطر: يكبر مع ما يُكتب حتّى حدّ، ثمّ يُمرَّر
   const inputRef = useRef(null);
@@ -302,12 +305,38 @@ export default function Chat() {
         .order("created_at", { ascending: true });
 
       if (!msgsError && msgs) setMessages(msgs);
+      historyProjectRef.current = String(selectedProjectId);
 
       setLoadingHistory(false);
     }
 
     loadOrCreateConversation();
   }, [selectedProjectId, user?.id]);
+
+  // استمارة التخطيط: تُرسَل مرّة واحدة حين تجهز محادثة مشروعها برسائلها
+  useEffect(() => {
+    if (searchParams.get("form") !== "planning") return;
+    const formProject = searchParams.get("project");
+    if (!formProject || formSentRef.current) return;
+    if (!conversationId || loadingHistory || historyProjectRef.current !== formProject) return;
+
+    formSentRef.current = true;
+    const next = new URLSearchParams(searchParams);
+    next.delete("form");
+    setSearchParams(next, { replace: true }); // يُحذف قبل الإرسال: F5 لا يعيده حتّى لو فشل
+
+    (async () => {
+      const { data: project, error } = await supabase
+        .from("projects")
+        .select("phase_forms, audience, platform")
+        .eq("id", formProject)
+        .single();
+      if (error || !project) return;
+      const answers = mergeWithProject(project.phase_forms?.planning || {}, project);
+      sendMessage(formatPlanningForm(answers, lang));
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, conversationId, loadingHistory]);
 
     async function startNewConversation() {
      if (!selectedProjectId || !user) return;

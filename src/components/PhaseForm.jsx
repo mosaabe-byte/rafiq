@@ -93,7 +93,7 @@ export default function PhaseForm({ projectId, lang, onSend }) {
                   key={o.id}
                   type="button"
                   className={"phase-form-option" + (answers[q.id] === o.id ? " selected" : "")}
-                  onClick={() => update(q.id, o.id)}
+                  onClick={() => update(q.id, !q.column && answers[q.id] === o.id ? "" : o.id)}
                 >
                   {pick(o.label, lang)}
                 </button>
