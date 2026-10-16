@@ -28,6 +28,18 @@ const DEFER_RE = /^مؤج[َّ]*ل\s*[—–-]\s*/;
 // فاصل التخبئة: ما قبله تعليمات عامّة ثابتة، وما بعده سياق المشروع (يتغيّر أحياناً)
 const CACHE_SPLIT = "\n<<<RAFIQ_CACHE_SPLIT>>>\n";
 
+// أسماء رموز tech_stack لسياق رفيق — مكرَّرة من src/lib/techOptions.js، فعدّل الموضعين معاً
+const TECH_NAMES = {
+  "html-css-js": "HTML و CSS و JavaScript",
+  "react-vite": "React (مع Vite)",
+  "react-cra": "React (مع Create React App)",
+  "nextjs": "Next.js",
+  "vue": "Vue.js",
+  "react-native": "React Native (موبايل)",
+  "flutter": "Flutter (موبايل)",
+  "python": "Python (Django أو Flask)",
+};
+
 // تعليمة الاستمارة: رسالة «📋» — قرارات ومؤجَّل وعرض تثبيت وما نقص، في ردّ واحد (للمشاريع لا للدروس)
 function formInstruction() {
   return `
@@ -490,9 +502,9 @@ const context = `
 - نسبة التقدّم: ${project.progress ?? 0}%
 - النظام الأساسي: ${project.platform || "غير محدّد"}
 - تقنية المشروع: ${
-    !project.tech_stack || project.tech_stack.includes("متأكد") || project.tech_stack.includes("متأكّد")
+    !project.tech_stack || project.tech_stack === "unsure" || project.tech_stack.includes("متأكد") || project.tech_stack.includes("متأكّد")
       ? "لم يحدّدها بعد — إن سأل عن التقنية المناسبة، ساعده على اختيارها بحسب مستواه ومشروعه، ولا تفترض تقنية معيّنة."
-      : project.tech_stack
+      : (TECH_NAMES[project.tech_stack] || project.tech_stack)
   }${memoryLines.length > 0 ? `
 
 - ذاكرة المشروع (قرارات وخلاصات موثّقة من محادثات سابقة — اعتمِدها ولا تقل إنّك تتذكّرها، بل انسبها إلى ملفّ المشروع):

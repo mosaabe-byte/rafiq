@@ -8,25 +8,15 @@ import { supabase } from '../lib/supabase';
 import { useLanguage } from '../i18n/LanguageContext';
 import './NewProject.css';
 
-// خيارات التقنيات — ترشد المبتدئ الذي قد لا يعرف تقنيته
-const TECH_OPTIONS = [
-  'HTML و CSS و JavaScript',
-  'React (مع Vite)',
-  'React (مع Create React App)',
-  'Next.js',
-  'Vue.js',
-  'React Native (موبايل)',
-  'Flutter (موبايل)',
-  'Python (Django أو Flask)',
-  'لست متأكّداً بعد',
-];
+// خيارات التقنيات: رموز تُخزَّن وتسميات تُعرض — مشتركة مع «مشاريعي»
+import { TECH_OPTIONS, TECH_IDS, techLabel } from '../lib/techOptions';
 
 // خطوات المحادثة الموجّهة
 const steps = [
   { key: 'name', botKey: 'q_name', type: 'text', phKey: 'ph_name' },
   { key: 'audience', botKey: 'q_audience', type: 'text', phKey: 'ph_audience' },
   { key: 'platform', botKey: 'q_platform', type: 'choice', options: ['web', 'mobile', 'both'] },
-  { key: 'tech_stack', botKey: 'q_tech', type: 'choice', options: TECH_OPTIONS },
+  { key: 'tech_stack', botKey: 'q_tech', type: 'choice', options: TECH_IDS },
   { key: 'level', botKey: 'q_level', type: 'choice', options: ['beginner', 'intermediate', 'advanced'] },
 ];
 
@@ -76,6 +66,7 @@ export default function NewProject() {
     : v === 'beginner' ? t('home.levelBeginner')
     : v === 'intermediate' ? t('home.levelIntermediate')
     : v === 'advanced' ? t('home.levelAdvanced')
+    : TECH_IDS.includes(v) ? techLabel(v, lang)
     : v;
 
   // حالة اللصق
@@ -132,7 +123,7 @@ export default function NewProject() {
       status: 'active',
       level: r.level,
       platform: r.platform,
-      tech_stack: 'لست متأكّداً بعد',
+      tech_stack: 'unsure',
       audience: null,
       progress: 0,
       phase_number: 1,
@@ -302,8 +293,8 @@ export default function NewProject() {
                 <label className="draft-field">
                   <span>{t('new.fieldTech')}</span>
                   <select value={draft.tech_stack} onChange={(e) => setDraft({ ...draft, tech_stack: e.target.value })}>
-                    {TECH_OPTIONS.map((opt) => (
-                      <option key={opt} value={opt}>{opt}</option>
+                    {TECH_OPTIONS.map((o) => (
+                      <option key={o.id} value={o.id}>{techLabel(o.id, lang)}</option>
                     ))}
                   </select>
                 </label>

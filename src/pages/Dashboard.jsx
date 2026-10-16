@@ -14,23 +14,13 @@ const statusBg = { active: '#EEEDFE', done: '#E1F5EE', paused: '#FAEEDA' };
 const PHASE_NUMBERS = [1, 2, 3, 4, 5, 6, 7];
 
 
-// خيارات التقنيات (مطابقة لصفحة إنشاء المشروع)
-const TECH_OPTIONS = [
-  'HTML و CSS و JavaScript',
-  'React (مع Vite)',
-  'React (مع Create React App)',
-  'Next.js',
-  'Vue.js',
-  'React Native (موبايل)',
-  'Flutter (موبايل)',
-  'Python (Django أو Flask)',
-  'لست متأكّداً بعد',
-];
+// خيارات التقنيات: رموز تُخزَّن وتسميات تُعرض — مشتركة مع «جديد»
+import { TECH_OPTIONS, normalizeTech, techLabel } from '../lib/techOptions';
 
 // النموذج الفارغ يبدأ بالمرحلة 1
 const emptyForm = {
     name: '', emoji: '📁', status: 'active', level: 'beginner',
-  platform: 'web', progress: 0, phase_number: 1, tech_stack: 'لست متأكّداً بعد',
+    platform: 'web', progress: 0, phase_number: 1, tech_stack: 'unsure',
 };
 
 export default function Dashboard() {
@@ -148,7 +138,7 @@ export default function Dashboard() {
       platform: project.platform,
       progress: project.progress,
       phase_number: pn && pn >= 1 && pn <= 7 ? pn : 1,
-      tech_stack: project.tech_stack || 'لست متأكّداً بعد',
+      tech_stack: normalizeTech(project.tech_stack),
     });
     setShowModal(true);
   }
@@ -385,8 +375,8 @@ export default function Dashboard() {
               <label className="field">
                 <span>{t('home.fieldTech')}</span>
                 <select value={form.tech_stack} onChange={(e) => setForm({ ...form, tech_stack: e.target.value })}>
-                  {TECH_OPTIONS.map((opt) => (
-                    <option key={opt} value={opt}>{opt}</option>
+                  {TECH_OPTIONS.map((o) => (
+                    <option key={o.id} value={o.id}>{techLabel(o.id, lang)}</option>
                   ))}
                 </select>
               </label>
