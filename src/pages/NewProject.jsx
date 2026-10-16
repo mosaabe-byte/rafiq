@@ -42,7 +42,6 @@ function analyzeIdea(text) {
 
   let name = (text.trim().split(/[.\n،,؛;!?؟]/)[0] || '').trim();
   if (name.length > 60) name = name.slice(0, 57) + '...';
-  if (!name) name = 'مشروع جديد';
   return { name, platform, level };
 }
 
@@ -279,7 +278,7 @@ export default function NewProject() {
                 <div className="draft-title">{t('new.draftTitle')}</div>
                 <label className="draft-field">
                   <span>{t('new.fieldName')}</span>
-                  <input type="text" value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} />
+                  <input type="text" value={draft.name} placeholder={t('new.defaultName')} onChange={(e) => setDraft({ ...draft, name: e.target.value })} />
                 </label>
                 <label className="draft-field">
                   <span>{t('new.fieldPlatform')}</span>
@@ -307,8 +306,8 @@ export default function NewProject() {
                     <option value="advanced">{t('home.levelAdvanced')}</option>
                   </select>
                 </label>
-                <button className="save-project-btn" onClick={() => saveProject(draft)} disabled={saving}>
-                  {saving ? (<><IconLoader2 size={18} className="spin" /> {t('new.saving')} </>) : (<><IconCheck size={18} /> {t('newproject.addToProjects')} </>)}
+                <button className="save-project-btn" onClick={() => saveProject({ ...draft, name: draft.name.trim() || t('new.defaultName') })} disabled={saving}>
+                  {saving ? (<><IconLoader2 size={18} className="spin" /> {t('new.saving')} </>) : (<><IconCheck size={18} /> {t('new.addToProjects')} </>)}
                 </button>
               </div>
             )}

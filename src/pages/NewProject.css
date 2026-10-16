@@ -64,12 +64,12 @@
 .bubble.bot {
   background: var(--gray-50);
   color: var(--gray-900);
-  border-bottom-right-radius: 4px;
+  border-end-start-radius: 4px;
 }
 .bubble.user {
   background: var(--purple);
   color: var(--white);
-  border-bottom-left-radius: 4px;
+  border-end-end-radius: 4px;
 }
 
 .success-card {
@@ -134,7 +134,6 @@
   font-family: var(--font);
   color: var(--gray-900);
   outline: none;
-  direction: rtl;
   transition: border-color 0.15s;
 }
 .text-input-row input:focus { border-color: var(--purple); }
@@ -229,7 +228,7 @@
   padding: 12px 14px;
   background: var(--purple-light);
   border-radius: 12px;
-  border-right: 3px solid var(--purple);
+  border-inline-start: 3px solid var(--purple);
 }
 .paste-box {
   width: 100%;
@@ -244,7 +243,6 @@
   line-height: 1.8;
   outline: none;
   resize: vertical;
-  direction: rtl;
   transition: border-color 0.15s;
 }
 .paste-box:focus { border-color: var(--purple); }
@@ -300,7 +298,6 @@
   font-family: var(--font);
   color: var(--gray-900);
   outline: none;
-  direction: rtl;
 }
 .draft-field input:focus,
 .draft-field select:focus { border-color: var(--purple); }
