@@ -598,11 +598,11 @@
   padding: 14px;
   border-radius: 14px;
   background: var(--gray-50);
-  border-right: 4px solid var(--gray-200);
+  border-inline-start: 4px solid var(--gray-200);
 }
-.product-card.published { background: color-mix(in srgb, var(--purple) 8%, white); border-right-color: var(--purple); }
-.product-card.completed { background: color-mix(in srgb, var(--teal) 8%, white); border-right-color: var(--teal); }
-.product-card.ongoing { background: var(--gray-50); border-right-color: var(--purple); }
+.product-card.published { background: color-mix(in srgb, var(--purple) 8%, white); border-inline-start-color: var(--purple); }
+.product-card.completed { background: color-mix(in srgb, var(--teal) 8%, white); border-inline-start-color: var(--teal); }
+.product-card.ongoing { background: var(--gray-50); border-inline-start-color: var(--purple); }
 .product-emoji {
   font-size: 1.8rem;
   width: 48px;

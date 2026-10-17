@@ -15,7 +15,7 @@
 }
 .search-wrap input {
   width: 100%;
-  padding: 11px 40px 11px 14px;
+  padding-block: 11px; padding-inline: 40px 14px;
   border-radius: 22px;
   border: 1px solid var(--gray-200);
   background: var(--white);
@@ -29,7 +29,7 @@
 .search-wrap input:focus { border-color: var(--purple); }
 .search-icon {
   position: absolute;
-  right: 14px;
+  inset-inline-start: 14px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--gray-400);
@@ -79,7 +79,7 @@
   font-style: italic;
 }
 .speak-btn {
-  margin-right: auto;
+  margin-inline-start: auto;
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -231,7 +231,7 @@
   cursor: pointer;
   color: var(--gray-400, #9ca3af);
   display: flex;
-  margin-right: auto;
+  margin-inline-start: auto;
 }
 .term-delete:hover { color: #dc2626; }
 

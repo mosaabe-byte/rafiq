@@ -40,7 +40,7 @@ a { text-decoration: none; color: inherit; }
 .rafiq-bubble td {
   border: 1px solid var(--gray-200);
   padding: 6px 10px;
-  text-align: right;
+  text-align: start;
 }
 .rafiq-bubble th {
   background: var(--purple-light);

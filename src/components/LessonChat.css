@@ -1,7 +1,7 @@
 .lesson-chat-fab {
   position: fixed;
   bottom: 80px;
-  left: 16px;
+  inset-inline-end: 16px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -22,7 +22,7 @@
 .lesson-chat-panel {
   position: fixed;
   bottom: 76px;
-  left: 16px;
+  inset-inline-end: 16px;
   width: 360px;
   max-width: calc(100vw - 32px);
   height: 460px;
