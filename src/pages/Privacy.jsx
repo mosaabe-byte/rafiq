@@ -11,7 +11,7 @@ export default function Privacy() {
   return (
     <div className="privacy-page">
       <Link to="/profile" className="privacy-back">
-        <IconArrowRight size={18} /> {t('privacy.back')}
+        <IconArrowRight size={18} className="dir-icon" /> {t('privacy.back')}
       </Link>
 
       <div className="privacy-header">

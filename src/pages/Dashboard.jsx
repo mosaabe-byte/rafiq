@@ -246,7 +246,7 @@ export default function Dashboard() {
           <div className="learn-banner-title">{t('home.learnBannerTitle')}</div>
           <div className="learn-banner-sub">{t('home.learnBannerSub')}</div>
         </div>
-        <IconChevronLeft size={20} className="learn-banner-arrow" />
+        <IconChevronLeft size={20} className="learn-banner-arrow dir-icon" />
       </Link>
 
       <div className="stats-strip">

@@ -60,3 +60,6 @@ a { text-decoration: none; color: inherit; }
   direction: ltr;
   unicode-bidi: isolate;
 }
+/* أيقونات الاتجاه مرسومة للعربيّة («إلى الأمام» يسار، «رجوع» يمين)، فتنقلب في ltr.
+   scale لا transform: خاصيّة مستقلّة لا تمحو حركات الأصناف الأخرى ولا تُمحى بها */
+html[dir="ltr"] .dir-icon { scale: -1 1; }

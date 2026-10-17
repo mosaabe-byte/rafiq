@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { IconShieldCheck, IconArrowLeft, IconRefresh, IconBulb, IconInfoCircle } from '@tabler/icons-react';
+import { IconShieldCheck, IconArrowRight, IconRefresh, IconBulb, IconInfoCircle } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
@@ -284,7 +284,7 @@ export default function QualityGate() {
       </div>
 
       <Link to="/roadmap" className="qg-back">
-        <IconArrowLeft size={16} /> {lang === 'ar' ? 'العودة لخارطة الطريق' : lang === 'fr' ? 'Retour à la feuille de route' : 'Back to roadmap'}
+        <IconArrowRight size={16} className="dir-icon" /> {lang === 'ar' ? 'العودة لخارطة الطريق' : lang === 'fr' ? 'Retour à la feuille de route' : 'Back to roadmap'}
       </Link>
     </div>
   );

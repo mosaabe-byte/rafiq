@@ -82,7 +82,7 @@ export default function SessionDetail() {
   if (!session) {
     return (
       <div className="session-detail">
-        <Link to="/learn" className="back-link"><IconArrowRight size={18} /> {t(UI.back, lang)}</Link>
+        <Link to="/learn" className="back-link"><IconArrowRight size={18} className="dir-icon" /> {t(UI.back, lang)}</Link>
         <div className="not-ready">
           <p>{t(UI.notReady, lang)}</p>
           <p className="not-ready-sub">{t(UI.notReadySub, lang)}</p>
@@ -104,7 +104,7 @@ export default function SessionDetail() {
 
   return (
     <div className="session-detail">
-      <Link to="/learn" className="back-link"><IconArrowRight size={18} /> {t(UI.back, lang)}</Link>
+      <Link to="/learn" className="back-link"><IconArrowRight size={18} className="dir-icon" /> {t(UI.back, lang)}</Link>
 
       <div className="sd-header">
         <div className="sd-num">{id}</div>

@@ -106,7 +106,7 @@ export default function LearningPath() {
                 <div className="session-title">{t(s.title, lang)}</div>
                 <div className="session-sub">{t(s.sub, lang)}</div>
               </div>
-              <IconChevronLeft size={18} className="session-arrow" />
+              <IconChevronLeft size={18} className="session-arrow dir-icon" />
             </Link>
           );
         })}

@@ -190,7 +190,7 @@ export default function NewProject() {
             <div className="success-icon"><IconCheck size={26} /></div>
             <div className="success-title">{t('new.successTitle').replace('{name}', savedName)}</div>
             <button className="go-dashboard" onClick={() => navigate('/')}>
-              <IconArrowLeft size={16} /> {t('new.goDashboard')}
+              <IconArrowLeft size={16} className="dir-icon" /> {t('new.goDashboard')}
             </button>
           </div>
         </div>

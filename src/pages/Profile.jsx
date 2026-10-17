@@ -534,7 +534,7 @@ export default function Profile() {
       )}
 
       <Link to={nextStep.to} className="next-step-card">
-        <div className="ns-icon"><IconArrowLeft size={16} /></div>
+        <div className="ns-icon"><IconArrowLeft size={16} className="dir-icon" /></div>
         <div className="ns-text">
           <div className="ns-title">{t('profile.nextTitle')}</div>
           <div className="ns-sub">{t('profile.next_' + nextStep.key)}</div>
